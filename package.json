@@ -1,0 +1,35 @@
+{
+  "name": "calvin-network-tools",
+  "version": "1.0.0",
+  "description": "CCommand line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucd-cws/calvin-network-tools.git"
+  },
+  "keywords": [
+    "water",
+    "California"
+  ],
+  "author": "Center for Watershed Sciences",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ucd-cws/calvin-network-tools/issues"
+  },
+  "homepage": "https://github.com/ucd-cws/calvin-network-tools#readme",
+  "dependencies": {
+    "async": "^1.4.2",
+    "csv-parse": "^1.0.0",
+    "csv-stringify": "0.0.8",
+    "globby": "^2.1.0",
+    "minimist": "^1.2.0",
+    "node-getopt": "^0.2.3",
+    "sphericalmercator": "^1.0.3",
+    "sprintf-js": "^1.0.3",
+    "walk": "^2.3.9",
+    "xlsx": "^0.8.0"
+  }
+}
