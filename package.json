@@ -28,6 +28,8 @@
     "globby": "^2.1.0",
     "minimist": "^1.2.0",
     "node-getopt": "^0.2.3",
+    "node-uuid": "^1.4.7",
+    "rimraf": "^2.4.3",
     "sphericalmercator": "^1.0.3",
     "sprintf-js": "^1.0.3",
     "walk": "^2.3.9",

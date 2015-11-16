@@ -2,11 +2,17 @@
 
 var fs = require('fs');
 var path = require('path');
+var rimraf = require('rimraf');
+var uuid = require('node-uuid');
+var parse = require('csv-parse');
+var stringify = require('csv-stringify');
+var async = require('async');
 
 var crawler = require('../../crawler');
 var runtime = require('../lib/runtime');
 var costs = require('../../dss/cost');
 var prepare = require('../lib/prepare');
+
 var options;
 var args;
 
@@ -31,13 +37,92 @@ function onCrawlComplete(results){
   fs.writeFileSync(priPath, prepare.pri(config));
 
   console.log('Writing Penalty DSS file: '+config.pd.path);
-  writeDssFile(config.pd, function(err, resp){
-    console.log('Writing TimeSeries DSS file: '+config.ts.path);
-    writeDssFile(config.ts, function(err, resp){
-      console.log('Done.');
-    });
-  });
 
+  writeDssFile(config.pd, function(err, resp){
+
+    if( args.start && args.stop ) {
+      trimTsData(args, config.ts, function(ts, tmpDir){
+        writeTsDssFile(config.ts, function(){
+          cleanTmpDir(tmpDir, function(){
+            console.log('Done.');
+          });
+        });
+      });
+    } else {
+      writeTsDssFile(config.ts);
+    }
+
+  });
+}
+
+function trimTsData(args, ts, callback) {
+  var start = toDate(args.start);
+  var end = toDate(args.stop);
+
+  console.log('Trimming ts data: '+start.toLocaleDateString()+' to '+end.toLocaleDateString());
+
+  var dir = path.join(process.cwd(), 'tmp');
+  cleanTmpDir(dir, function(){
+    fs.mkdirSync(dir);
+
+    async.eachSeries(
+      ts.data,
+      function(node, next) {
+
+        parse(fs.readFileSync(node.csvFilePath, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
+          trimDates(start, end, data);
+
+          var uid = uuid.v1();
+          var newFilePath = path.join(dir, uid+'.csv');
+          node.csvFilePath = newFilePath;
+
+          stringify(data, function(err, csvstring){
+            if( err ) {
+              console.log(err);
+            } else {
+              fs.writeFileSync(newFilePath, csvstring);
+            }
+            next();
+          });
+
+        });
+      },
+      function() {
+        callback(ts, dir);
+      }
+    );
+  });
+}
+
+function trimDates(start, stop, data) {
+  var i, date;
+  for( i = data.length-1; i >= 1; i-- ) {
+    date = toDate(data[i][0]).getTime();
+    if( start.getTime() > date || stop.getTime() < date ) {
+      data.splice(i, 1);
+    }
+  }
+}
+
+function toDate(dateStr) {
+  var parts = dateStr.split('-');
+  return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parts.length > 2 ? parseInt(parts[2]) : 1);
+}
+
+function writeTsDssFile(tsConfig, callback) {
+  console.log('Writing TimeSeries DSS file: '+tsConfig.path);
+  writeDssFile(tsConfig, function(err, resp){
+    if( callback ) callback();
+    else console.log('Done.');
+  });
+}
+
+function cleanTmpDir(dir, callback) {
+  if( fs.existsSync(dir) ) {
+    rimraf(dir, callback);
+  } else {
+    callback();
+  }
 }
 
 function writeDssFile(dss, callback) {
