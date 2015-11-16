@@ -71,6 +71,14 @@ node prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-
 By default to files will be created in your current working directory.  If you would like
 to specify the path to create the files, use the *--output* flag.
 
+#### Specify date range for TimeSeries data
+##### --start [date] --stop [date]
+
+example:
+```
+node prm build --prefix partialRun --start 2000-01 --stop 2002-1
+```
+
 
 #### Debug build
 
