@@ -24,7 +24,7 @@ module.exports = function(lib, params, options, callback) {
 
   // run the custom dssWriter jar using the packaged java (Win 32bit), HEC's java lib and HEC's system DLL's
   // (DLL's supplied with -Djava.library.path).  The jar takes as it's first parameter the path to the tmp file.
-  var cmd = 'java.exe -Djava.library.path="../../lib;${env_var:PATH}" -jar ../../dssWriter.jar '+paramFile;
+  var cmd = 'java.exe -Djava.library.path=\'../../lib;${env_var:PATH}\' -jar ../../dssWriter.jar '+paramFile;
   // if we are not running in windows, we need to use wine.
   if( os.type() !== 'Windows_NT' ) {
     cmd = 'wine '+cmd;
