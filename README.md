@@ -57,7 +57,11 @@ do so with --config [path/to/config/file] parameter.
 
 ## Commands
 
-- [Crawl](#crawl --data [directory])
+- [Crawl](#crawl---data-directory)
+- [Build](#build---prefix-prefix---runtime-pathtohecruntime---data-pathtodatarepo)
+- [Show](#show-prmname-prmname-)
+- [List](#list-prmname-prmname-)
+- [Show Build](#showbuild-prmname)
 
 ### crawl --data [directory]
 Test crawl a data directory.  Prints the errors, number for nodes/links and number of regions found.
