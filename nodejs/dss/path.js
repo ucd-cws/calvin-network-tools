@@ -60,12 +60,12 @@ function writeEAC(prmname, outputType) {
 }
 
 // write empty penalty function
-function writeEmptyPq() {
+function writeEmptyPq(outputType) {
   return utils.parts('PQ',{
     MO: 'ALL',
     B:'DUMMY',
     C:'BLANK'
-  });
+  }, outputType);
 }
 
 module.exports = {

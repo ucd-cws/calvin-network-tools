@@ -12,6 +12,7 @@ var crawler = require('../../crawler');
 var runtime = require('../lib/runtime');
 var costs = require('../../dss/cost');
 var prepare = require('../lib/prepare');
+var dummy = require('../../dss/dummy');
 
 var options;
 var args;
@@ -64,6 +65,9 @@ function onCrawlComplete(results){
 }
 
 function write(config, start, stop) {
+  // add dummy pd record
+  config.pd.data.push(dummy());
+
   var priPath = path.join(options.output || process.cwd(), options.prefix+'.pri');
 
   console.log('Writing PRI file: '+priPath);
