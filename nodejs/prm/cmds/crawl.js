@@ -3,12 +3,19 @@
 var crawler = require('../../crawler');
 
 module.exports = function(argv) {
-  if( argv._.length === 0 ) {
-    console.log('No path provided');
+  var path = '';
+  if( argv.d ) {
+    path = argv.d;
+  } else if( argv.data ) {
+    path = argv.data;
+  }
+
+  if( !path ) {
+    console.log('No data path provided');
     process.exit(-1);
   }
 
-  crawler(argv._[0], function(result){
+  crawler(path, function(result){
     console.log('*********');
     console.log('Regions: '+result.regions.length);
     console.log('Nodes/Links: '+result.nodes.length);

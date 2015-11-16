@@ -3,9 +3,12 @@ var sprintf = require('sprintf-js').sprintf;
 var header = require('./format/header');
 var utils = require('./format/utils');
 
-module.exports = function(pri) {
+module.exports = function(pri, showHeader) {
   var outputtext = '';
-  outputtext += header();
+
+  if( showHeader ) {
+    outputtext += header();
+  }
 
   outputtext += '..\n..        ***** NODE DEFINITIONS *****\n..';
   outputtext += pri.nodelist.length > 0 ? '\n'+pri.nodelist.join('\n..\n') : '';

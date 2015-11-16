@@ -18,9 +18,12 @@ if( noCommand ) {
 
 // check for link, we are using node module for link commands
 var cmd = argv._.splice(0, 1)[0];
-if( cmd === 'link' ) {
+if( cmd === 'show' ) {
   cmd = 'node';
-  argv.link = true;
+  argv.show = true;
+} else if( cmd === 'list' ) {
+  cmd = 'node';
+  argv.list = true;
 }
 
 // load config file

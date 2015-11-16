@@ -51,42 +51,35 @@ do so with --config [path/to/config/file] parameter.
 
 ## Commands
 
-### crawl [directory]
+### crawl --data [directory]
 Test crawl a data directory.  Prints the errors, number for nodes/links and number of regions found.
 
-### build [prefix] --runtime [/path/to/hec/runtime] --data [/path/to/data/repo]
+### build --prefix [prefix] --runtime [/path/to/hec/runtime] --data [/path/to/data/repo]
 Write CSV file(s) to dss file.  Requires the Calvin HEC Runtime (see [releases](https://github.com/ucd-cws/calvin-network-data/releases) section)
 
 Example
 ```
-node prm build out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
+node prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
  ```
 
 Optionally you can add *--verbose* to dump the hec-dss libraries output.
 
-### node [show|list] [prmname] [prmname] ...
+### show [prmname] [prmname] ...
+Print a list of nodes as they are represented in the pri files.  You can pass 'ALL'
+to print all nodes/links.
 
-#### node show [prmname] [prmname]
-Print a list of nodes as they are represented in the pri files.
-
-#### node list
-Print all nodes.  Format:
+### list [prmname] [prmname] ...
+Print all nodes/link.  Format:
 prmname,/full/path/to/file
 
-### link [show|list] [prmname] [prmname] ...
+You can pass 'ALL' to print all nodes/links.
 
-#### link show [prmname] [prmname]
-Print a list of links as they are represented in the pri files.
-
-#### links list
-Print all links.  Format:
-prmname,/full/path/to/file
-
-### [pd|ts|ev] show [prmname]
+### showBuild [prmname]
 Print the JSON that will be passed to the DssWriter.  Optional flag *--showData*
 will print the csv file data as well.  Otherwise just the path is printed.
 
-### DSSVUE
+
+## DSSVUE
 
 You will most likely want to review your DSS files from time to time.  [HEC-DSSVue](http://www.hec.usace.army.mil/software/hec-dssvue/) is the most common software for that.  The download section of the [HEC-DSSVue](http://www.hec.usace.army.mil/software/hec-dssvue/) includes a windows and a linux version available for download.
 

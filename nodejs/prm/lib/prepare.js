@@ -30,7 +30,7 @@ function format(n, config) {
 }
 
 
-function pri(config) {
+function pri(config, showHeader) {
   /*var text = '..\n..        ***** NODE DEFINITIONS *****\n..';
   text += config.pri.nodelist.length > 0 ? '\n'+config.pri.nodelist.join('\n..\n') : '';
   text += '\n..\n..        ***** INFLOW DEFINITIONS *****\n..';
@@ -40,7 +40,7 @@ function pri(config) {
   text += '\n..\n..        ***** LINK DEFINITIONS *****\n..';
   text += config.pri.linklist.length > 0 ? '\n'+config.pri.linklist.join('\n..\n') : '';
   return text;*/
-  return createPri(config.pri);
+  return createPri(config.pri, showHeader);
 }
 
 function init() {

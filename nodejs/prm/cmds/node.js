@@ -17,34 +17,25 @@ module.exports = function(argv) {
     process.exit(-1);
   }
 
-  var cmd = argv._.splice(0,1)[0];
-  if( cmd  === 'show' ) {
+  if( argv.show ) {
     show(argv._, argv.data);
-  } else if( cmd === 'list' ) {
-    list(argv.link, argv.data);
-  } else {
-    console.log('Unknown node command: '+cmd);
-    process.exit(-1);
+  } else if( argv.list ) {
+    list(argv._, argv.data);
   }
 };
 
-function list(link, datapath) {
+function list(nodes, datapath) {
+  for (var i = 0 ; i < nodes.length; i++) {
+    nodes[i] = nodes[i].toUpperCase();
+  }
+
   crawler(datapath, {parseCsv : false}, function(results){
     var i, node;
 
-    if( link ) {
-      for( i = 0; i < results.nodes.length; i++ ) {
-        node = results.nodes[i];
-        if( node.properties.type === 'Diversion' || node.properties.type === 'Return Flow'  ) {
-          console.log(node.properties.prmname+','+path.join(datapath, node.properties.repo.dir));
-        }
-      }
-    } else {
-      for( i = 0; i < results.nodes.length; i++ ) {
-        node = results.nodes[i];
-        if( node.properties.type !== 'Diversion' && node.properties.type !== 'Return Flow'  ) {
-          console.log(node.properties.prmname+','+path.join(datapath, node.properties.repo.dir));
-        }
+    for( i = 0; i < results.nodes.length; i++ ) {
+      node = results.nodes[i];
+      if( nodes[0] === '' || nodes[0] === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
+        console.log(node.properties.prmname+','+path.join(datapath, node.properties.repo.dir));
       }
     }
 
@@ -67,6 +58,6 @@ function show(nodes, datapath) {
       }
     }
 
-    console.log(prepare.pri(config));
+    console.log(prepare.pri(config, false));
   });
 }
