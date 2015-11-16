@@ -27,11 +27,44 @@ function onCrawlComplete(results){
   var config = prepare.init();
   config.pd.path = path.join(options.output || process.cwd(), options.prefix+'PD.dss');
   config.ts.path = path.join(options.output || process.cwd(), options.prefix+'TS.dss');
-  var priPath = path.join(options.output || process.cwd(), options.prefix+'.pri');
 
-  for( var i = 0; i < results.nodes.length; i++ ) {
-    prepare.format(results.nodes[i], config);
+
+  var start, stop;
+  if( args.start && args.stop ) {
+    start = toDate(args.start);
+    stop = toDate(args.stop);
   }
+
+  async.eachSeries(
+    results.nodes,
+    function(node, next){
+      // update initial and ending storage if start and stop provided
+      if( node.properties.type === 'Surface Storage' && node.properties.storage && start && stop) {
+
+        parse(fs.readFileSync(node.properties.storage, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
+          trimDates(data, start, stop);
+
+          if( data.length > 1 ){
+            node.properties.initialstorage = parseFloat(data[1][1]);
+            node.properties.endingstorage = parseFloat(data[data.length-1][1]);
+          }
+
+          prepare.format(node, config);
+          next();
+        });
+      } else {
+        prepare.format(node, config);
+        next();
+      }
+    },
+    function(err) {
+      write(config, start, stop);
+    }
+  );
+}
+
+function write(config, start, stop) {
+  var priPath = path.join(options.output || process.cwd(), options.prefix+'.pri');
 
   console.log('Writing PRI file: '+priPath);
   fs.writeFileSync(priPath, prepare.pri(config));
@@ -40,8 +73,8 @@ function onCrawlComplete(results){
 
   writeDssFile(config.pd, function(err, resp){
 
-    if( args.start && args.stop ) {
-      trimTsData(args, config.ts, function(ts, tmpDir){
+    if( start && stop ) {
+      trimTsData(start, stop, config.ts, function(ts, tmpDir){
         writeTsDssFile(config.ts, function(){
           cleanTmpDir(tmpDir, function(){
             console.log('Done.');
@@ -55,11 +88,9 @@ function onCrawlComplete(results){
   });
 }
 
-function trimTsData(args, ts, callback) {
-  var start = toDate(args.start);
-  var end = toDate(args.stop);
 
-  console.log('Trimming ts data: '+start.toLocaleDateString()+' to '+end.toLocaleDateString());
+function trimTsData(start, stop, ts, callback) {
+  console.log('Trimming ts data: '+start.toLocaleDateString()+' to '+stop.toLocaleDateString());
 
   var dir = path.join(process.cwd(), 'tmp');
   cleanTmpDir(dir, function(){
@@ -70,7 +101,7 @@ function trimTsData(args, ts, callback) {
       function(node, next) {
 
         parse(fs.readFileSync(node.csvFilePath, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
-          trimDates(start, end, data);
+          trimDates(start, stop, data);
 
           var uid = uuid.v1();
           var newFilePath = path.join(dir, uid+'.csv');
