@@ -3,6 +3,7 @@
 var header = require('../../pri/format/header');
 var link = require('../../pri/format/link');
 var node = require('../../pri/format/node');
+var createPri = require('../../pri/create');
 var costs = require('../../dss/cost');
 var sprintf = require('sprintf-js').sprintf;
 
@@ -30,7 +31,7 @@ function format(n, config) {
 
 
 function pri(config) {
-  var text = '..\n..        ***** NODE DEFINITIONS *****\n..';
+  /*var text = '..\n..        ***** NODE DEFINITIONS *****\n..';
   text += config.pri.nodelist.length > 0 ? '\n'+config.pri.nodelist.join('\n..\n') : '';
   text += '\n..\n..        ***** INFLOW DEFINITIONS *****\n..';
   text += config.pri.inflowlist.length > 0 ? '\n'+config.pri.inflowlist.join('\n..\n') : '';
@@ -38,7 +39,8 @@ function pri(config) {
   text += config.pri.rstolist.length > 0 ? '\n'+config.pri.rstolist.join('\n..\n') : '';
   text += '\n..\n..        ***** LINK DEFINITIONS *****\n..';
   text += config.pri.linklist.length > 0 ? '\n'+config.pri.linklist.join('\n..\n') : '';
-  return text;
+  return text;*/
+  return createPri(config.pri);
 }
 
 function init() {

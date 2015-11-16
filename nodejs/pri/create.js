@@ -5,19 +5,16 @@ var utils = require('./format/utils');
 
 module.exports = function(pri) {
   var outputtext = '';
-  outputtext += pri.header();
+  outputtext += header();
 
-  outputtext += '..        ***** NODE DEFINITIONS *****';
-  outputtext += pri.nodelist.join('\n..\n');
-
-  outputtext += '..        ***** STORAGE DEFINITIONS *****';
-  outputtext += pri.storlist.join('\n..\n');
-
-  outputtext += '..        ***** STORAGE LINK DEFINITIONS *****\n';
-  outputtext += pri.rtsolist.join('\n..\n');
-
-  outputtext += '..        ***** INFLOW DEFINITIONS *****\n';
-  outputtext += pri.rtsolist.join('\n..\n');
+  outputtext += '..\n..        ***** NODE DEFINITIONS *****\n..';
+  outputtext += pri.nodelist.length > 0 ? '\n'+pri.nodelist.join('\n..\n') : '';
+  outputtext += '\n..\n..        ***** INFLOW DEFINITIONS *****\n..';
+  outputtext += pri.inflowlist.length > 0 ? '\n'+pri.inflowlist.join('\n..\n') : '';
+  outputtext += '\n..\n..        ***** STORAGE LINK DEFINITIONS *****\n..';
+  outputtext += pri.rstolist.length > 0 ? '\n'+pri.rstolist.join('\n..\n') : '';
+  outputtext += '\n..\n..        ***** LINK DEFINITIONS *****\n..';
+  outputtext += pri.linklist.length > 0 ? '\n'+pri.linklist.join('\n..\n') : '';
 
   return outputtext;
 };

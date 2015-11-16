@@ -36,6 +36,16 @@ function readNodes(dir, nodes, gitInfo, parseCsvData, callback) {
         var d = fs.readFileSync(dir+'/'+file, 'utf-8').replace(/[\r\n]/g,'');
         d = JSON.parse(d);
 
+        // check prmname
+        if( !d.properties ) {
+          d.properties = {};
+        }
+        if( !d.properties.prmname ) {
+          console.log('  --Invalid PRMNAME: '+file+' has no prmname');
+        } else if( !d.properties.prmname.length > 10  ) {
+          console.log('  --Invalid PRMNAME: '+file+' has no prmname greater than 10 character: '+d.properties.prmname);
+        }
+
         // ignore feature collections for now
         if( d.type === 'FeatureCollection' ) {
           if( global.debug ) {

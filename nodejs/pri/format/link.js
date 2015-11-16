@@ -3,6 +3,7 @@
 var sprintf = require('sprintf-js').sprintf;
 var utils = require('./utils');
 var fs = require('fs');
+var extend = require('extend');
 var dss = require('../../dss');
 
 // from page 58 of manual
@@ -41,9 +42,32 @@ function writeLink(config, np, type) {
   var inf = '';
   var cost = '', lowerBound = '', upperBound = '', constantBound = '';
 
+
   var prmname = np.prmname;
   if( np.type === 'Surface Storage' ) {
     prmname = prmname+'_'+prmname;
+  }
+
+  // do we have sinks, if so, loop in
+  if( np.sinks ) {
+
+    for( var i = 0; i < np.sinks.length; i++ ) {
+      for( var name in np.sinks[i] ) {
+        var sinkPrmname = np.prmname;
+        if( np.terminus ) sinkPrmname = np.terminus;
+
+        var sink = extend(true, {}, np.sinks[i][name]);
+        sink.prmname = sinkPrmname+'-SINK';
+        sink.type = 'Return Flow';
+        if( sink.amplitude === undefined ) {
+          sink.amplitude = 1;
+        }
+        sink.origin = sinkPrmname;
+        sink.terminus = 'SINK';
+
+        writeLink(config, sink, 'DIVR');
+      }
+    }
   }
 
   // do we have bounds

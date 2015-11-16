@@ -24,6 +24,7 @@
     "async": "^1.4.2",
     "csv-parse": "^1.0.0",
     "csv-stringify": "0.0.8",
+    "extend": "^3.0.0",
     "globby": "^2.1.0",
     "minimist": "^1.2.0",
     "node-getopt": "^0.2.3",
