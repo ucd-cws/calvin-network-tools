@@ -19,9 +19,9 @@ module.exports = function(argv) {
 
 function onCrawlComplete(results){
   var config = prepare.init();
-  config.pd.path = path.join(options.output || getUserHome(), options.prefix+'PD.dss');
-  config.ts.path = path.join(options.output || getUserHome(), options.prefix+'TS.dss');
-  var priPath = path.join(options.output || getUserHome(), options.prefix+'.pri');
+  config.pd.path = path.join(options.output || process.cwd(), options.prefix+'PD.dss');
+  config.ts.path = path.join(options.output || process.cwd(), options.prefix+'TS.dss');
+  var priPath = path.join(options.output || process.cwd(), options.prefix+'.pri');
 
   for( var i = 0; i < results.nodes.length; i++ ) {
     prepare.format(results.nodes[i], config);

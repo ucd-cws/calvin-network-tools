@@ -6,7 +6,20 @@ The HEC-PRM code is distributed as a windows binary.   Further, HEC-PRM uses DSS
 
 ## Requirements
 
-### All Systems
+
+### Calvin HEC Runtime
+
+[Download the HEC Runtime](https://github.com/ucd-cws/calvin-network-data/releases)
+
+For your convenience and to reduce pain and suffering, we have created a
+package with all required libraries to run the prm tool minus NodeJS (and wine).
+The package can be found [here](https://github.com/ucd-cws/calvin-network-data/releases) in the releases section.
+
+Currently this runtime is REQUIRED to run the **build** command.  You need to
+download and unzip the package.  Then specify the path to the unzipped folder in **build** using the *--runtime* flag.
+
+
+#### The Runtime contains:
 - [NodeJS](http://nodejs.org)
   - use apt-get or install from website
 - [Java 32-Bit](http://java.com/en/download/manual.jsp)
@@ -14,23 +27,16 @@ The HEC-PRM code is distributed as a windows binary.   Further, HEC-PRM uses DSS
   - The required jars are bundled with HEC-DSSVUE
   - /path/to/install/dir/HEC/HEC-DSSVue/lib;
 
-These requirements have been bundled into a [windows runtime](#calvin-hec-runtime).  The command
-line tool will automatically run the java code via wine in OS X and Linux.  So make sure you
-have wine installed if you are not using windows.
 
 ### Linux / OS X
+
+To use the Calvin HEC Runtime, wine is required for Linux and OS X.
+
 - [wine](https://www.winehq.org/)
   - Linux: use apt-get or other package manager
   - OS X: use [homebrew](http://brew.sh/)
     - brew install wine
 
-### Calvin HEC Runtime
-For your convenience and to reduce pain and suffering, we have created a
-package with all required libraries to run the prm tool minus NodeJS (and wine).
-The package can be found [here](https://github.com/ucd-cws/calvin-network-data/releases) in the releases section.
-
-Currently this runtime is REQUIRED to run the **build** command.  You need to
-download and unzip the package.  Then specify the path to the unzipped folder in **build** using the *--runtime* flag.
 
 ## Install Node Modules
 ```
@@ -62,7 +68,20 @@ Example
 node prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
  ```
 
+By default to files will be created in your current working directory.  If you would like
+to specify the path to create the files, use the *--output* flag.
+
+
+#### Debug build
+
+##### --verbose
 Optionally you can add *--verbose* to dump the hec-dss libraries output.
+
+##### --debugRuntime
+The PRM NodeJS code uses a json file to pass information to the dssWriter jar file.
+Normally this file is removed after the jar is finished executing.  To debug to this file,
+you can specify *--debugRuntime* and the file will not be removed after execution.
+
 
 ### show [prmname] [prmname] ...
 Print a list of nodes as they are represented in the pri files.  You can pass 'ALL'
