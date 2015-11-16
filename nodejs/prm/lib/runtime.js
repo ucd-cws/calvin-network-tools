@@ -13,9 +13,9 @@ var exec = require('child_process').exec;
 // by the jar and parsed using the jackson lib.
 var PARAMS_TMP_FILE = '.dssWriterParams';
 
-module.exports = function(lib, params, keep, callback) {
-  if( typeof keep === 'function' ) {
-    callback = keep;
+module.exports = function(lib, params, options, callback) {
+  if( typeof options === 'function' ) {
+    callback = options;
   }
 
   // create tmp file in current working directory
@@ -35,10 +35,15 @@ module.exports = function(lib, params, keep, callback) {
   var cwd = path.join(lib, 'jre', 'bin');
 
   // run
+  if( options.verbose ) {
+    console.log(cwd);
+    console.log(cmd);
+  }
+
   exec(cmd, {maxBuffer: 1024 * 500, cwd: cwd},
     function (error, stdout, stderr) {
       // first thing after program runs, remove the tmp file
-      if( keep !== true ) {
+      if( options.keep !== true ) {
         fs.unlinkSync(paramFile);
       }
 

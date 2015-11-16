@@ -41,7 +41,15 @@ function onCrawlComplete(results){
 }
 
 function writeDssFile(dss, callback) {
-  runtime(args.runtime, dss, args.debugRuntime, function(err, resp){
+  var options = {};
+  if( args.debugRuntime ) {
+    args.keep = true;
+  }
+  if( args.verbose ) {
+    args.verbose = true;
+  }
+
+  runtime(args.runtime, dss, args, function(err, resp){
     if( err ) {
       console.log('ERROR: writing to dss file.');
       console.log(err);
