@@ -57,6 +57,8 @@ do so with --config [path/to/config/file] parameter.
 
 ## Commands
 
+- [Crawl](crawl --data [directory])
+
 ### crawl --data [directory]
 Test crawl a data directory.  Prints the errors, number for nodes/links and number of regions found.
 
