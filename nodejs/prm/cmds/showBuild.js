@@ -5,6 +5,7 @@ var parse = require('csv-parse');
 var prepare = require('../lib/prepare');
 var async = require('async');
 var fs = require('fs');
+var date = require('./date');
 
 module.exports = function(argv) {
   if( argv._.length === 0 ) {
@@ -28,9 +29,9 @@ module.exports = function(argv) {
   var config = prepare.init();
   crawler(data, {parseCsv : false}, function(results){
     for( var i = 0; i < results.nodes.length; i++ ) {
-      if( results.nodes[i].properties.prmname === prmname ) {
+      if( results.nodes[i].properties.prmname.toUpperCase() === prmname.toUpperCase() ) {
         prepare.format(results.nodes[i], config);
-        print(config, argv.showData);
+        print(config, argv);
         return;
       }
     }
@@ -39,7 +40,7 @@ module.exports = function(argv) {
   });
 };
 
-function print(config, showData) {
+function print(config, argv) {
   console.log('*** Time Series ***');
   var csvFiles = [];
   for( var i = 0; i < config.ts.data.length; i++ ) {
@@ -52,8 +53,14 @@ function print(config, showData) {
     csvFiles.push(config.pd.data[i].csvFilePath);
   }
 
-  if( !showData ) {
+  if( !argv.showData ) {
     return;
+  }
+
+  var start, stop;
+  if( argv.start && argv.stop ) {
+    start = date.toDate(argv.start);
+    stop = date.toDate(argv.stop);
   }
 
   async.eachSeries(
@@ -65,6 +72,10 @@ function print(config, showData) {
       }
 
       parse(fs.readFileSync(file, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
+        if( start && stop ) {
+          date.trim(start, stop, data);
+        }
+
         console.log(data);
         next();
       });
