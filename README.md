@@ -3,17 +3,31 @@
 The ```prm``` command line tool allows users to prepare their calvin-network-data for running the HEC-PRM model code.
 The HEC-PRM code is distributed as a windows binary.   Further, HEC-PRM uses DSS formatted files as input.  We use the DSSVUE software to transfer data into and out of the DSS format.  While, DSSVue is written in JAVA, precompiled libraries for this package only work in the Windows environment.  For these two reasons, if you are running this software on MacOS or Linux, you will need to run a Windows emulator, like wine.
 
+## Quick Start
+
+Make sure you have pulled the [data repo](https://github.com/ucd-cws/calvin-network-data).
+
+Then pull this repo and run:
+```
+npm run init
+```
+
+This will:
+ - install npm dependencies
+ - pull and extract the runtime
+ - setup the .prmconf file with runtime and data repo locations
+
 
 ## Requirements
 
 
 ### Calvin HEC Runtime
 
-[Download the HEC Runtime](https://github.com/ucd-cws/calvin-network-data/releases)
+[Download the HEC Runtime](https://github.com/ucd-cws/calvin-network-tools/releases)
 
 For your convenience and to reduce pain and suffering, we have created a
 package with all required libraries to run the prm tool minus NodeJS (and wine).
-The package can be found [here](https://github.com/ucd-cws/calvin-network-data/releases) in the releases section.
+The package can be found [here](https://github.com/ucd-cws/calvin-network-tools/releases) in the releases section.
 
 Currently this runtime is REQUIRED to run the **build** command.  You need to
 download and unzip the package.  Then specify the path to the unzipped folder in **build** using the *--runtime* flag.
@@ -68,7 +82,7 @@ do so with --config [path/to/config/file] parameter.
 Test crawl a data directory.  Prints the errors, number for nodes/links and number of regions found.
 
 ### build --prefix [prefix] --runtime [/path/to/hec/runtime] --data [/path/to/data/repo]
-Write CSV file(s) to dss file.  Requires the Calvin HEC Runtime (see [releases](https://github.com/ucd-cws/calvin-network-data/releases) section)
+Write CSV file(s) to dss file.  Requires the Calvin HEC Runtime (see [releases](https://github.com/ucd-cws/calvin-network-tools/releases) section)
 
 Example
 ```
