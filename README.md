@@ -62,6 +62,7 @@ do so with --config [path/to/config/file] parameter.
 - [Show](#show-prmname-prmname-)
 - [List](#list-prmname-prmname-)
 - [Show Build](#showbuild-prmname)
+- [Apply Excel Changes](#excel--x-path)
 
 ### crawl --data [directory]
 Test crawl a data directory.  Prints the errors, number for nodes/links and number of regions found.
@@ -110,6 +111,17 @@ You can pass 'ALL' to print all nodes/links.
 ### showBuild [prmname]
 Print the JSON that will be passed to the DssWriter.  Optional flag *--showData*
 will print the csv file data as well.  Otherwise just the path is printed.
+
+### excel -x [path]
+
+Using the [Calvin Network App](http://cwn.casil.ucdavis.edu/) (repo [here](https://github.com/ucd-cws/calvin-network-app)),
+you can download all tabular data for a node/link in a single excel file using the
+'Download Excel Data File' button. ex: [http://cwn.casil.ucdavis.edu/#info/SR_CLE-D94](http://cwn.casil.ucdavis.edu/#info/SR_CLE-D94).
+
+Using this file you can make modifications to the underlying data for a node.  Once you are ready to
+apply those modifications back to the [data repo](https://github.com/ucd-cws/calvin-network-data),
+you simply run this command passing the path to the excel file.  You should be able to use *git*
+to make sure all changes were apply correctly to the data repo.
 
 
 ## DSSVUE
