@@ -41,12 +41,15 @@ function writeLink(config, np, type) {
   var eac = '';
   var inf = '';
   var cost = '', lowerBound = '', upperBound = '', constantBound = '';
+//  var surface_node;
 
 
   var prmname = np.prmname;
-  if( np.type === 'Surface Storage' ) {
-    prmname = prmname+'_'+prmname;
-  }
+// Usually just name
+//  if( np.type === 'Surface Storage' ) {
+//    surface_node=prmname;
+//    prmname = prmname+'-'+prmname;
+//  }
 
   // do we have sinks, if so, loop in
   if( np.sinks ) {
@@ -91,9 +94,9 @@ function writeLink(config, np, type) {
       } else if( bound.type === 'EQC' ) {
         constantBound = bound.bound.toFixed(4);
       } else if( bound.type === 'UBM' ) {
-        b += writeMonthlyBound('UB', bound)+'\n';
+        b += writeMonthlyBound('BU', bound)+'\n';
       } else if( bound.type === 'LBM' ) {
-        b += writeMonthlyBound('LB', bound)+'\n';
+        b += writeMonthlyBound('BL', bound)+'\n';
       } else if( bound.type === 'UBT' ) {
         if( !fs.existsSync(bound.bound) ) {
           console.log('File not found, ignoring: '+bound.bound);
@@ -124,7 +127,7 @@ function writeLink(config, np, type) {
         }
 
         // set pri path
-        pq += dss.path.monthlyPq(month, prmname)+'\n';
+        pq += dss.path.monthlyPq(prmname, month)+'\n';
         // set dss writer json object
         config.pd.data.push(dss.cost(prmname, month, np.costs.costs[month]));
       }
@@ -185,7 +188,7 @@ function writeLink(config, np, type) {
   }
 
   if( np.type === 'Surface Storage' ) {
-    link = sprintf(LINK_FORMAT, 'LINK', '', 'RSTO', prmname, prmname, amplitude, cost, lowerBound, upperBound, constantBound)+'\n';
+    link = sprintf(LINK_FORMAT, 'LINK', '', 'RSTO', prmname, prmname, amplitude.toFixed(3), cost, lowerBound, upperBound, constantBound)+'\n';
     link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
     link += b;
     link += ev;
@@ -211,7 +214,7 @@ function writeMonthlyBound(type, bound) {
 }
 
 function writeIn(prmname, name, description) {
-  var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFLOW', 'SOURCE', prmname, 1, 0, '', '', '')+'\n';
+  var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFLOW', 'SOURCE', prmname, '1.000', '0.000', '', '', '')+'\n';
   inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
   inf += dss.path.in(prmname, name)+'\n';
   return inf;

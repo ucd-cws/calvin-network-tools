@@ -30,7 +30,8 @@ function writeMonthlyPq(prmname, month, outputType) {
   return utils.parts('PQ',{
     MO : month,
     B : prmname,
-    C : 'Q(K$-KAF)',
+    C : 'Q(KAF)-P_EDT',
+//    C : 'Q(K$-KAF)',
     E : month
   }, outputType);
 }
