@@ -13,6 +13,7 @@ var runtime = require('../lib/runtime');
 var costs = require('../../dss/cost');
 var prepare = require('../lib/prepare');
 var dummy = require('../../dss/dummy');
+var updateStorage = require('../lib/updateStorage');
 
 var options;
 var args;
@@ -32,36 +33,16 @@ function onCrawlComplete(results){
 
   var start, stop;
   if( args.start && args.stop ) {
-    start = toDate(args.start);
-    stop = toDate(args.stop);
+
   }
 
-  async.eachSeries(
-    results.nodes,
-    function(node, next){
-      // update initial and ending storage if start and stop provided
-      if( node.properties.type === 'Surface Storage' && node.properties.storage && start && stop) {
-
-        parse(fs.readFileSync(node.properties.storage, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
-          trimDates(data, start, stop);
-
-          if( data.length > 1 ){
-            node.properties.initialstorage = parseFloat(data[1][1]);
-            node.properties.endingstorage = parseFloat(data[data.length-1][1]);
-          }
-
-          prepare.format(node, config);
-          next();
-        });
-      } else {
-        prepare.format(node, config);
-        next();
-      }
-    },
-    function(err) {
-      write(config, start, stop);
+  updateStorage(args.start, args.stop, results.nodes, function(){
+    for( var i = 0; i < results.nodes.length; i++ ) {
+      prepare.format(results.nodes[i], config);
     }
-  );
+
+    write(config, start, stop);
+  });
 }
 
 function write(config, start, stop) {
@@ -129,26 +110,14 @@ function trimTsData(start, stop, ts, callback) {
   });
 }
 
-function trimDates(start, stop, data) {
-  var i, date;
-  for( i = data.length-1; i >= 1; i-- ) {
-    date = toDate(data[i][0]).getTime();
-    if( start.getTime() > date || stop.getTime() < date ) {
-      data.splice(i, 1);
-    }
-  }
-}
-
-function toDate(dateStr) {
-  var parts = dateStr.split('-');
-  return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parts.length > 2 ? parseInt(parts[2]) : 1);
-}
-
 function writeTsDssFile(tsConfig, callback) {
   console.log('Writing TimeSeries DSS file: '+tsConfig.path);
   writeDssFile(tsConfig, function(err, resp){
-    if( callback ) callback();
-    else console.log('Done.');
+    if( callback ) {
+      callback();
+    } else {
+      console.log('Done.');
+    }
   });
 }
 

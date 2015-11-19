@@ -23,5 +23,5 @@ module.exports = function() {
 
   // Not sure
   header.push(sprintf('%-8.8s  %-70.70s','ZWFRQ',zwfrq.join(' ')));
-  return header.join('\n');
+  return header.join('\n')+'\n';
 };

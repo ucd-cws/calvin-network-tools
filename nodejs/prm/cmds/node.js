@@ -1,6 +1,6 @@
 'use strict';
 
-//var writeInflow = require('../../pri/lib/writeInflow');
+var updateStorage = require('../lib/updateStorage');
 var crawler = require('../../crawler');
 var prepare = require('../lib/prepare');
 var link = require('../../pri/format/link');
@@ -18,7 +18,7 @@ module.exports = function(argv) {
   }
 
   if( argv.show ) {
-    show(argv._, argv.data);
+    show(argv._, argv);
   } else if( argv.list ) {
     list(argv._, argv.data);
   }
@@ -35,29 +35,35 @@ function list(nodes, datapath) {
     for( i = 0; i < results.nodes.length; i++ ) {
       node = results.nodes[i];
       if( nodes[0] === '' || nodes[0] === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
-        console.log(node.properties.prmname+','+path.join(datapath, node.properties.repo.dir));
       }
     }
 
   });
 }
 
-function show(nodes, datapath) {
+function show(nodes, argv) {
   for (var i = 0 ; i < nodes.length; i++) {
     nodes[i] = nodes[i].toUpperCase();
   }
 
   var config = prepare.init();
-  crawler(datapath, {parseCsv : false}, function(results){
+  crawler(argv.data, {parseCsv : false}, function(results){
     var node, i;
+    var list = [];
 
     for( i = 0; i < results.nodes.length; i++ ) {
       node = results.nodes[i];
       if( nodes[0] === '' || nodes[0] === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
-        prepare.format(node, config);
+        list.push(node);
       }
     }
 
-    console.log(prepare.pri(config, false));
+    updateStorage(argv.start, argv.stop, list, function(){
+      for( var i = 0; i < list.length; i++ ) {
+        prepare.format(list[i], config);
+      }
+
+      console.log(prepare.pri(config, false));
+    });
   });
 }
