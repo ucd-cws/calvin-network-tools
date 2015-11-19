@@ -20,6 +20,8 @@ This will:
 
 ## Requirements
 
+- [NodeJS](http://nodejs.org)
+  - use apt-get (linux) or install from website
 
 ### Calvin HEC Runtime
 
@@ -34,12 +36,14 @@ download and unzip the package.  Then specify the path to the unzipped folder in
 
 
 #### The Runtime contains:
-- [NodeJS](http://nodejs.org)
-  - use apt-get or install from website
+
 - [Java 32-Bit](http://java.com/en/download/manual.jsp)
 - [HecDss Java Library](http://www.hec.usace.army.mil/software/hec-dssvue/)
   - The required jars are bundled with HEC-DSSVUE
-  - /path/to/install/dir/HEC/HEC-DSSVue/lib;
+  - jars are found in /path/to/install/dir/HEC/HEC-DSSVue/lib;
+- DssWriter.jar
+ - Custom csv to paired/timeseries data DSS writer java code
+- HecPrm Executable
 
 
 ### Linux / OS X
@@ -53,6 +57,9 @@ To use the Calvin HEC Runtime, wine is required for Linux and OS X.
 
 
 ## Install Node Modules
+
+The quick start command above will do this as well.
+
 ```
 cd /path/to/repo && npm install
 ```
@@ -68,6 +75,8 @@ All arguments for prm commands can be passed via command line parameter or store
 This file should be stored in your accounts home directory be default.  If you
 wish to supply a config file that is not located in your home directory, you can
 do so with --config [path/to/config/file] parameter.
+
+Again, the quick start command above will configure this file for you.
 
 ## Commands
 
