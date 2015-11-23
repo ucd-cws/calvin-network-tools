@@ -158,7 +158,7 @@ function writeLink(config, np, type) {
         continue;
       }
 
-      config.pri.inflowlist.push(writeIn(prmname, name));
+      config.pri.inflowlist.push(writeIn(prmname, name, np.description));
 
       // set dss writer json object
       config.ts.data.push(dss.inflow(prmname, name, np.inflows[name].inflow));
@@ -214,8 +214,8 @@ function writeMonthlyBound(type, bound) {
 }
 
 function writeIn(prmname, name, description) {
-  var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFLOW', 'SOURCE', prmname, '1.000', '0.000', '', '', '')+'\n';
+  var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFL', 'SOURCE', prmname, '1.000', '0.000', '', '', '')+'\n';
   inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
-  inf += dss.path.in(prmname, name)+'\n';
+  inf += dss.path.in(prmname, name);
   return inf;
 }
