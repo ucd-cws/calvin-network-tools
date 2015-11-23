@@ -4,3 +4,4 @@ node_modules
 *.pri
 *.dss
 .dssWriterParams
+dssWriter.jar
