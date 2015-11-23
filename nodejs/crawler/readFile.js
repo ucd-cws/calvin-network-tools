@@ -40,7 +40,7 @@ function parseInts(data) {
   for( var i = 0; i < data.length; i++ ) {
     for( var j = 0; j < data[i].length; j++ ) {
       if( data[i][j].match(/^-?\d+\.?\d*$/) || data[i][j].match(/^-?\d*\.\d+$/) ) {
-        var t = parseFloat(data[i][j]);
+        var t = Number(data[i][j]);
         if( !isNaN(t) ) {
           data[i][j] = t;
         }
