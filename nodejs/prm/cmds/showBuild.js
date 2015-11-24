@@ -26,11 +26,18 @@ module.exports = function(argv) {
     process.exit(-1);
   }
 
+  var o = {};
+  if( argv['no-initialize'] ) {
+    o.initialize = false;
+  } else {
+    o.initialize = argv.initialize !== undefined ? argv.initialize : 'init';
+  }
+
   var config = prepare.init();
   crawler(data, {parseCsv : false}, function(results){
     for( var i = 0; i < results.nodes.length; i++ ) {
       if( results.nodes[i].properties.prmname.toUpperCase() === prmname.toUpperCase() ) {
-        prepare.format(results.nodes[i], config);
+        prepare.format(results.nodes[i], config, o);
         print(config, argv);
         return;
       }
@@ -60,7 +67,7 @@ function print(config, argv) {
   var start, stop;
   if( argv.start && argv.stop ) {
     start = date.toDate(argv.start);
-    stop = date.toDate(argv.stop);
+    stop = date.toDate(argv.stop, true);
   }
 
   async.eachSeries(

@@ -1,6 +1,5 @@
 'use strict';
 
-var fs = require('fs');
 var path = require('./path');
 
 module.exports = function(prmname, a, file) {
@@ -8,10 +7,10 @@ module.exports = function(prmname, a, file) {
   return {
     csvFilePath : file,
     type : 'timeseries',
-    parameter : 'FLOW_DIV(KAF)',
+    parameter : 'STOR',
     location : prmname,
     units : 'KAF',
     xtype : 'PER-AVER',
-    path : path.flow(prmname, a, 'dss')
+    path : path.store(prmname, a, 'dss')
   };
 };

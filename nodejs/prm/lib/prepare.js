@@ -19,14 +19,14 @@ function all(nodes) {
   return config;
 }
 
-function format(n, config) {
+function format(n, config, options) {
   var np = n.properties;
 
   if( np.type !== 'Diversion' && np.type !== 'Return Flow' ) {
     config.pri.nodelist.push(node(np));
   }
 
-  link(config, n);
+  link(config, n, options);
 }
 
 

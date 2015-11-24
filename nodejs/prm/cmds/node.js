@@ -42,6 +42,13 @@ function list(nodes, datapath) {
 }
 
 function show(nodes, argv) {
+  var o = {};
+  if( argv['no-initialize'] ) {
+    o.initialize = false;
+  } else {
+    o.initialize = argv.initialize !== undefined ? argv.initialize : 'init';
+  }
+
   for (var i = 0 ; i < nodes.length; i++) {
     nodes[i] = nodes[i].toUpperCase();
   }
@@ -60,7 +67,7 @@ function show(nodes, argv) {
 
     updateStorage(argv.start, argv.stop, list, function(){
       for( var i = 0; i < list.length; i++ ) {
-        prepare.format(list[i], config);
+        prepare.format(list[i], config, o);
       }
 
       console.log(prepare.pri(config, false));

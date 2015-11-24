@@ -8,6 +8,7 @@ var parse = require('csv-parse');
 var stringify = require('csv-stringify');
 var async = require('async');
 
+var date = require('./date');
 var crawler = require('../../crawler');
 var runtime = require('../lib/runtime');
 var costs = require('../../dss/cost');
@@ -30,15 +31,21 @@ function onCrawlComplete(results){
   config.pd.path = path.join(options.output || process.cwd(), options.prefix+'PD.dss');
   config.ts.path = path.join(options.output || process.cwd(), options.prefix+'TS.dss');
 
-
-  var start, stop;
+  var start, stop, init, o = {};
   if( args.start && args.stop ) {
+    start = date.toDate(args.start);
+    stop = date.toDate(args.stop, true);
+  }
 
+  if( args['no-initialize'] ) {
+    o.initialize = false;
+  } else {
+    o.initialize = args.initialize !== undefined ? args.initialize : 'init';
   }
 
   updateStorage(args.start, args.stop, results.nodes, function(){
     for( var i = 0; i < results.nodes.length; i++ ) {
-      prepare.format(results.nodes[i], config);
+      prepare.format(results.nodes[i], config, o);
     }
 
     write(config, start, stop);
@@ -55,7 +62,6 @@ function write(config, start, stop) {
   fs.writeFileSync(priPath, prepare.pri(config));
 
   console.log('Writing Penalty DSS file: '+config.pd.path);
-
   writeDssFile(config.pd, function(err, resp){
 
     if( start && stop ) {
@@ -86,7 +92,7 @@ function trimTsData(start, stop, ts, callback) {
       function(node, next) {
 
         parse(fs.readFileSync(node.csvFilePath, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
-          trimDates(start, stop, data);
+          date.trim(start, stop, data);
 
           var uid = uuid.v1();
           var newFilePath = path.join(dir, uid+'.csv');

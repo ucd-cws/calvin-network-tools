@@ -24,22 +24,25 @@ for( var i = 0; i < LINK_SPACING.length; i++ ) {
   LINK_FORMAT += '%-'+LINK_SPACING[i]+'.'+LINK_SPACING[i]+'s';
 }
 
-module.exports = function(config, node, type) {
+module.exports = function(config, node, options) {
   var np = node.properties;
-  writeLink(config, np, type || 'DIVR');
+  writeLink(config, np, options);
 };
 
-function writeLink(config, np, type) {
+function writeLink(config, np, options) {
   var amplitude = 1.0;
   if( np.amplitude !== undefined ) {
     amplitude = np.amplitude.toFixed(4);
   }
+
+  var type = options.type || 'DIVR';
 
   var pq = '';
   var b = '';
   var ev = '';
   var eac = '';
   var inf = '';
+  var qi = '';
   var cost = '', lowerBound = '', upperBound = '', constantBound = '';
 
 
@@ -62,7 +65,10 @@ function writeLink(config, np, type) {
         sink.origin = sinkPrmname;
         sink.terminus = 'SINK';
 
-        writeLink(config, sink, 'DIVR');
+        var o = extend(true, {}, options);
+        o.type = 'DIVR';
+
+        writeLink(config, sink, o);
       }
     }
   }
@@ -159,6 +165,18 @@ function writeLink(config, np, type) {
     }
   }
 
+  if( np.storage && options.initialize) {
+    qi = dss.path.store(prmname, options.initialize)+'\n';
+    // set dss writer json object
+    config.ts.data.push(dss.store(prmname, options.initialize, np.storage));
+  }
+
+  if( np.flow && options.initialize) {
+    qi = dss.path.flow(prmname, options.initialize)+'\n';
+    // set dss writer json object
+    config.ts.data.push(dss.flow(prmname, options.initialize, np.flow));
+  }
+
   if( np.evaporation ) {
     if( !fs.existsSync(np.evaporation) ) {
       console.log('File not found, ignoring: '+np.evaporation);
@@ -178,6 +196,7 @@ function writeLink(config, np, type) {
     link += ev;
     link += eac;
     link += pq;
+    link += qi;
     config.pri.linklist.push(link.replace(/\n$/,''));
   }
 
@@ -193,6 +212,7 @@ function writeLink(config, np, type) {
     link += ev;
     link += eac;
     link += pq;
+    link += qi;
     config.pri.rstolist.push(link.replace(/\n$/,''));
   }
 }

@@ -1,5 +1,7 @@
 'use strict';
 
+var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 function trimDates(start, stop, data) {
   var i, date;
   for( i = data.length-1; i >= 1; i-- ) {
@@ -10,9 +12,19 @@ function trimDates(start, stop, data) {
   }
 }
 
-function toDate(dateStr) {
+function toDate(dateStr, isStop) {
   var parts = dateStr.split('-');
-  return new Date(parseInt(parts[0]), parseInt(parts[1])-1, parts.length > 2 ? parseInt(parts[2]) : 1);
+
+  var day = parts.length > 2 ? parseInt(parts[2]) : 1;
+  if( isStop && parts.length <= 2) {
+    day = daysInMonth[parseInt(parts[1])-1];
+  }
+
+  return new Date(
+    parseInt(parts[0]),
+    parseInt(parts[1])-1,
+    day
+  );
 }
 
 module.exports = {

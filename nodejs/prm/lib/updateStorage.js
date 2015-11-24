@@ -11,7 +11,7 @@ module.exports = function(start, stop, nodes, callback) {
   }
 
   start = date.toDate(start);
-  stop = date.toDate(stop);
+  stop = date.toDate(stop, true);
 
   async.eachSeries(
     nodes,

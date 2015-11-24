@@ -18,14 +18,6 @@ function writeTimeBound(type, prmname, boundType, outputType) {
   //A=HEXT2014 B=SR-CMN_SR-CMN C=STOR_UBT(KAF) E=1MON F=CAMANCHE R FLOOD CAP
 }
 
-function writeFlow(prmname) {
-  return utils.parts('', {
-    B : prmname,
-    C : 'FLOW_LOSS(KAF)',
-    E : '1MON'
-  });
-}
-
 function writeMonthlyPq(prmname, month, outputType) {
   return utils.parts('PQ',{
     MO : month,
@@ -60,6 +52,24 @@ function writeEAC(prmname, outputType) {
   }, outputType);
 }
 
+function writeStore(prmname, a, outputType) {
+  return utils.parts('QI',{
+    A : a,
+    B : prmname,
+    C : 'STOR',
+    E : '1MON'
+  }, outputType);
+}
+
+function writeFlow(prmname, a, outputType) {
+  return utils.parts('QI', {
+    A : a,
+    B : prmname,
+    C : 'FLOW_DIV(KAF)',
+    E : '1MON'
+  }, outputType);
+}
+
 // write empty penalty function
 function writeEmptyPq(outputType) {
   return utils.parts('PQ',{
@@ -76,5 +86,6 @@ module.exports = {
   in : writeIn,
   evapo : writeEvapo,
   eac : writeEAC,
-  empty : writeEmptyPq
+  empty : writeEmptyPq,
+  store : writeStore
 };
