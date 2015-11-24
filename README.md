@@ -7,8 +7,17 @@ The HEC-PRM code is distributed as a windows binary.   Further, HEC-PRM uses DSS
 
 Make sure you have pulled the [data repo](https://github.com/ucd-cws/calvin-network-data).
 
-Then pull this repo and run:
-```
+Fastest way to a build.
+
+```bash
+# pull down data (you may have already done this)
+git clone https://github.com/ucd-cws/calvin-network-data
+
+# grab this repo
+git clone https://github.com/ucd-cws/calvin-network-tools
+
+# runs install, follow prompts.
+# will be asked for full path to data repo pulled above
 npm run init
 ```
 
