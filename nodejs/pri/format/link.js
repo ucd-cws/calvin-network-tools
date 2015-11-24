@@ -41,15 +41,9 @@ function writeLink(config, np, type) {
   var eac = '';
   var inf = '';
   var cost = '', lowerBound = '', upperBound = '', constantBound = '';
-//  var surface_node;
 
 
   var prmname = np.prmname;
-// Usually just name
-//  if( np.type === 'Surface Storage' ) {
-//    surface_node=prmname;
-//    prmname = prmname+'-'+prmname;
-//  }
 
   // do we have sinks, if so, loop in
   if( np.sinks ) {
@@ -187,7 +181,12 @@ function writeLink(config, np, type) {
     config.pri.linklist.push(link.replace(/\n$/,''));
   }
 
-  if( np.type === 'Surface Storage' ) {
+  if( np.type === 'Surface Storage' || np.type === 'Groundwater Storage' ) {
+    var t = Number(cost);
+    if( np.type === 'Groundwater Storage' && (t === 0 || isNaN(t)) ) {
+      pq = dss.path.empty()+'\n';
+    }
+
     link = sprintf(LINK_FORMAT, 'LINK', '', 'RSTO', prmname, prmname, amplitude.toFixed(3), cost, lowerBound, upperBound, constantBound)+'\n';
     link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
     link += b;
