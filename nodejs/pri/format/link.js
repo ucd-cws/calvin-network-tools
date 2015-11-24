@@ -127,7 +127,12 @@ function writeLink(config, np, options) {
         }
 
         // set pri path
-        pq += dss.path.monthlyPq(prmname, month)+'\n';
+        if( np.type === 'Surface Storage' || np.type === 'Groundwater Storage' ) {
+          pq += dss.path.monthlyPs(prmname, month)+'\n';
+        } else {
+          pq += dss.path.monthlyPq(prmname, month)+'\n';
+        }
+
         // set dss writer json object
         config.pd.data.push(dss.cost(prmname, month, np.costs.costs[month]));
       }

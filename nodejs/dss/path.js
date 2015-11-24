@@ -23,7 +23,15 @@ function writeMonthlyPq(prmname, month, outputType) {
     MO : month,
     B : prmname,
     C : 'Q(KAF)-P_EDT',
-//    C : 'Q(K$-KAF)',
+    E : month
+  }, outputType);
+}
+
+function writeMonthlyPs(prmname, month, outputType) {
+  return utils.parts('PS',{
+    MO : month,
+    B : prmname,
+    C : 'Q(KAF)-P_EDT',
     E : month
   }, outputType);
 }
@@ -82,6 +90,7 @@ function writeEmptyPq(outputType) {
 module.exports = {
   timeBound : writeTimeBound,
   monthlyPq : writeMonthlyPq,
+  monthlyPs : writeMonthlyPs,
   flow : writeFlow,
   in : writeIn,
   evapo : writeEvapo,
