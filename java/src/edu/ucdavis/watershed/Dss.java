@@ -12,7 +12,7 @@ import hec.io.TimeSeriesContainer;
 public class Dss {
 	
 	@SuppressWarnings("deprecation")
-	public static Date EPOCH = new Date(1900, 0, 0);
+	public static Date EPOCH = new Date(1900, 1, 0);
 
 	public static HecDss open(String file) throws Exception {
 		return HecDss.open(file);
