@@ -14,7 +14,8 @@ var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/downl
 var dataRepo = '';
 
 function getDataDir() {
-  console.log('\nPlease enter the full path of your data directory: ');
+  console.log('\nPlease enter the full path of your data directory\n'+
+                '(be sure and include /data, so will look something like /path/to/repo/calvin-network-data/data ): ');
   var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -71,6 +72,8 @@ function write() {
 
   fs.writeFileSync(path.join(getUserHome(), '.prmconf'), JSON.stringify(config));
   console.log('All set.');
+  console.log('Example build: node nodejs/prm build --prefix test');
+  console.log('Full Docs: https://github.com/ucd-cws/calvin-network-tools');
 }
 
 function getUserHome() {
