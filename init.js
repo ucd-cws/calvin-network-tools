@@ -10,7 +10,7 @@ var readline = require('readline');
 var runtimeZip = path.join(__dirname, 'HEC_Runtime.zip');
 var runtimeFolder = path.join(__dirname, 'HEC_Runtime');
 
-var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/download/v1.0/HEC_Runtime.zip';
+var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/download/v1.3/HEC_Runtime.zip';
 var dataRepo = '';
 
 function getDataDir() {

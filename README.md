@@ -18,7 +18,7 @@ git clone https://github.com/ucd-cws/calvin-network-tools
 
 # runs install, follow prompts.
 # will be asked for full path to data repo pulled above
-npm run init
+cd calvin-network-tools && npm run init
 ```
 
 This will:
