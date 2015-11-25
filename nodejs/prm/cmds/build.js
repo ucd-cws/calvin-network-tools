@@ -13,6 +13,7 @@ var crawler = require('../../crawler');
 var runtime = require('../lib/runtime');
 var costs = require('../../dss/cost');
 var prepare = require('../lib/prepare');
+var debug = require('../lib/debug');
 var dummy = require('../../dss/dummy');
 var updateStorage = require('../lib/updateStorage');
 
@@ -44,8 +45,16 @@ function onCrawlComplete(results){
   }
 
   updateStorage(args.start, args.stop, results.nodes, function(){
-    for( var i = 0; i < results.nodes.length; i++ ) {
-      prepare.format(results.nodes[i], config, o);
+
+    var nodes;
+    if( args.debug ) {
+      nodes = debug(args, results.nodes);
+    } else {
+      nodes = results.nodes;
+    }
+
+    for( var i = 0; i < nodes.length; i++ ) {
+      prepare.format(nodes[i], config, o);
     }
 
     write(config, start, stop);

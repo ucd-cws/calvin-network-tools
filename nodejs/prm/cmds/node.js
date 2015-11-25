@@ -3,11 +3,12 @@
 var updateStorage = require('../lib/updateStorage');
 var crawler = require('../../crawler');
 var prepare = require('../lib/prepare');
+var debug = require('../lib/debug');
 var link = require('../../pri/format/link');
 var path = require('path');
 
 module.exports = function(argv) {
-  if( argv._.length === 0 ) {
+  if( argv._.length === 0 && !argv.debug ) {
     console.log('Please provide a node command [list | show]');
     process.exit(-1);
   }
@@ -58,10 +59,14 @@ function show(nodes, argv) {
     var node, i;
     var list = [];
 
-    for( i = 0; i < results.nodes.length; i++ ) {
-      node = results.nodes[i];
-      if( nodes[0] === '' || nodes[0] === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
-        list.push(node);
+    if( argv.debug ) {
+      list = debug(argv, results.nodes);
+    } else {
+      for( i = 0; i < results.nodes.length; i++ ) {
+        node = results.nodes[i];
+        if( nodes[0] === '' || nodes[0].toUpperCase() === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
+          list.push(node);
+        }
       }
     }
 

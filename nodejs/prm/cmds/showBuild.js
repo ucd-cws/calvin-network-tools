@@ -3,12 +3,13 @@
 var crawler = require('../../crawler');
 var parse = require('csv-parse');
 var prepare = require('../lib/prepare');
+var debug = require('../lib/debug');
 var async = require('async');
 var fs = require('fs');
 var date = require('./date');
 
 module.exports = function(argv) {
-  if( argv._.length === 0 ) {
+  if( argv._.length === 0 && !argv.debug ) {
     console.log('You need to supply a prmname to show');
     process.exit(-1);
   }
@@ -35,15 +36,28 @@ module.exports = function(argv) {
 
   var config = prepare.init();
   crawler(data, {parseCsv : false}, function(results){
-    for( var i = 0; i < results.nodes.length; i++ ) {
-      if( results.nodes[i].properties.prmname.toUpperCase() === prmname.toUpperCase() ) {
-        prepare.format(results.nodes[i], config, o);
+
+    var nodes, all = false;
+    if( argv.debug ) {
+      all = true;
+      nodes = debug(argv, results.nodes);
+    } else {
+      nodes = results.nodes;
+    }
+
+    for( var i = 0; i < nodes.length; i++ ) {
+      if( all || nodes[i].properties.prmname.toUpperCase() === prmname.toUpperCase() ) {
+        prepare.format(nodes[i], config, o);
         print(config, argv);
-        return;
+        if( !argv.debug ) {
+          return;
+        }
       }
     }
 
-    console.log('prmname '+prmname+' not found.');
+    if( !argv.debug ) {
+      console.log('prmname '+prmname+' not found.');
+    }
   });
 };
 
