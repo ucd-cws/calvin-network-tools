@@ -35,6 +35,7 @@
     "sphericalmercator": "^1.0.3",
     "sprintf-js": "^1.0.3",
     "superagent": "^1.4.0",
+    "tv4": "^1.2.7",
     "walk": "^2.3.9",
     "xlsx": "^0.8.0"
   }

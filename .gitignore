@@ -2,6 +2,10 @@ HEC_Runtime
 HEC_Runtime.zip
 node_modules
 *.pri
+*.pro
 *.dss
+HECPRM.*
+PRM_MCST.BIN
+tempPrm.txt
 .dssWriterParams
 dssWriter.jar
