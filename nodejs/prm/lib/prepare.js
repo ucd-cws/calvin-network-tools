@@ -6,7 +6,9 @@ var node = require('../../pri/format/node');
 var createPri = require('../../pri/create');
 var costs = require('../../dss/cost');
 var sprintf = require('sprintf-js').sprintf;
+var args;
 
+/*
 function all(nodes) {
   var config = init();
 
@@ -18,6 +20,7 @@ function all(nodes) {
 
   return config;
 }
+*/
 
 function format(n, config, options) {
   var np = n.properties;
@@ -40,10 +43,12 @@ function pri(config, showHeader) {
   text += '\n..\n..        ***** LINK DEFINITIONS *****\n..';
   text += config.pri.linklist.length > 0 ? '\n'+config.pri.linklist.join('\n..\n') : '';
   return text;*/
-  return createPri(config.pri, showHeader);
+  return createPri(config.pri, args, showHeader);
 }
 
-function init() {
+function init(argv) {
+  args = argv;
+
   return {
     pd : {
       path : '',
@@ -67,6 +72,6 @@ module.exports = {
   init : init,
   format: format,
   node_link : format,
-  pri: pri,
-  all : all
+  pri: pri
+  //all : all
 };

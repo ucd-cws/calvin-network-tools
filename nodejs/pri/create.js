@@ -3,11 +3,11 @@ var sprintf = require('sprintf-js').sprintf;
 var header = require('./format/header');
 var utils = require('./format/utils');
 
-module.exports = function(pri, showHeader) {
+module.exports = function(pri, args, showHeader) {
   var outputtext = '';
 
   if( showHeader !== false ) {
-    outputtext += header();
+    outputtext += header(args);
   }
 
   outputtext += '..\n..        ***** NODE DEFINITIONS *****\n..';

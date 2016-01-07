@@ -34,7 +34,7 @@ module.exports = function(argv) {
     o.initialize = argv.initialize !== undefined ? argv.initialize : 'init';
   }
 
-  var config = prepare.init();
+  var config = prepare.init(argv);
   crawler(data, {parseCsv : false}, function(results){
 
     var nodes, all = false;

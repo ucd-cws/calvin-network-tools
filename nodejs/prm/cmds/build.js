@@ -28,7 +28,7 @@ module.exports = function(argv) {
 };
 
 function onCrawlComplete(results){
-  var config = prepare.init();
+  var config = prepare.init(args);
   config.pd.path = path.join(options.output || process.cwd(), options.prefix+'PD.dss');
   config.ts.path = path.join(options.output || process.cwd(), options.prefix+'TS.dss');
 
