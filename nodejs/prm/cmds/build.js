@@ -36,6 +36,8 @@ function onCrawlComplete(results){
   if( args.start && args.stop ) {
     start = date.toDate(args.start);
     stop = date.toDate(args.stop, true);
+    config.pri.start=args.start;
+    config.pri.stop=args.stop;
   }
 
   if( args['no-initialize'] ) {

@@ -8,13 +8,19 @@ var zwts = [
 
 var zwfrq = ['STOR','FLOW(KAF)'];
 
-module.exports = function() {
+module.exports = function(pri) {
+  var months = ['','JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   var header = [];
+
+  var parts = pri.start.split('-');
+  var start_str=months[parseInt(parts[1])]+parts[0];
+  parts = pri.stop.split('-');
+  var stop_str=months[parseInt(parts[1])]+parts[0];
 
   header.push('.. Capitalization Model Run');
   header.push(sprintf('%-8.8s  %-70s','ZW','F='));
   header.push(sprintf('%-8.8s  %-10.10s%-10.10s','IDENT','SOURCE','SINK'));
-  header.push(sprintf('%-8.8s  %-10.10s%-10.10s','TIME','OCT1921','SEP2003'));
+  header.push(sprintf('%-8.8s  %-10.10s%-10.10s','TIME',start_str,stop_str));
   header.push('J11.0E-05 1.0E+06   1.0       1.0       1         3');
 
   // What to save

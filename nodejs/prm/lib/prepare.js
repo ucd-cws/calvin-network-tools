@@ -10,7 +10,7 @@ var sprintf = require('sprintf-js').sprintf;
 function all(nodes) {
   var config = init();
 
-  config.pri.header = header();
+  config.pri.header = header(start,stop);
 
   for( var i = 0; i < nodes.length; i++ ) {
     format(nodes[i], config);

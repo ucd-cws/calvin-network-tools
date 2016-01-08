@@ -7,7 +7,7 @@ module.exports = function(pri, showHeader) {
   var outputtext = '';
 
   if( showHeader !== false ) {
-    outputtext += header();
+    outputtext += header(pri);
   }
 
   outputtext += '..\n..        ***** NODE DEFINITIONS *****\n..';
