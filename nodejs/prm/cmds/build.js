@@ -137,7 +137,7 @@ function writeTsDssFile(tsConfig, callback) {
 }
 
 function cleanTmpDir(dir, callback) {
-  if( fs.existsSync(dir) ) {
+  if( fs.existsSync(dir) && !args.keep  ) {
     rimraf(dir, callback);
   } else {
     callback();
