@@ -12,7 +12,7 @@ import hec.io.TimeSeriesContainer;
 public class Dss {
 	
 	@SuppressWarnings("deprecation")
-	public static Date EPOCH = new Date(1900, 1, 0);
+	public static Date EPOCH = new Date(1900, 1, 0, 0, 0, 0);
 
 	public static HecDss open(String file) throws Exception {
 		return HecDss.open(file);
@@ -118,7 +118,7 @@ public class Dss {
 		int month = Integer.parseInt(parts[1]);
 		int day = Integer.parseInt(parts[2]);
 		
-		Date d = new Date(year, month, day);
+		Date d = new Date(year, month, day, 0, 0, 0);
 		long diff = d.getTime() - EPOCH.getTime(); 
 		diff = diff / (1000 * 60);
 		return (int) diff;
