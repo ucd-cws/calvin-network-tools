@@ -76,9 +76,13 @@ function write(config, start, stop) {
     if( start && stop ) {
       trimTsData(start, stop, config.ts, function(ts, tmpDir){
         writeTsDssFile(config.ts, function(){
-          cleanTmpDir(tmpDir, function(){
-            console.log('Done.');
-          });
+          if( args.keep ) {
+            console.log('Done. Keeping tmp.');
+          } else {
+            cleanTmpDir(tmpDir, function(){
+              console.log('Done.');
+            });
+          }
         });
       });
     } else {
@@ -137,7 +141,7 @@ function writeTsDssFile(tsConfig, callback) {
 }
 
 function cleanTmpDir(dir, callback) {
-  if( fs.existsSync(dir) && !args.keep  ) {
+  if( fs.existsSync(dir) ) {
     rimraf(dir, callback);
   } else {
     callback();

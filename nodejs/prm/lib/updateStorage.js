@@ -11,6 +11,7 @@ module.exports = function(start, stop, nodes, callback) {
   }
 
   start = date.toDate(start);
+  start.setMonth(start.getMonth()-1);
   stop = date.toDate(stop, true);
 
   async.eachSeries(
