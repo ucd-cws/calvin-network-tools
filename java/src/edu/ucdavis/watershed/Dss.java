@@ -9,10 +9,15 @@ import hec.heclib.dss.HecDss;
 import hec.io.PairedDataContainer;
 import hec.io.TimeSeriesContainer;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
+
 public class Dss {
 	
 	@SuppressWarnings("deprecation")
-	public static Date EPOCH = new Date(1900, 1, 0, 0, 0, 0);
+	//public static Date EPOCH = new Date(0, 0, 1, 0, 0, 0);
+	public static LocalDateTime EPOCH = LocalDateTime.of(1899, Month.of(12), 31, 0, 0, 0);
 
 	public static HecDss open(String file) throws Exception {
 		return HecDss.open(file);
@@ -118,9 +123,9 @@ public class Dss {
 		int month = Integer.parseInt(parts[1]);
 		int day = Integer.parseInt(parts[2]);
 		
-		Date d = new Date(year, month, day, 0, 0, 0);
-		long diff = d.getTime() - EPOCH.getTime(); 
-		diff = diff / (1000 * 60);
+		LocalDateTime d = LocalDateTime.of(year, Month.of(month), day, 0, 0, 0);
+		long diff = ChronoUnit.MINUTES.between(EPOCH, d);
+		
 		return (int) diff;
 	}
 
