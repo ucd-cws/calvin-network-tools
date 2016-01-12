@@ -94,7 +94,7 @@ public class Dss {
 		
 		ts.times = new int[csv.data.size()];
 		for( int i = 0; i < csv.data.size(); i++ ) {
-			ts.times[i] = calcTime(csv.data.get(i).name);
+			ts.times[i] = calcTime(csv.data.get(i).name, i == 0 ? true : false);
 		}
 		ts.startTime = ts.times[0];
 		ts.endTime = ts.times[ts.times.length-1];
@@ -116,7 +116,7 @@ public class Dss {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public static int calcTime(String date) {
+	public static int calcTime(String date, boolean start) {
 		String[] parts = date.split("-");
 		
 		int year = Integer.parseInt(parts[0]);
@@ -124,7 +124,16 @@ public class Dss {
 		int day = Integer.parseInt(parts[2]);
 		
 		LocalDateTime d = LocalDateTime.of(year, Month.of(month), day, 0, 0, 0);
+		
 		long diff = ChronoUnit.MINUTES.between(EPOCH, d);
+		
+		// HACK.  If we are on the first date and the month doesn't have 31 days, add one
+		// day cause this system is fubar and Quinn came up with craziness below.
+		if( start ) {
+			if( month == 2 || month == 4 || month == 6 || month == 9 || month == 11 ) {
+				diff += 1440;
+			}
+		}
 		
 		return (int) diff;
 	}
