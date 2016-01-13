@@ -11,6 +11,8 @@ module.exports = function(start, stop, nodes, callback) {
   }
 
   start = date.toDate(start);
+  // For storage parameters only, we actually want one additional time-step saved
+  // this also properly sets the initial storage to the time-step before the start time
   start.setMonth(start.getMonth()-1);
   stop = date.toDate(stop, true);
 
@@ -23,10 +25,12 @@ module.exports = function(start, stop, nodes, callback) {
         parse(fs.readFileSync(node.properties.storage, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
           date.trim(start, stop, data);
 
-          if( data.length > 1 ){
+            if( data.length > 1 ){
+//		console.log(data);
             node.properties.initialstorage = parseFloat(data[1][1]);
             node.properties.endingstorage = parseFloat(data[data.length-1][1]);
           }
+//	    console.log(node);
 
           next();
         });
