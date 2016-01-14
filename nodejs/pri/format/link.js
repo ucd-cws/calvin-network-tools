@@ -146,14 +146,15 @@ function writeLink(config, np, options) {
     }
   }
 
-  if( np.el_ar_cap ) {
-    if( !fs.existsSync(np.el_ar_cap) ) {
-      console.log('File not found, ignoring: '+np.el_ar_cap);
-    } else {
-      eac = dss.path.eac(prmname)+'\n';
-      config.pd.data.push(dss.eac(np.prmname, np.el_ar_cap));
-    }
-  }
+// QJH - EAC is not used currently
+//  if( np.el_ar_cap ) {
+//    if( !fs.existsSync(np.el_ar_cap) ) {
+//      console.log('File not found, ignoring: '+np.el_ar_cap);
+//    } else {
+//      eac = dss.path.eac(prmname)+'\n';
+//      config.pd.data.push(dss.eac(np.prmname, np.el_ar_cap));
+//    }
+//  }
 
 
   if( np.inflows ) {

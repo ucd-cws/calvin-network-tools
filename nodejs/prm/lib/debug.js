@@ -40,7 +40,7 @@ var sourceLink = {
 
 module.exports = function(args, nodes) {
 
-  var cost = args['debug-cost'] || 200000;
+  var cost = args['debug-cost'] || 2000000;
 
   var all = false, matches = [];
   if( args.debug === '*' || args.debug.toLowerCase() === 'all' ) {
