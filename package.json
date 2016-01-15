@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "init": "npm install && node init.js"
   },
+  "bin": {
+        "prm": "bin/prm.bin.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ucd-cws/calvin-network-tools.git"
