@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var argv = require('minimist')(process.argv.slice(2));
 var crawler = require('../crawler');
-var docsUrl = 'https://github.com/ucd-cws/calvin-network-tools/blob/master/README.md#commands';
+var docsUrl = 'https://github.com/ucd-cws/calvin-network-tools#commands';
 
 var noCommand = false;
 if( !argv._ ) {
