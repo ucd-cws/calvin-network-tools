@@ -117,7 +117,7 @@ Write CSV file(s) to dss file.  Requires the Calvin HEC Runtime (see [releases](
 
 Example
 ```
-node prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
+prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
  ```
 
 By default to files will be created in your current working directory.  If you would like
@@ -128,7 +128,7 @@ to specify the path to create the files, use the *--output* flag.
 
 example:
 ```
-node prm build --prefix partialRun --start 2000-01 --stop 2002-1
+prm build --prefix partialRun --start 2000-01 --stop 2002-1
 ```
 
 
