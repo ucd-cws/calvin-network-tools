@@ -1,6 +1,6 @@
 {
   "name": "calvin-network-tools",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Command line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
   "main": "index.js",
   "scripts": {
@@ -18,9 +18,12 @@
     "water",
     "California",
     "CALVIN",
-    "HOBBES"
+    "HOBBES",
+    "UC Davis",
+    "Center for Watershed Sciences",
+    "HEC-PRM"
   ],
-  "author": "Center for Watershed Sciences",
+  "author": "UC Davis: Center for Watershed Sciences",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ucd-cws/calvin-network-tools/issues"
