@@ -10,15 +10,17 @@ Make sure you have pulled the [data repo](https://github.com/ucd-cws/calvin-netw
 Fastest way to a build.
 
 ```bash
+# You will need NodeJS and git.
+
 # pull down data (you may have already done this)
 git clone https://github.com/ucd-cws/calvin-network-data
 
-# grab this repo
-git clone https://github.com/ucd-cws/calvin-network-tools
+# install prm cli via npm
+npm install -g calvin-network-tools
 
-# runs install, follow prompts.
+prm init
+# runs install and download of library, follow prompts.
 # will be asked for full path to data repo pulled above
-cd calvin-network-tools && npm run init
 ```
 
 This will:

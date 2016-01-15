@@ -8,7 +8,7 @@
     "init": "npm install && node init.js"
   },
   "bin": {
-        "prm": "bin/prm.bin.js"
+    "prm": "bin/prm.bin.js"
   },
   "repository": {
     "type": "git",
@@ -30,12 +30,9 @@
     "csv-parse": "^1.0.0",
     "csv-stringify": "0.0.8",
     "extend": "^3.0.0",
-    "globby": "^2.1.0",
     "minimist": "^1.2.0",
-    "node-getopt": "^0.2.3",
     "node-uuid": "^1.4.7",
     "rimraf": "^2.4.3",
-    "sphericalmercator": "^1.0.3",
     "sprintf-js": "^1.0.3",
     "superagent": "^1.4.0",
     "walk": "^2.3.9",
