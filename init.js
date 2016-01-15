@@ -72,7 +72,7 @@ function write() {
 
   fs.writeFileSync(path.join(getUserHome(), '.prmconf'), JSON.stringify(config));
   console.log('All set.');
-  console.log('Example build: node nodejs/prm build --prefix test');
+  console.log('Example build: prm build --prefix test');
   console.log('Full Docs: https://github.com/ucd-cws/calvin-network-tools');
 }
 

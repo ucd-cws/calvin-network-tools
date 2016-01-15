@@ -14,7 +14,7 @@ if( !argv._ ) {
 }
 
 if( noCommand ) {
-  return console.log('Please provide a command. See docs here: '+docsUrl);
+  return console.log('Please provide a command.\nSee docs here: '+docsUrl);
 }
 
 
@@ -50,7 +50,7 @@ if( cmd === 'pd' || cmd === 'ts' || cmd === 'el' ) {
   if( cmd === 'show' ) {
     return require('./cmds/showBuild')(type, argv);
   } else {
-    console.log('Invalid command for '+type+': '+cmd+'. See docs here '+docsUrl);
+    console.log('Invalid command for '+type+': '+cmd+'.\nSee docs here '+docsUrl);
     process.exit(-1);
   }
 }
@@ -58,7 +58,7 @@ if( cmd === 'pd' || cmd === 'ts' || cmd === 'el' ) {
 var modulePath = path.join(__dirname, 'cmds', cmd+'.js');
 
 if( !fs.existsSync(modulePath) ) {
-  return console.log('Invalid command: '+cmd+'. See docs here '+docsUrl);
+  return console.log('Invalid command: '+cmd+'.\nSee docs here '+docsUrl);
 }
 
 require(modulePath)(argv);

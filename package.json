@@ -1,7 +1,7 @@
 {
   "name": "calvin-network-tools",
-  "version": "1.0.0",
-  "description": "CCommand line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
+  "version": "1.0.1",
+  "description": "Command line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,9 @@
   },
   "keywords": [
     "water",
-    "California"
+    "California",
+    "CALVIN",
+    "HOBBES"
   ],
   "author": "Center for Watershed Sciences",
   "license": "ISC",
