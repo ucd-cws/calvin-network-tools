@@ -185,9 +185,7 @@ function verify(argv) {
     data : ''
   };
 
-  if( argv._.length > 0 ) {
-    options.prefix = argv._[0];
-  } else if( argv.prefix ) {
+  if( argv.prefix ) {
     options.prefix = argv.prefix;
   }
 
