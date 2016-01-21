@@ -5,7 +5,7 @@ var colors = require('colors');
 var os = require('os');
 
 var cmd = 'wine';
-var argsTemplate = '{{runtime}}/hecprm.exe I={{prefix}}.pri O=${{prefix}}.pro '+
+var argsTemplate = '{{runtime}}/hecprm.exe I={{prefix}}.pri O={{prefix}}.pro '+
           'T={{prefix}}TS.dss P={{prefix}}PD.dss R={{prefix}}.dss';
 
 
