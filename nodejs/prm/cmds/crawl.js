@@ -2,7 +2,9 @@
 
 var crawler = require('../../crawler');
 
-module.exports = function(argv) {
+module.exports = function(argv, callback) {
+  console.log('Running **Crawl** command.\n');
+
   var path = '';
   if( argv.d ) {
     path = argv.d;
@@ -20,5 +22,6 @@ module.exports = function(argv) {
     console.log('Regions: '+result.regions.length);
     console.log('Nodes/Links: '+result.nodes.length);
     console.log('done.');
+    callback();
   });
 };

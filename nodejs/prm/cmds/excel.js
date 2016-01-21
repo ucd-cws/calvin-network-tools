@@ -3,20 +3,18 @@
 var crawler = require('../../crawler');
 var excel = require('../../excel');
 
-module.exports = function(argv) {
+module.exports = function(argv, callback) {
+  console.log('Running **Excel** command.\n');
+
   if( !argv.data ) {
     console.log('No path provided');
-    process.exit(-1);
+    return callback();
   }
 
   if( !argv.x ) {
     console.log('No excel provided');
-    process.exit(-1);
+    return callback();
   }
 
-  excel(argv);
-
-  /*crawler(argv._[0], function(result){
-
-  });*/
+  excel(argv, callback);
 };

@@ -19,8 +19,12 @@ var updateStorage = require('../lib/updateStorage');
 
 var options;
 var args;
+var callback;
 
-module.exports = function(argv) {
+module.exports = function(argv, cb) {
+  console.log('Running **Build** command.\n');
+
+  callback = cb;
   args = argv;
   options = verify(argv);
 
@@ -78,9 +82,11 @@ function write(config, start, stop) {
         writeTsDssFile(config.ts, function(){
           if( args.keep ) {
             console.log('Done. Keeping tmp.');
+            callback();
           } else {
             cleanTmpDir(tmpDir, function(){
               console.log('Done.');
+              callback();
             });
           }
         });

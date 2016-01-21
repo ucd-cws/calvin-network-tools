@@ -8,10 +8,10 @@ var async = require('async');
 var fs = require('fs');
 var date = require('./date');
 
-module.exports = function(argv) {
+module.exports = function(type, argv, callback) {
   if( argv._.length === 0 && !argv.debug ) {
     console.log('You need to supply a prmname to show');
-    process.exit(-1);
+    return callback();
   }
   var prmname = argv._.splice(0,1)[0];
 
@@ -50,7 +50,7 @@ module.exports = function(argv) {
         prepare.format(nodes[i], config, o);
         print(config, argv);
         if( !argv.debug ) {
-          return;
+          return callback();
         }
       }
     }
@@ -58,6 +58,7 @@ module.exports = function(argv) {
     if( !argv.debug ) {
       console.log('prmname '+prmname+' not found.');
     }
+    callback();
   });
 };
 

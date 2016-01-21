@@ -9,7 +9,9 @@ var argsTemplate = '{{runtime}}/hecprm.exe I={{prefix}}.pri O={{prefix}}.pro '+
           'T={{prefix}}TS.dss P={{prefix}}PD.dss R={{prefix}}.dss';
 
 
-module.exports = function(argv) {
+module.exports = function(argv, callback) {
+  console.log('Running **Run** command.\n');
+
   var args = argsTemplate.replace(/{{runtime}}/, argv.runtime);
   args = args.replace(/{{prefix}}/g, argv.prefix).split(' ');
 
@@ -33,7 +35,8 @@ module.exports = function(argv) {
 
   child.on('close', (code) => {
     console.log('hecprm.exe exited with code '+code);
-    console.log('finished.');
+    console.log('done.');
+    callback();
   });
 
 };

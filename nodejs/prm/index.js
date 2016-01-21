@@ -1,10 +1,11 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
 var argv = require('minimist')(process.argv.slice(2));
-var crawler = require('../crawler');
+var async = require('async');
+var run = require('./runCmd');
 var docsUrl = 'https://github.com/ucd-cws/calvin-network-tools#commands';
+
+var cmds = ['init', 'crawl', 'build', 'run', 'show', 'list', 'showBuild', 'excel'];
 
 var noCommand = false;
 if( !argv._ ) {
@@ -17,48 +18,20 @@ if( noCommand ) {
   return console.log('Please provide a command.\nSee docs here: '+docsUrl);
 }
 
-
-var cmd = argv._.splice(0, 1)[0];
-
-// check for init command.
-if( cmd === 'init' ) {
-  require('../../init.js');
-  return;
-}
-
-// check for link, we are using node module for link commands
-if( cmd === 'show' ) {
-  cmd = 'node';
-  argv.show = true;
-} else if( cmd === 'list' ) {
-  cmd = 'node';
-  argv.list = true;
-}
-
-// load config file
-require('./lib/fileConfig')(argv);
-
-// check for show pd, ts or el
-if( cmd === 'pd' || cmd === 'ts' || cmd === 'el' ) {
-  var type = cmd;
-  if( argv._.length === 0 ) {
-    console.log('You need to supply a command for the '+type+' module. options: [list | show | add]');
-    process.exit(-1);
-  }
-
-  var cmd = argv._.splice(0, 1)[0];
-  if( cmd === 'show' ) {
-    return require('./cmds/showBuild')(type, argv);
-  } else {
-    console.log('Invalid command for '+type+': '+cmd+'.\nSee docs here '+docsUrl);
-    process.exit(-1);
+var nodes = [];
+for( var i = argv._.length-1; i >= 0; i-- ) {
+  if( cmds.indexOf(argv._[i]) === -1 ) {
+    nodes.push(argv._.splice(i, 1)[0]);
   }
 }
+argv.nodes = nodes;
 
-var modulePath = path.join(__dirname, 'cmds', cmd+'.js');
-
-if( !fs.existsSync(modulePath) ) {
-  return console.log('Invalid command: '+cmd+'.\nSee docs here '+docsUrl);
-}
-
-require(modulePath)(argv);
+async.eachSeries(
+  argv._,
+  function(cmd, next) {
+    run(cmd, argv, docsUrl, next);
+  },
+  function(err) {
+    // done with all cmds
+  }
+);
