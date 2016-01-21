@@ -20,8 +20,9 @@ module.exports = function(start, stop, nodes, callback) {
     nodes,
     function(node, next){
       // update initial and ending storage if start and stop provided
-	//      if( (node.properties.type === 'Surface Storage' || node.properties.type === 'Groundwater Storage')
-	if(node.properties.type === 'Surface Storage' && node.properties.storage && start && stop) {
+	      if( (node.properties.type === 'Surface Storage' || node.properties.type === 'Groundwater Storage')
+        && node.properties.storage && start && stop) {
+//	if(node.properties.type === 'Surface Storage' && node.properties.storage && start && stop) {
 
         parse(fs.readFileSync(node.properties.storage, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
           date.trim(start, stop, data);
