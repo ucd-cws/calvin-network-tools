@@ -32,6 +32,7 @@
   "dependencies": {
     "adm-zip": "^0.4.7",
     "async": "^1.4.2",
+    "colors": "^1.1.2",
     "csv-parse": "^1.0.0",
     "csv-stringify": "0.0.8",
     "extend": "^3.0.0",

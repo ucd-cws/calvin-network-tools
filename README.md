@@ -98,6 +98,7 @@ Again, the quick start command above will configure this file for you.
 - [init](#init)
 - [Crawl](#crawl---data-directory)
 - [Build](#build---prefix-prefix---runtime-pathtohecruntime---data-pathtodatarepo)
+- [Run](#run)
 - [Show](#show-prmname-prmname-)
 - [List](#list-prmname-prmname-)
 - [Show Build](#showbuild-prmname)
@@ -131,7 +132,6 @@ example:
 prm build --prefix partialRun --start 2000-01 --stop 2002-1
 ```
 
-
 #### Debug build
 
 ##### --verbose
@@ -142,6 +142,15 @@ The PRM NodeJS code uses a json file to pass information to the dssWriter jar fi
 Normally this file is removed after the jar is finished executing.  To debug to this file,
 you can specify *--debugRuntime* and the file will not be removed after execution.
 
+
+
+### Run
+
+```bash
+prm run --prefix [prefix] --runtime [/path/to/hec/runtime]
+```
+
+Run the hecprm.exe program with provided prefix files.  Wine is required.
 
 ### show [prmname] [prmname] ...
 Print a list of nodes as they are represented in the pri files.  You can pass 'ALL'

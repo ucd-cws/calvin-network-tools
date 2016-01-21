@@ -6,3 +6,8 @@ node_modules
 *.dss
 .dssWriterParams
 dssWriter.jar
+*.pro
+*.ERR
+*.LOC
+*.BIN
+tempPrm.txt
