@@ -6,8 +6,13 @@ var path = require('path');
 module.exports = function(cmd, argv, docsUrl, callback) {
   // check for init command.
   if( cmd === 'init' ) {
-    require('../../init.js');
+    require('./init.js');
     return callback();
+  }
+
+  if( cmd === 'update-library' ) {
+    require('./updateVersion');
+    return;
   }
 
   // check for link, we are using node module for link commands
@@ -47,4 +52,4 @@ module.exports = function(cmd, argv, docsUrl, callback) {
   }
 
   require(modulePath)(argv, callback);
-}
+};
