@@ -15,19 +15,23 @@ public class CMD {
 	public static void main(String[] args) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		CommandLineInput input = mapper.readValue(new File(args[0]), CommandLineInput.class);
-		
-		//try {
-			HecDss dssFile = Dss.open(input.getPath());
-			
-			for( Config config: input.getData() ) {
-				CsvData data = Csv.parseCsv(config.getCsvFilePath(), config.getType());
-				Dss.write(config, data, dssFile, input.getPath());
+
+		HecDss dssFile = Dss.open(input.getPath());
+
+		if( input.isExport() ) {
+			String root = "";
+			if( input.getExportRoot() != null ) {
+				root = input.getExportRoot();
 			}
 			
-		//} catch (Exception e) {
-		//	printError(e.getMessage());
-		//	return;
-		//}
+			Dss.exportJson(dssFile, root, input.getRegex());
+			return;
+		}
+		
+		for( Config config: input.getData() ) {
+			CsvData data = Csv.parseCsv(config.getCsvFilePath(), config.getType());
+			Dss.write(config, data, dssFile, input.getPath());
+		}
 
 		printSuccess();
 	}

@@ -1,14 +1,22 @@
 package edu.ucdavis.watershed;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Vector;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hec.data.meta.Catalog;
 import hec.dssgui.CombinedDataManager;
+import hec.heclib.dss.CondensedReference;
 import hec.heclib.dss.HecDSSUtilities;
 import hec.heclib.dss.HecDss;
+import hec.io.DataContainer;
 import hec.io.PairedDataContainer;
 import hec.io.TimeSeriesContainer;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -115,7 +123,93 @@ public class Dss {
 		dssFile.put(ts);
 	}
 	
-	@SuppressWarnings("deprecation")
+	public static void exportJson(HecDss dssFile, String directory, String regex) throws Exception {
+		int count = 0;
+		
+		HashMap<String, HashMap<String,Integer>> map = new HashMap<String, HashMap<String,Integer>>();
+		Vector<CondensedReference> v = dssFile.getCondensedCatalog();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		cleanDirectory(new File(directory));
+		new File(directory).mkdir();
+		
+		for( CondensedReference path: v) {
+			
+			CwsContainer ts = new CwsContainer();
+			DataContainer dc;
+			String name;
+			String parameter;
+			
+			try {
+				String hecpath = path.getNominalPathname();
+				
+				if( !regex.contentEquals("") && regex != null ) {
+					if( !hecpath.matches(regex) ) continue;
+				}
+				
+				dc = dssFile.get(hecpath, true);
+			
+				try {
+					
+					
+					ts.timeSeriesContainer = (TimeSeriesContainer) dc;
+					name = ts.timeSeriesContainer.getLocationName();
+					parameter = ts.timeSeriesContainer.getParameterName();
+					
+					if( ts.timeSeriesContainer.times == null ) {
+						System.out.println("Ignoring: "+path.getNominalPathname());
+						continue;
+					}
+					
+					for( int i = 0; i < ts.timeSeriesContainer.times.length; i++ ) {
+						ts.dates.add(Dss.calcDate(ts.timeSeriesContainer.times[i]));
+					}
+				} catch(Exception e) {
+					try {
+						ts.pairedDataContainer = (PairedDataContainer) dc;
+						parameter = "pairedData";
+						name = ts.pairedDataContainer.location;
+					} catch(Exception e2) {
+						continue;
+					}
+				}
+			} catch(Exception e2) {
+				continue;
+			}
+			
+			mapper.writeValue(new File(directory+File.separatorChar+count+".json"), ts);
+		
+			if( !map.containsKey(name) ) {
+				map.put(name, new HashMap<String, Integer>());
+			}
+			map
+				.get(name)
+				.put(parameter, count);
+			
+			count += 1;
+		}
+		
+		mapper.writeValue(new File(directory+File.separatorChar+"index.json"), map);
+	}
+	
+	public static boolean cleanDirectory(File dir) {
+	    if (dir.isDirectory()) {
+	        String[] children = dir.list();
+	        for (int i=0; i<children.length; i++) {
+	            boolean success = cleanDirectory(new File(dir, children[i]));
+	            if (!success) {
+	                return false;
+	            }
+	        }
+	    }
+	    return dir.delete();
+	}
+	
+	public static String calcDate(int time) {
+		LocalDateTime ldt = EPOCH.plusMinutes((long) time);
+		return ldt.toString();
+	}
+	
 	public static int calcTime(String date, boolean start) {
 		String[] parts = date.split("-");
 		
