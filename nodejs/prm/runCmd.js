@@ -45,11 +45,12 @@ module.exports = function(cmd, argv, docsUrl, callback) {
   }*/
 
   var modulePath = path.join(__dirname, 'cmds', cmd+'.js');
+  var modulePathDir = path.join(__dirname, 'cmds', cmd+'/index.js');
 
-  if( !fs.existsSync(modulePath) ) {
+  if( !fs.existsSync(modulePath) && !fs.existsSync(modulePathDir) ) {
     console.log('Invalid command: '+cmd+'.\nSee docs here '+docsUrl);
     return callback();
   }
 
-  require(modulePath)(argv, callback);
+  require(path.join(__dirname, 'cmds', cmd))(argv, callback);
 };

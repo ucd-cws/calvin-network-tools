@@ -3,7 +3,8 @@
 var path = require('path');
 var rimraf = require('rimraf');
 var fs = require('fs');
-var runtime = require('../lib/runtime');
+var processData = require('./processData');
+var runtime = require('../../lib/runtime');
 var dirPreFix = 'dssExportJson';
 
 module.exports = function(args, callback) {
@@ -18,9 +19,10 @@ module.exports = function(args, callback) {
   };
 
   if( args.cache && !args['clean-cache'] && fs.existsSync(params.exportRoot) ) {
-    // process(args);
-    console.log('Finished update: '+(new Date().getTime() - t)+'ms');
-    callback();
+    processData(params.exportRoot, args, function(){
+      console.log('Finished update: '+(new Date().getTime() - t)+'ms');
+      callback();
+    });
     return;
   }
 
@@ -32,13 +34,12 @@ module.exports = function(args, callback) {
     }
 
     runtime(args.runtime, params, args, function(){
-      // process(args);
-
-      console.log('Finished update: '+(new Date().getTime() - t)+'ms');
-      cleanTmpDir(params.exportRoot, args.cache, function(){
-        callback();
+      processData(params.exportRoot, args, function(){
+        console.log('Finished update: '+(new Date().getTime() - t)+'ms');
+        cleanTmpDir(params.exportRoot, args.cache, function(){
+          callback();
+        });
       });
-
     });
   });
 };
