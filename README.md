@@ -1,7 +1,10 @@
 # PRM Command Line Tool
 
-The ```prm``` command line tool allows users to prepare their calvin-network-data for running the HEC-PRM model code.
-The HEC-PRM code is distributed as a windows binary.   Further, HEC-PRM uses DSS formatted files as input.  We use the DSSVUE software to transfer data into and out of the DSS format.  While, DSSVue is written in JAVA, precompiled libraries for this package only work in the Windows environment.  For these two reasons, if you are running this software on MacOS or Linux, you will need to run a Windows emulator, like wine.
+The ```prm``` command line tool allows users to prepare their
+[calvin-network-data](https://github.com/ucd-cws/calvin-network-data) for
+running the HEC-PRM model code.
+
+The [HEC-PRM](http://www.hec.usace.army.mil/software/) code is distributed as a windows binary.   Further, HEC-PRM uses DSS formatted files as input.  We use the DSSVUE software to transfer data into and out of the DSS format.  While, DSSVue is written in JAVA, precompiled libraries for this package only work in the Windows environment.  For these two reasons, if you are running this software on MacOS or Linux, you will need to run a Windows emulator, like wine.
 
 ## Quick Start
 
@@ -10,15 +13,17 @@ Make sure you have pulled the [data repo](https://github.com/ucd-cws/calvin-netw
 Fastest way to a build.
 
 ```bash
+# You will need NodeJS and git.
+
 # pull down data (you may have already done this)
 git clone https://github.com/ucd-cws/calvin-network-data
 
-# grab this repo
-git clone https://github.com/ucd-cws/calvin-network-tools
+# install prm cli via npm
+npm install -g calvin-network-tools
 
-# runs install, follow prompts.
+prm init
+# runs install and download of library, follow prompts.
 # will be asked for full path to data repo pulled above
-cd calvin-network-tools && npm run init
 ```
 
 This will:
@@ -41,7 +46,8 @@ package with all required libraries to run the prm tool minus NodeJS (and wine).
 The package can be found [here](https://github.com/ucd-cws/calvin-network-tools/releases) in the releases section.
 
 Currently this runtime is REQUIRED to run the **build** command.  You need to
-download and unzip the package.  Then specify the path to the unzipped folder in **build** using the *--runtime* flag.
+download and unzip the package.  Then specify the path to the unzipped folder in **build** using the *--runtime* flag.  Or you can simply run **prm init** and this will download and
+install the runtime as well as create a .prmconf file in your home folder.
 
 
 #### The Runtime contains:
@@ -89,12 +95,20 @@ Again, the quick start command above will configure this file for you.
 
 ## Commands
 
+- [init](#init)
 - [Crawl](#crawl---data-directory)
 - [Build](#build---prefix-prefix---runtime-pathtohecruntime---data-pathtodatarepo)
+- [Run](#run)
 - [Show](#show-prmname-prmname-)
 - [List](#list-prmname-prmname-)
 - [Show Build](#showbuild-prmname)
 - [Apply Excel Changes](#excel--x-path)
+
+### init
+
+Init will ask for your full path to the data repo's /data folder (/path/to/repo/calvin-network-data/data).  Then it will download the runtime and
+create a .prmconf file in your home dir containing the path to both the runtime
+and the data repo so these do not need to be supplied every time you run a command.
 
 ### crawl --data [directory]
 Test crawl a data directory.  Prints the errors, number for nodes/links and number of regions found.
@@ -104,7 +118,7 @@ Write CSV file(s) to dss file.  Requires the Calvin HEC Runtime (see [releases](
 
 Example
 ```
-node prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
+prm build --prefix out --runtime ~/Desktop/HEC_Runtime --data ~/dev/calvin-network-data/data
  ```
 
 By default to files will be created in your current working directory.  If you would like
@@ -115,9 +129,8 @@ to specify the path to create the files, use the *--output* flag.
 
 example:
 ```
-node prm build --prefix partialRun --start 2000-01 --stop 2002-1
+prm build --prefix partialRun --start 2000-01 --stop 2002-1
 ```
-
 
 #### Debug build
 
@@ -129,6 +142,15 @@ The PRM NodeJS code uses a json file to pass information to the dssWriter jar fi
 Normally this file is removed after the jar is finished executing.  To debug to this file,
 you can specify *--debugRuntime* and the file will not be removed after execution.
 
+
+
+### Run
+
+```bash
+prm run --prefix [prefix] --runtime [/path/to/hec/runtime]
+```
+
+Run the hecprm.exe program with provided prefix files.  Wine is required.
 
 ### show [prmname] [prmname] ...
 Print a list of nodes as they are represented in the pri files.  You can pass 'ALL'

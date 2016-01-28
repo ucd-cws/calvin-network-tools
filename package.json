@@ -1,11 +1,14 @@
 {
   "name": "calvin-network-tools",
-  "version": "1.0.0",
-  "description": "CCommand line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
+  "version": "1.0.8",
+  "description": "Command line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "init": "npm install && node init.js"
+  },
+  "bin": {
+    "prm": "bin/prm.bin.js"
   },
   "repository": {
     "type": "git",
@@ -13,9 +16,14 @@
   },
   "keywords": [
     "water",
-    "California"
+    "California",
+    "CALVIN",
+    "HOBBES",
+    "UC Davis",
+    "Center for Watershed Sciences",
+    "HEC-PRM"
   ],
-  "author": "Center for Watershed Sciences",
+  "author": "UC Davis: Center for Watershed Sciences",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ucd-cws/calvin-network-tools/issues"
@@ -24,15 +32,13 @@
   "dependencies": {
     "adm-zip": "^0.4.7",
     "async": "^1.4.2",
+    "colors": "^1.1.2",
     "csv-parse": "^1.0.0",
     "csv-stringify": "0.0.8",
     "extend": "^3.0.0",
-    "globby": "^2.1.0",
     "minimist": "^1.2.0",
-    "node-getopt": "^0.2.3",
     "node-uuid": "^1.4.7",
     "rimraf": "^2.4.3",
-    "sphericalmercator": "^1.0.3",
     "sprintf-js": "^1.0.3",
     "superagent": "^1.4.0",
     "walk": "^2.3.9",

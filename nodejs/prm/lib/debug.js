@@ -40,7 +40,7 @@ var sourceLink = {
 
 module.exports = function(args, nodes) {
 
-  var cost = args['debug-cost'] || 200000;
+  var cost = args['debug-cost'] || 2000000;
 
   var all = false, matches = [];
   if( args.debug === '*' || args.debug.toLowerCase() === 'all' ) {
@@ -59,8 +59,8 @@ module.exports = function(args, nodes) {
 
   for( var i = 0; i < nodes.length; i++ ) {
     np = nodes[i].properties;
-
-    if( np.type !== 'Diversion' && (all || matches.indexOf(np.prmname.toLowerCase()) > -1) ) {
+      if( np.type != 'Diversion' &&
+	  (all || matches.indexOf(np.prmname.toLowerCase()) > -1 )) {
       newList.push({
         properties : {
           type : 'Diversion',
@@ -80,9 +80,9 @@ module.exports = function(args, nodes) {
           costs : {}
         }
       });
-
-      newList.push(nodes[i]);
     }
+      // Push this regardless
+      newList.push(nodes[i]);
   }
 
   return newList;

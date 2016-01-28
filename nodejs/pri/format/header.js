@@ -32,8 +32,8 @@ module.exports = function(args) {
   header.push('J11.0E-05 1.0E+06   1.0       1.0       1         3');
 
   // What to save
-  header.push(sprintf('%-8.8s  %-70.70s','ZWTS','-ALL'));
-  header.push(sprintf('%-8.8s  %-70.70s','ZWTS',zwts.join(' ')));
+  header.push(sprintf('%-8.8s  %-80.80s','ZWTS','-ALL'));
+  header.push(sprintf('%-8.8s  %-80.80s','ZWTS',zwts.join(' ')));
 
   // Not sure
   header.push(sprintf('%-8.8s  %-70.70s','ZWFRQ',zwfrq.join(' ')));

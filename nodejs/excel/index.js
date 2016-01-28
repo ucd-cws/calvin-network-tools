@@ -8,9 +8,14 @@ var stringify = require('csv-stringify');
 var path = require('path');
 var crawler = require('../crawler');
 
-module.exports = function(args) {
+var callback;
+
+module.exports = function(args, cb) {
+  var callback = cb;
+
   if( !fs.existsSync(args.x) ) {
-    return console.log('Invalid file: '+args.x);
+    console.log('Invalid file: '+args.x);
+    return callback();
   }
 
   var workbook = xlsx.readFile(args.x);
@@ -46,6 +51,7 @@ function update(items, args) {
       },
       function(err) {
         console.log('done.');
+        callback();
       }
     );
 
