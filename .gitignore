@@ -11,5 +11,5 @@ dssWriter.jar
 *.LOC
 *.BIN
 *.dsc
-dssExportJson
+dssExportJson*
 tempPrm.txt
