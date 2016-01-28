@@ -1,5 +1,7 @@
 'use strict';
 
+var HEC_VERSION = 'v1.4';
+
 var request = require('superagent');
 var AdmZip = require('adm-zip');
 var rimraf = require('rimraf');
@@ -13,7 +15,7 @@ var runtimeFolder = path.join(__dirname, '..', '..', 'HEC_Runtime');
 var extractTo = path.join(__dirname, '..', '..');
 
 
-var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/download/v1.3/HEC_Runtime.zip';
+var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/download/'+HEC_VERSION+'/HEC_Runtime.zip';
 var dataRepo = '';
 
 function getUserHome() {
