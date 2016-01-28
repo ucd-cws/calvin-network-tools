@@ -10,4 +10,6 @@ dssWriter.jar
 *.ERR
 *.LOC
 *.BIN
+*.dsc
+dssExportJson
 tempPrm.txt

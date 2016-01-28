@@ -6,6 +6,7 @@
 
 var fs = require('fs');
 var os = require('os');
+var colors = require('colors');
 var path = require('path');
 var exec = require('child_process').exec;
 
@@ -24,10 +25,16 @@ module.exports = function(lib, params, options, callback) {
 
   // run the custom dssWriter jar using the packaged java (Win 32bit), HEC's java lib and HEC's system DLL's
   // (DLL's supplied with -Djava.library.path).  The jar takes as it's first parameter the path to the tmp file.
-  var cmd = 'java.exe -Djava.library.path=\'../../lib;${env_var:PATH}\' -jar ../../dssWriter.jar '+paramFile;
+  var cmd = [
+      'java.exe',
+      "-Djava.library.path='"+path.join('..','..','lib')+";${env_var:PATH}'",
+      '-jar',
+      path.join('..','..','dssWriter.jar'),
+      paramFile
+  ];
   // if we are not running in windows, we need to use wine.
   if( os.type() !== 'Windows_NT' ) {
-    cmd = 'wine '+cmd;
+    cmd.unshift('wine');
   }
 
   // set current working directory of the exec env to the runtime/jre/bin path.
@@ -37,19 +44,31 @@ module.exports = function(lib, params, options, callback) {
   // run
   if( options.verbose ) {
     console.log(cwd);
-    console.log(cmd);
+    console.log(cmd.join(' '));
   }
 
-  exec(cmd, {maxBuffer: 1024 * 500, cwd: cwd},
-    function (error, stdout, stderr) {
-      // first thing after program runs, remove the tmp file
-      if( options.keep !== true ) {
-        fs.unlinkSync(paramFile);
-      }
-
-      writeResponse(stdout, error, stderr, callback);
+  var child = exec(cmd.join(' '), {maxBuffer: 1024 * 100000, cwd: cwd});
+  child.stdout.on('data', (data) => {
+    if( !options.verbose ) {
+      return;
     }
-  );
+    console.log(data.replace(/\n$/,''));
+  });
+  child.stderr.on('data', (data) => {
+    if( !options.verbose ) {
+      return;
+    }
+    console.log(colors.red(data.replace(/\n$/,'')));
+  });
+
+  child.on('close', (code) => {
+    // first thing after program runs, remove the tmp file
+    if( options.keep !== true ) {
+      fs.unlinkSync(paramFile);
+    }
+
+    callback();
+  });
 };
 
 function writeResponse(stdout, error, stderr, callback) {

@@ -163,19 +163,7 @@ function writeDssFile(dss, callback) {
     args.verbose = true;
   }
 
-  runtime(args.runtime, dss, args, function(err, resp){
-    if( err ) {
-      console.log('ERROR: writing to dss file.');
-      console.log(err);
-      //return;
-    }
-
-    if( args.verbose ) {
-      console.log(resp.stack);
-    }
-
-    callback();
-  });
+  runtime(args.runtime, dss, args, callback);
 }
 
 function verify(argv) {

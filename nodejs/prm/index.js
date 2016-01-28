@@ -6,7 +6,7 @@ var run = require('./runCmd');
 var checkVersion = require('./checkVersion');
 var docsUrl = 'https://github.com/ucd-cws/calvin-network-tools#commands';
 
-var cmds = ['init', 'crawl', 'build', 'run', 'show', 'list', 'showBuild', 'excel', 'update-library'];
+var cmds = ['init', 'crawl', 'build', 'run', 'show', 'list', 'showBuild', 'excel', 'update-library','update'];
 
 var noCommand = false;
 if( !argv._ ) {
@@ -27,6 +27,13 @@ checkVersion(function(){
     }
   }
   argv.nodes = nodes;
+
+  if( argv._.length === 0 ) {
+    console.log('No known commands given.');
+    console.log('Commands: ['+cmds.join(', ')+']');
+    console.log('See docs here: '+docsUrl);
+    return;
+  }
 
   async.eachSeries(
     argv._,
