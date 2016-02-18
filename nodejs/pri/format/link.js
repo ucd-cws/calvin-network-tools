@@ -137,7 +137,7 @@ function writeLink(config, np, options) {
         config.pd.data.push(dss.cost(prmname, month, np.costs.costs[month]));
       }
 
-    } else if( np.costs.cost >= 0 ) {
+    } else if( np.costs.cost != 0 ) {
       cost = np.costs.cost.toFixed(4);
 
     //IF COST IS ZERO, we need a PQ
