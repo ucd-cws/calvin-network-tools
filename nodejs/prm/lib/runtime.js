@@ -27,9 +27,9 @@ module.exports = function(lib, params, options, callback) {
   // (DLL's supplied with -Djava.library.path).  The jar takes as it's first parameter the path to the tmp file.
   var cmd = [
       'java.exe',
-      "-Djava.library.path='"+path.join('..','..','lib')+";${env_var:PATH}'",
+      '-Djava.library.path="'+path.join(lib,'lib')+';${env_var:PATH}"',
       '-jar',
-      path.join('..','..','dssWriter.jar'),
+      path.join(lib,'dssWriter.jar'),
       paramFile
   ];
   // if we are not running in windows, we need to use wine.
