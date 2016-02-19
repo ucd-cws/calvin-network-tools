@@ -2,6 +2,7 @@
 
 var async = require('async');
 var readFile = require('./readFile');
+var path = require('path');
 
 // process $ref pointers
 function readRefs(dir, filename, parent, attr, parseCsvData, callback) {
@@ -16,14 +17,14 @@ function readRefs(dir, filename, parent, attr, parseCsvData, callback) {
 
           // handle files with local path ie: ./path
           if( parent[attr].$ref.match(/^\.\/.*/) ) {
-            file = dir+'/'+parent[attr].$ref.replace(/^\.\//,'');
+            file = path.join(dir, parent[attr].$ref.replace(/^\.\//,''));
             parts.push(parent[attr].$ref.replace(/^\.\//,''));
             readFile(file, parent, attr, shouldParse(parent, parseCsvData), next);
             return;
 
           // handle files with without . in path ie: path/file
           } else {
-            file = dir+'/'+parent[attr].$ref;
+            file = path.join(dir, parent[attr].$ref);
             parts.push(filename);
             parts.push(parent[attr].$ref);
 
@@ -47,6 +48,10 @@ function readRefs(dir, filename, parent, attr, parseCsvData, callback) {
       setImmediate(callback);
     }
   );
+}
+
+function getPath() {
+
 }
 
 // when running show commands, we don't parse csv data.  That said, the Monthly

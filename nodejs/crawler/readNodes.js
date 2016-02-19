@@ -3,7 +3,7 @@
 var async = require('async');
 var fs = require('fs');
 var readRefs = require('./readRefs');
-
+var path = require('path');
 
 function readNodes(dir, nodes, gitInfo, parseCsvData, callback) {
   var files = fs.readdirSync(dir);
@@ -23,17 +23,17 @@ function readNodes(dir, nodes, gitInfo, parseCsvData, callback) {
         return setImmediate(next);
       }
 
-      var stat = fs.statSync(dir+'/'+file);
+      var stat = fs.statSync(path.join(dir, file));
 
       // if child file is a dir recurse in
       if( stat.isDirectory() ) {
-        return readNodes(dir+'/'+file, nodes, gitInfo, parseCsvData, next);
+        return readNodes(path.join(dir, file), nodes, gitInfo, parseCsvData, next);
 
       // if this is a geojson file, let's do some stuff
       } else if ( stat.isFile() && file.match('\.geojson$') ) {
 
         // clean and read node/link
-        var d = fs.readFileSync(dir+'/'+file, 'utf-8').replace(/[\r\n]/g,'');
+        var d = fs.readFileSync(path.join(dir, file), 'utf-8').replace(/[\r\n]/g,'');
         d = JSON.parse(d);
 
         // check prmname
@@ -57,7 +57,7 @@ function readNodes(dir, nodes, gitInfo, parseCsvData, callback) {
         // set repo information for the node
         d.properties.repo = {
           dir : dir,
-          dirNodeName : dir.replace(/.*\//,''),
+          dirNodeName : dir.replace(/.*(\/|\\)/,''),
           filename : file
         };
 
