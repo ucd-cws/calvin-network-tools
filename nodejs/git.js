@@ -38,9 +38,9 @@ function gitInfo(cwd, callback) {
         if( !stdout ) {
           onResp('origin', '');
         } else if( stdout.match(/.*git@github.com:.*/) ) {
-          onResp('origin', stdout.replace(/.*github.com:/,'').replace(/.git\n$/,''));
+          onResp('origin', stdout.replace(/.*github.com:/,'').replace(/.git\n$/,'').replace(/\n/g,''));
         } else {
-          onResp('origin', stdout.replace(/.*github.com\//,'').replace(/.git\n$/,''));
+          onResp('origin', stdout.replace(/.*github.com\//,'').replace(/.git\n$/,'').replace(/\n/g,''));
         }
       }
     );

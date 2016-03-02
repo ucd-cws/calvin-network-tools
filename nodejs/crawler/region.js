@@ -125,6 +125,11 @@ var Region = function(root, name, branch) {
           geo : this.geo
       };
 
+      if( name ) {
+        json.path = root+'/'+name;
+      }
+
+
       if( sub.length > 0 ) {
         json.subregions = sub;
       }

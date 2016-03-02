@@ -10,12 +10,10 @@ var runtimePath = path.join(__dirname, '..','..','HEC_Runtime');
 var tmpPath = path.join(utils.getUserHome(),'.HEC_Runtime');
 var moved = false;
 
-if( utils.fileExistsSync(runtimePath) ) {
-  if( !utils.fileExistsSync(tmpPath) ) {
-    console.log('Moving runtime');
-    fs.renameSync(runtimePath, tmpPath);
-  }
-  moved = true;
+moveHome();
+
+if( !moved ) {
+  console.log('Failed to move runtime.  Please run "prm init"');
 }
 
 console.log('Updating via npm');
@@ -43,3 +41,32 @@ exec('npm install -g calvin-network-tools', {},
     }
   }
 );
+
+
+function moveHome() {
+  try {
+    if( utils.fileExistsSync(runtimePath) ) {
+      if( !utils.fileExistsSync(tmpPath) ) {
+        console.log('Attempting to move runtime');
+        fs.renameSync(runtimePath, tmpPath);
+      }
+      moved = true;
+    }
+  } catch(e) {
+    console.log('Failed to stash runtime in home dir, attempting parent');
+    moveUp();
+  }
+}
+
+function moveUp() {
+  try {
+    tmpPath = path.join(__dirname, '..', '..','..','.HEC_Runtime');
+    if( utils.fileExistsSync(runtimePath) ) {
+      if( !utils.fileExistsSync(tmpPath) ) {
+        console.log('Attempting to move runtime, again');
+        fs.renameSync(runtimePath, tmpPath);
+      }
+      moved = true;
+    }
+  } catch(e) {}
+}
