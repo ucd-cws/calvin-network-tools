@@ -7,6 +7,7 @@ var path = require('path');
 // process $ref pointers
 function readRefs(dir, filename, parent, attr, parseCsvData, callback) {
   var keys = Object.keys(parent[attr]);
+
   async.eachSeries(keys,
     function(key, next) {
 

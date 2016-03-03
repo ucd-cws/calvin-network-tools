@@ -46,10 +46,6 @@ function crawl(root, regionLookup, geojson, parseCsvData, callback) {
 
   processLinks(geojson.features, lookup);
 
-  if( !parseCsvData ) {
-    return callback();
-  }
-
   async.eachSeries(
     geojson.features,
     function(feature, next) {

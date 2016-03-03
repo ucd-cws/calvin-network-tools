@@ -40,9 +40,9 @@ module.exports = function(type, argv, callback) {
     var nodes, all = false;
     if( argv.debug ) {
       all = true;
-      nodes = debug(argv, results.nodes);
+      nodes = debug(argv, results.nodes.features);
     } else {
-      nodes = results.nodes;
+      nodes = results.nodes.features;
     }
 
     for( var i = 0; i < nodes.length; i++ ) {

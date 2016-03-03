@@ -21,12 +21,13 @@ module.exports = function(dir, args, callback) {
 
   console.log('Crawling data directory');
   crawler(path, function(result){
-    for( var i = 0; i < result.nodes.length; i++ ) {
-      if( reader.hasParam(result.nodes[i].properties.prmname, 'FLOW_LOC(KAF)') ) {
-        console.log(result.nodes[i].properties.prmname+': ');
+    var nodes = result.nodes.features;
+    for( var i = 0; i < nodes.length; i++ ) {
+      if( reader.hasParam(nodes[i].properties.prmname, 'FLOW_LOC(KAF)') ) {
+        console.log(nodes[i].properties.prmname+': ');
 
-        var newData = reader.getDataArray(result.nodes[i].properties.prmname, 'FLOW_LOC(KAF)');
-        var oldData = result.nodes[i].properties.flow;
+        var newData = reader.getDataArray(nodes[i].properties.prmname, 'FLOW_LOC(KAF)');
+        var oldData = nodes[i].properties.flow;
 
         // round dss data
         for( var j = 1; j < newData.length; j++ ) {

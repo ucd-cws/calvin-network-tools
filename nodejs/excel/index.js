@@ -47,7 +47,7 @@ function update(items, args) {
 
     async.eachSeries(items,
       function(item, next){
-        updateNode(item, result.nodes, args.data.replace(/data\/?$/, ''), next);
+        updateNode(item, result.nodes.features, args.data.replace(/data\/?$/, ''), next);
       },
       function(err) {
         console.log('done.');

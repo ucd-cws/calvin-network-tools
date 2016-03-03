@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var crawler = require('../../nodejs/crawlerV2');
+var crawler = require('../../nodejs/crawler');
 var data = '/Users/jrmerz/dev/watershed/calvin-network-data/data';
 
 var network = {

@@ -99,7 +99,8 @@ function writeLink(config, np, options) {
         b += writeMonthlyBound('BL', bound)+'\n';
       } else if( bound.type === 'UBT' ) {
         if( !fs.existsSync(bound.bound) ) {
-          console.log('File not found, ignoring: '+bound.bound);
+          console.log('Bound file not found, ignoring: ');
+          console.log(bound.bound);
           continue;
         }
         // set pri path
@@ -122,7 +123,8 @@ function writeLink(config, np, options) {
     if( np.costs.type === 'Monthly Variable' ) {
       for( var month in np.costs.costs ){
         if( !fs.existsSync(np.costs.costs[month]) ) {
-          console.log('File not found, ignoring: '+np.costs.costs[month]);
+          console.log('Cost file not found, ignoring: ');
+          console.log(np.costs.costs[month]);
           continue;
         }
 
@@ -160,7 +162,8 @@ function writeLink(config, np, options) {
   if( np.inflows ) {
     for( var name in np.inflows ) {
       if( !fs.existsSync(np.inflows[name].inflow) ) {
-        console.log('File not found, ignoring: '+np.inflows[name].inflow);
+        console.log('Flow file not found, ignoring: ');
+        console.log(np.inflows[name].inflow);
         continue;
       }
 
@@ -185,7 +188,8 @@ function writeLink(config, np, options) {
 
   if( np.evaporation ) {
     if( !fs.existsSync(np.evaporation) ) {
-      console.log('File not found, ignoring: '+np.evaporation);
+      console.log('Evaporation File not found, ignoring: ');
+      console.log(np.evaporation);
     } else {
       ev = dss.path.evapo(prmname)+'\n';
       // set dss writer json object

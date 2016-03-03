@@ -35,17 +35,14 @@ module.exports = function(file, object, attr, parseCsvData, callback) {
   }
 };
 
-var numMatch1 = /^-?\d+\.?\d*$/;
-var numMatch2 = /^-?\d*\.\d+$/;
-var numMatch3 = /^-?\d*\.?\d*e-?\d+$/;
 
 function parseInts(data) {
   for( var i = 0; i < data.length; i++ ) {
     for( var j = 0; j < data[i].length; j++ ) {
-      if( data[i][j].match(numMatch1) || data[i][j].match(numMatch2) || data[i][j].match(numMatch3) ) {
+      if( data[i][j].match(/^-?\d+\.?\d*$/) || data[i][j].match(/^-?\d*\.\d+$/) ) {
         var t = Number(data[i][j]);
         if( !isNaN(t) ) {
-          data[i][j] = t.valueOf();
+          data[i][j] = t;
         }
       }
     }

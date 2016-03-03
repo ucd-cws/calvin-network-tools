@@ -1,5 +1,5 @@
 // expose utils for other apps
 
 module.exports = {
-  crawler : require('./nodejs/crawlerV2')
+  crawler : require('./nodejs/crawler')
 };

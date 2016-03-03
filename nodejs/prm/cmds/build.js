@@ -48,13 +48,13 @@ function onCrawlComplete(results){
     o.initialize = args.initialize !== undefined ? args.initialize : 'init';
   }
 
-  updateStorage(args.start, args.stop, results.nodes, function(){
+  updateStorage(args.start, args.stop, results.nodes.features, function(){
 
     var nodes;
     if( args.debug ) {
-      nodes = debug(args, results.nodes);
+      nodes = debug(args, results.nodes.features);
     } else {
-      nodes = results.nodes;
+      nodes = results.nodes.features;
     }
 
     for( var i = 0; i < nodes.length; i++ ) {
