@@ -18,19 +18,21 @@ function crawl(root, regionLookup, geojson, parseCsvData, callback) {
       var parts = node.$ref.split('/');
       var filename = parts.splice(parts.length-1, 1)[0];
 
-      newNode.properties.regions = parts;
+      newNode.properties.regions = [];
       newNode.properties.repo = {
         path : parts.join('/'),
         filename : filename
       };
+      newNode.properties.id = parts.join('/');
 
+      var regionPath = extend(false, [], parts);
       for( var j = parts.length-1; j >= 0; j-- ) {
-        region = regionLookup[parts[j]];
+        region = regionLookup[regionPath.join('/')];
         if( region ) {
           region.properties.nodes[newNode.properties.prmname] = newNode.properties.type;
-          newNode.properties.regions = extend(false, [], region.properties.parents);
-          break;
+          newNode.properties.regions.push(regionPath.join('/'));
         }
+        regionPath.splice(j, 1);
       }
 
       lookup[newNode.properties.prmname] = newNode;
@@ -51,7 +53,7 @@ function crawl(root, regionLookup, geojson, parseCsvData, callback) {
   async.eachSeries(
     geojson.features,
     function(feature, next) {
-      readRefs(path.join(root, feature.properties.repo.path), feature.properties.prmname, feature, 'properties', parseCsvData, next);
+      readRefs(path.join(root, feature.properties.repo.path), feature.properties.id, feature, 'properties', parseCsvData, next);
     },
     callback
   );
@@ -96,12 +98,12 @@ function processLinks(nodes, lookup) {
 
       if( !origin || !terminus ) {
         if( global.debug ) {
-          console.log('Found link but nodes are missing geo: '+node.properties.prmname);
+          console.log('Found link but nodes are missing geo: '+node.properties.id);
         }
         return;
       } else if( !origin.geometry || !terminus.geometry ) {
         if( global.debug ) {
-          console.log('Found link but nodes are missing geo: '+node.properties.prmname);
+          console.log('Found link but nodes are missing geo: '+node.properties.id);
         }
         return;
       }
@@ -116,7 +118,7 @@ function processLinks(nodes, lookup) {
 
     } else {
       if( global.debug ) {
-        console.log('Found node with missing geo but not link: '+node.properties.prmname);
+        console.log('Found node with missing geo but not link: '+node.properties.id);
       }
       removeList.push(node);
     }

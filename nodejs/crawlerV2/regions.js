@@ -24,7 +24,6 @@ function crawl(root, geojson, callback) {
         filename : filename
       };
 
-
       newFeature.properties.id = id;
       lookup[id] = newFeature;
 
