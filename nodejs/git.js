@@ -4,8 +4,23 @@ var exec = require('child_process').exec;
 
 module.exports = {
     name: 'git',
-    info : gitInfo
+    info : gitInfo,
+    status : gitStatus
 };
+
+function gitStatus(cwd, callback) {
+  exec('git status -s', {cwd: cwd},
+    function (error, stdout, stderr) {
+      var changes = (stdout || '').split('\n');
+      for( var i = changes.length-1; i >= 0; i-- ) {
+        if( changes[i] === ''  ) {
+          changes.splice(i, 1);
+        }
+      }
+      callback(error, changes);
+    }
+  );
+}
 
 function gitInfo(cwd, callback) {
     var c = 0;

@@ -1,5 +1,7 @@
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
 var diff = require('deep-diff').diff;
 var crawler = require('../../../crawler');
 var ExportReader = require('./jsonExportReader');
@@ -20,8 +22,9 @@ module.exports = function(dir, args, callback) {
   }
 
   console.log('Crawling data directory');
-  crawler(path, function(result){
+  crawler(path, {parseCsv: true}, function(result){
     var nodes = result.nodes.features;
+
     for( var i = 0; i < nodes.length; i++ ) {
       if( reader.hasParam(nodes[i].properties.prmname, 'FLOW_LOC(KAF)') ) {
         console.log(nodes[i].properties.prmname+': ');
@@ -36,9 +39,11 @@ module.exports = function(dir, args, callback) {
 
         if( newData && !oldData ) {
           console.log('  -- New');
+          updateCsvData(path, nodes[i], newData);
           continue;
         }
 
+        // TODO, make this a simple string compare
         var h1 = toHash(oldData);
         var h2 = toHash(newData);
 
@@ -47,6 +52,7 @@ module.exports = function(dir, args, callback) {
           console.log('  -- No Changes');
         } else {
           console.log('  -- Changes: '+differences.length);
+          updateCsvData(path, nodes[i], newData);
         }
 
       }
@@ -54,6 +60,30 @@ module.exports = function(dir, args, callback) {
     callback();
   });
 };
+
+function updateCsvData(root, node, newData) {
+  var filepath = path.join(root, node.properties.repo.path, node.properties.repo.filename);
+  var csvpath = path.join(root, node.properties.repo.path, 'flow.csv');
+  var file = fs.readFileSync(filepath, 'utf-8');
+
+  file = JSON.parse(file.replace(/\n|\r/g, ''));
+  file.properties.flow = {
+    $ref : 'flow.csv'
+  };
+
+  fs.writeFileSync(filepath, JSON.stringify(file, '  ', '  '));
+
+  if( fs.existsSync(csvpath) ) {
+    fs.unlinkSync(csvpath);
+  }
+
+  newData.unshift(['date','kaf']);
+  var csvdata = newData.map(function(row){
+    return row.join(',');
+  }).join('\n');
+
+  fs.writeFileSync(csvpath, csvdata);
+}
 
 function toHash(data) {
   var hash = {};

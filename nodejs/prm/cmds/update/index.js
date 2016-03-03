@@ -5,10 +5,43 @@ var rimraf = require('rimraf');
 var fs = require('fs');
 var processData = require('./processData');
 var runtime = require('../../lib/runtime');
+var git = require('../../../git');
 var dirPreFix = 'dssExportJson';
 
 module.exports = function(args, callback) {
   console.log('Running **Update** command.\n');
+
+  var path;
+  if( args.d ) {
+    path = args.d;
+  } else if( args.data ) {
+    path = args.data;
+  }
+
+  if( !path ) {
+    console.log('No data path provided');
+    process.exit(-1);
+  }
+
+  // make sure the repo is all checked in
+  git.status(path, function(err, changes) {
+    if( err ) {
+      console.log('Error checking git status for: '+path);
+      process.exit(-1);
+    }
+    if( changes.length > 0 ) {
+      console.log('ERROR: your data directory must have a clean git status.');
+      console.log('The data directory '+path+' has the following '+changes.length+' changes:\n');
+      console.log(changes.join('\n'));
+      console.log('Please commit changes, then try running "update" again');
+      process.exit(-1);
+    }
+
+    run(args, callback);
+  });
+};
+
+function run(args, callback) {
   var t = new Date().getTime();
 
   var params = {
@@ -42,7 +75,7 @@ module.exports = function(args, callback) {
       });
     });
   });
-};
+}
 
 function cleanTmpDir(dir, clearCache, callback) {
   if( fs.existsSync(dir) && clearCache ) {

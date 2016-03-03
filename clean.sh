@@ -1,3 +1,3 @@
 #! /bin/bash
 
-rm *.dss *.pro *.pri tempPrm.txt HECPRM.* PRM_MCST.BIN
+rm *.dss *.pro *.pri tempPrm.txt HECPRM.* PRM_MCST.BIN *.dsc
