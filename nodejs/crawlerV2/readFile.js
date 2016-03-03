@@ -45,7 +45,7 @@ function parseInts(data) {
       if( data[i][j].match(numMatch1) || data[i][j].match(numMatch2) || data[i][j].match(numMatch3) ) {
         var t = Number(data[i][j]);
         if( !isNaN(t) ) {
-          data[i][j] = t.valuOf();
+          data[i][j] = t.valueOf();
         }
       }
     }
