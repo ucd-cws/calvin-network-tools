@@ -11,25 +11,44 @@ function crawl(root, geojson, callback) {
     if( region.$ref ) {
       var newFeature = readGeoJson(path.join(root, region.$ref));
       var parts = region.$ref.split('/');
-      var filename = parts.splice(parts.length-1, 1)[0];
 
+      var filename = parts.splice(parts.length-1, 1)[0];
+      var id = parts.join('/');
+      parts.splice(parts.length-1, 1);
 
       newFeature.properties.parents = parts;
+      newFeature.properties.subregions = [];
       newFeature.properties.nodes = {};
       newFeature.properties.repo = {
         path : parts.join('/'),
         filename : filename
       };
 
-      if( parts.length > 0 ) {
-        var id = parts[parts.length-1];
-        newFeature.properties.id = id;
-        lookup[id] = newFeature;
-      }
+
+      newFeature.properties.id = id;
+      lookup[id] = newFeature;
+
 
       geojson.features[i] = newFeature;
     }
   }
+
+  geojson.features.forEach(function(region){
+    if( !region.properties.parents ) {
+      return;
+    }
+    if( region.properties.parents.length === 0 ) {
+      return;
+    }
+
+    var parent = region.properties.parents[region.properties.parents.length-1];
+    //console.log('- '+region.properties.id);
+    //console.log(parent);
+
+    if( lookup[parent] ) {
+      lookup[parent].properties.subregions.push(region.properties.id);
+    }
+  });
 
   return lookup;
 }

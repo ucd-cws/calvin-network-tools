@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var crawler = require('../../nodejs/crawler');
+var crawler = require('../../nodejs/crawlerV2');
 var data = '/Users/jrmerz/dev/watershed/calvin-network-data/data';
 
 var network = {
@@ -16,13 +16,13 @@ var regions = {
 
 crawler(data, {parseCsv : false}, function(results){
 
-  results.nodes.forEach(function(node){
+  results.nodes.features.forEach(function(node){
     network.features.push({
-      $ref : node.properties.repo.dir.replace(data+'/','')+'/'+node.properties.repo.filename
+      $ref : node.properties.repo.dir.replace(data,'')+'/'+node.properties.repo.filename
     });
   });
 
-  results.regions.forEach(function(node){
+  results.regions.features.forEach(function(node){
     if( !node.path ) return;
 
     regions.features.push({
