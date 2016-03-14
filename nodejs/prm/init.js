@@ -72,14 +72,25 @@ function get() {
   console.log('\nDownloading runtime, this might take a minute...');
 
   var file = fs.createWriteStream(runtimeZip);
-  var req = request.get(runtimeUrl);
-  req.pipe(file);
-  req.on('end', function() {
+  var p = request
+    .get(runtimeUrl)
+    .pipe(file); // returns write stream pipe
+
+  p.on('end', function(){
+    extract();
+  });
+  p.on('finish', function(){
     extract();
   });
 }
 
+var ranExtract = false;
 function extract() {
+  if( ranExtract ) {
+    return;
+  }
+  ranExtract = true;
+
   console.log('Extracting runtime, please wait...');
 
   // reading archives

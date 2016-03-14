@@ -16,36 +16,33 @@ function crawl(root, geojson, callback) {
       var id = parts.join('/');
       parts.splice(parts.length-1, 1);
 
-      newFeature.properties.parents = parts;
-      newFeature.properties.subregions = [];
-      newFeature.properties.nodes = {};
-      newFeature.properties.repo = {
-        path : parts.join('/'),
-        filename : filename
+      newFeature.properties.hobbes = {
+        parents : parts,
+        subregions : [],
+        nodes : {},
+        repo : {
+          path : parts.join('/'),
+          filename : filename
+        },
+        id : id
       };
 
-      newFeature.properties.id = id;
       lookup[id] = newFeature;
-
-
       geojson.features[i] = newFeature;
     }
   }
 
   geojson.features.forEach(function(region){
-    if( !region.properties.parents ) {
+    if( !region.properties.hobbes.parents ) {
       return;
     }
-    if( region.properties.parents.length === 0 ) {
+    if( region.properties.hobbes.parents.length === 0 ) {
       return;
     }
 
-    var parent = region.properties.parents[region.properties.parents.length-1];
-    //console.log('- '+region.properties.id);
-    //console.log(parent);
-
+    var parent = region.properties.hobbes.parents[region.properties.hobbes.parents.length-1];
     if( lookup[parent] ) {
-      lookup[parent].properties.subregions.push(region.properties.id);
+      lookup[parent].properties.hobbes.subregions.push(region.properties.hobbes.id);
     }
   });
 

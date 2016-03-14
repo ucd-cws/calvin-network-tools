@@ -6,6 +6,12 @@ running the HEC-PRM model code.
 
 The [HEC-PRM](http://www.hec.usace.army.mil/software/) code is distributed as a windows binary.   Further, HEC-PRM uses DSS formatted files as input.  We use the DSSVUE software to transfer data into and out of the DSS format.  While, DSSVue is written in JAVA, precompiled libraries for this package only work in the Windows environment.  For these two reasons, if you are running this software on MacOS or Linux, you will need to run a Windows emulator, like wine.
 
+## Requirements
+
+- [NodeJS](http://nodejs.org)
+  - use apt-get (linux) or install from website
+- [git](https://git-scm.com/downloads)
+
 ## Quick Start
 
 Make sure you have pulled the [data repo](https://github.com/ucd-cws/calvin-network-data).
@@ -30,12 +36,6 @@ This will:
  - install npm dependencies
  - pull and extract the runtime
  - setup the .prmconf file with runtime and data repo locations
-
-
-## Requirements
-
-- [NodeJS](http://nodejs.org)
-  - use apt-get (linux) or install from website
 
 ### Calvin HEC Runtime
 

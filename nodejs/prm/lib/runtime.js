@@ -47,7 +47,7 @@ module.exports = function(lib, params, options, callback) {
     console.log(cmd.join(' '));
   }
 
-  var child = exec(cmd.join(' '), {maxBuffer: 1024 * 100000, cwd: cwd});
+  var child = exec(cmd.join(' '), {maxBuffer: 1024 * 100000, cwd: cwd, shell: '/bin/bash'});
   child.stdout.on('data', (data) => {
     if( !options.verbose ) {
       return;
@@ -70,34 +70,3 @@ module.exports = function(lib, params, options, callback) {
     callback();
   });
 };
-
-function writeResponse(stdout, error, stderr, callback) {
-  var org = stdout;
-
-  try {
-    // the HEC java lib pollutes stdout.  the custom dssWriter throws some
-    // JSON in there as well to communicate back to us.  See if we can find
-    // it.
-    var json = {
-      message : 'If you see this, max buffer proly exceeded',
-      stack : ''
-    };
-    if( stdout.match(/\{.*\}/) ){
-      json = stdout.match(/\{.*\}/);
-      var stack = stdout.replace(json, '');
-      json = JSON.parse(json);
-      json.stack = stack;
-    }
-
-    callback(null, json);
-  } catch(e) {
-    // if we fail to find any JSON in the response, something bad happened,
-    // error out and report back everything we have
-    callback({
-      error : error,
-      message : 'failed to parse stdout',
-      stdout  : org,
-      stderr : stderr
-    });
-  }
-}

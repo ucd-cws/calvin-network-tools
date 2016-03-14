@@ -5,10 +5,13 @@ var extend = require('extend');
 var async = require('async');
 var readGeoJson = require('./readGeoJson');
 var readRefs = require('./readRefs');
+var uid;
 
-function crawl(root, regionLookup, geojson, parseCsvData, callback) {
+function crawl(root, regionLookup, geojson, options, callback) {
   var region, node;
   var lookup = {};
+  var parseCsvData = options.parseCsvData;
+  uid = options.walkerConfig.id;
 
   for( var i = 0; i < geojson.features.length; i++ ) {
     node = geojson.features[i];
@@ -16,26 +19,30 @@ function crawl(root, regionLookup, geojson, parseCsvData, callback) {
     if( node.$ref ) {
       var newNode = readGeoJson(path.join(root, node.$ref));
       var parts = node.$ref.split('/');
+      var type = node.type;
       var filename = parts.splice(parts.length-1, 1)[0];
 
-      newNode.properties.regions = [];
-      newNode.properties.repo = {
-        path : parts.join('/'),
-        filename : filename
+      newNode.properties.hobbes = {
+        regions : [],
+        repo : {
+          path : parts.join('/'),
+          filename : filename
+        },
+        type : type,
+        id : parts.join('/')
       };
-      newNode.properties.id = parts.join('/');
 
       var regionPath = extend(false, [], parts);
       for( var j = parts.length-1; j >= 0; j-- ) {
         region = regionLookup[regionPath.join('/')];
         if( region ) {
-          region.properties.nodes[newNode.properties.prmname] = newNode.properties.type;
-          newNode.properties.regions.push(regionPath.join('/'));
+          region.properties.hobbes.nodes[newNode.properties[uid]] = newNode.properties.hobbes.type;
+          newNode.properties.hobbes.regions.push(region.properties.hobbes.id);
         }
         regionPath.splice(j, 1);
       }
 
-      lookup[newNode.properties.prmname] = newNode;
+      lookup[newNode.properties[uid]] = newNode;
       geojson.features[i] = newNode;
     }
   }
@@ -49,35 +56,35 @@ function crawl(root, regionLookup, geojson, parseCsvData, callback) {
   async.eachSeries(
     geojson.features,
     function(feature, next) {
-      readRefs(path.join(root, feature.properties.repo.path), feature.properties.id, feature, 'properties', parseCsvData, next);
+      readRefs(path.join(root, feature.properties.hobbes.repo.path), feature.properties.id, feature, 'properties', parseCsvData, next);
     },
     callback
   );
 }
 
 function setOriginsTerminals(node, nodes) {
-  if( node.properties.type === 'Diversion' || node.properties.type === 'Return Flow' ) {
+  if( node.properties.hobbes.type === 'link' ) {
     return;
   }
 
   var origins = [];
   var terminals = [];
   for( var i = 0; i < nodes.length; i++ ) {
-    if( nodes[i].properties.terminus === node.properties.prmname ) {
+    if( nodes[i].properties.terminus === node.properties[uid] ) {
       origins.push({
-        prmname : nodes[i].properties.origin,
-        link_prmname : nodes[i].properties.prmname
+        node : nodes[i].properties.origin,
+        link : nodes[i].properties[uid]
       });
-    } else if ( nodes[i].properties.origin === node.properties.prmname ) {
+    } else if ( nodes[i].properties.origin === node.properties[uid] ) {
       terminals.push({
-        prmname : nodes[i].properties.terminus,
-        link_prmname : nodes[i].properties.prmname
+        node : nodes[i].properties.terminus,
+        link : nodes[i].properties[uid]
       });
     }
   }
 
-  node.properties.origins = origins;
-  node.properties.terminals = terminals;
+  node.properties.hobbes.origins = origins;
+  node.properties.hobbes.terminals = terminals;
 }
 
 function processLinks(nodes, lookup) {
