@@ -1,6 +1,6 @@
 'use strict';
 
-var crawler = require('../../crawler');
+var crawler = require('hobbes-network-format');
 
 module.exports = function(argv, callback) {
   console.log('Running **Crawl** command.\n');

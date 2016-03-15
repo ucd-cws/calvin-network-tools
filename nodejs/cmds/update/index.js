@@ -3,20 +3,19 @@
 var path = require('path');
 var rimraf = require('rimraf');
 var fs = require('fs');
+
+var config = require('./config').get();
 var processData = require('./processData');
 var runtime = require('../../lib/runtime');
-var git = require('../../../git');
+var git = require('../../lib/git');
+
 var dirPreFix = 'dssExportJson';
 
-module.exports = function(args, callback) {
+
+module.exports = function(callback) {
   console.log('Running **Update** command.\n');
 
-  var path;
-  if( args.d ) {
-    path = args.d;
-  } else if( args.data ) {
-    path = args.data;
-  }
+  var path = config.data;
 
   if( !path ) {
     console.log('No data path provided');
@@ -37,22 +36,22 @@ module.exports = function(args, callback) {
       process.exit(-1);
     }
 
-    run(args, callback);
+    run(callback);
   });
 };
 
-function run(args, callback) {
+function run(callback) {
   var t = new Date().getTime();
 
   var params = {
     export : true,
-    path : path.join(args.output || process.cwd(), args.prefix+'.dss'),
-    exportRoot : path.join(args.output || process.cwd(), dirPreFix+'_'+args.prefix),
-    regex : args.regex || '.*FLOW_LOC.*'
+    path : path.join(config.workspace || process.cwd(), config.prefix+'.dss'),
+    exportRoot : path.join(config.workspace || process.cwd(), dirPreFix+'_'+config.prefix),
+    regex : config.regex || '.*FLOW_LOC.*'
   };
 
-  if( args.cache && !args['clean-cache'] && fs.existsSync(params.exportRoot) ) {
-    processData(params.exportRoot, args, function(){
+  if( config.cache && !config['clean-cache'] && fs.existsSync(params.exportRoot) ) {
+    processData(params.exportRoot, function(){
       console.log('Finished update: '+(new Date().getTime() - t)+'ms');
       callback();
     });

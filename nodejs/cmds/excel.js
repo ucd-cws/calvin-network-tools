@@ -1,6 +1,5 @@
 'use strict';
 
-var crawler = require('../../crawler');
 var excel = require('../../excel');
 
 module.exports = function(argv, callback) {

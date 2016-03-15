@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs');
-var crawler = require('../../nodejs/crawler');
+var crawler = require('hobbes-network-format');
 var data = '/Users/jrmerz/dev/watershed/calvin-network-data/data';
 
 var network = {
@@ -14,7 +14,7 @@ var regions = {
 };
 
 
-crawler(data, {parseCsv : false}, function(results){
+crawler(data, {parseCsvData : false}, function(results){
 
   results.nodes.features.forEach(function(node){
     network.features.push({

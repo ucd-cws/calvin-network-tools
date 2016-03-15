@@ -57,8 +57,12 @@ module.exports = function(dir) {
       date = new Date(data.dates[i].replace(/T.*/,''));
       m = date.getMonth()+1;
       d = date.getDate();
-      if( m < 10 ) m = '0'+m;
-      if( d < 10 ) d = '0'+d;
+      if( m < 10 ) {
+        m = '0'+m;
+      }
+      if( d < 10 ) {
+        d = '0'+d;
+      }
       arr.push([date.getFullYear()+'-'+m+'-'+d, data.timeSeriesContainer.values[i]]);
     }
     return arr;

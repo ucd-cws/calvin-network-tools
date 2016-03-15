@@ -1,7 +1,8 @@
 'use strict';
 
-var crawler = require('../../crawler');
+var crawler = require('hobbes-network-format');
 var parse = require('csv-parse');
+
 var prepare = require('../lib/prepare');
 var debug = require('../lib/debug');
 var async = require('async');
@@ -35,7 +36,7 @@ module.exports = function(type, argv, callback) {
   }
 
   var config = prepare.init(argv);
-  crawler(data, {parseCsv : false}, function(results){
+  crawler(data, {parseCsvData : false}, function(results){
 
     var nodes, all = false;
     if( argv.debug ) {

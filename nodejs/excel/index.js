@@ -6,7 +6,7 @@ var fs = require('fs');
 var parse = require('csv-parse');
 var stringify = require('csv-stringify');
 var path = require('path');
-var crawler = require('../crawler');
+var crawler = require('hobbes-network-format');
 
 var callback;
 
@@ -43,7 +43,7 @@ module.exports = function(args, cb) {
 };
 
 function update(items, args) {
-  crawler(args.data, {parseCsv:false}, function(result){
+  crawler(args.data, {parseCsvData:false}, function(result){
 
     async.eachSeries(items,
       function(item, next){

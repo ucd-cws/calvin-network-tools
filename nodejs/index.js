@@ -6,8 +6,6 @@ var run = require('./runCmd');
 var checkVersion = require('./checkVersion');
 var docsUrl = 'https://github.com/ucd-cws/calvin-network-tools#commands';
 
-var cmds = ['init', 'crawl', 'build', 'run', 'show', 'list', 'showBuild', 'excel', 'update-library','update'];
-
 var noCommand = false;
 if( !argv._ ) {
   noCommand = true;

@@ -3,18 +3,15 @@
 var fs = require('fs');
 var path = require('path');
 var diff = require('deep-diff').diff;
-var crawler = require('../../../crawler');
+var crawler = require('hobbes-network-format');
+
+var config = require('./config').get();
 var ExportReader = require('./jsonExportReader');
 
-module.exports = function(dir, args, callback) {
+module.exports = function(dir, callback) {
   var reader = new ExportReader(dir);
 
-  var path;
-  if( args.d ) {
-    path = args.d;
-  } else if( args.data ) {
-    path = args.data;
-  }
+  var path = config.data;
 
   if( !path ) {
     console.log('No data path provided');
@@ -22,7 +19,7 @@ module.exports = function(dir, args, callback) {
   }
 
   console.log('Crawling data directory');
-  crawler(path, {parseCsv: true}, function(result){
+  crawler(path, {parseCsvData: true}, function(result){
     var nodes = result.nodes.features;
 
     for( var i = 0; i < nodes.length; i++ ) {

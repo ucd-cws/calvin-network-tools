@@ -1,5 +1,6 @@
 'use strict';
 
+var fs = require('fs');
 var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function trimDates(start, stop, data) {
@@ -27,7 +28,28 @@ function toDate(dateStr, isStop) {
   );
 }
 
+// stupid node.
+function fileExistsSync(path) {
+  try {
+    fs.accessSync(path, fs.F_OK);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+function getUserHome() {
+  return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+}
+
+function getCommands() {
+  
+}
+
 module.exports = {
-  trim : trimDates,
-  toDate : toDate
+  fileExistsSync : fileExistsSync,
+  getUserHome : getUserHome,
+  trimDates : trimDates,
+  toDate : toDate,
+  getCommands : getCommands
 };

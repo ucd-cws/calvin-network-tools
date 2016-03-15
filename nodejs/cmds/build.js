@@ -7,12 +7,12 @@ var uuid = require('node-uuid');
 var parse = require('csv-parse');
 var stringify = require('csv-stringify');
 var async = require('async');
+var crawler = require('hobbes-network-format');
 
 var date = require('./date');
-var crawler = require('../../crawler');
 var runtime = require('../lib/runtime');
 var costs = require('../../dss/cost');
-var prepare = require('../lib/prepare');
+var pri = require('../lib/prepare');
 var debug = require('../lib/debug');
 var dummy = require('../../dss/dummy');
 var updateStorage = require('../lib/updateStorage');
@@ -28,7 +28,7 @@ module.exports = function(argv, cb) {
   args = argv;
   options = verify(argv);
 
-  crawler(options.data, {parseCsv : false}, onCrawlComplete);
+  crawler(options.data, {parseCsvData : false}, onCrawlComplete);
 };
 
 function onCrawlComplete(results){

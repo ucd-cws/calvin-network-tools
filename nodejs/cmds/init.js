@@ -35,7 +35,9 @@ function getDataDir() {
           return go();
         }
       }
-    } catch(e) {}
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   console.log('\nPlease enter the full path of your data directory\n'+
@@ -76,9 +78,6 @@ function get() {
     .get(runtimeUrl)
     .pipe(file); // returns write stream pipe
 
-  p.on('end', function(){
-    extract();
-  });
   p.on('finish', function(){
     extract();
   });

@@ -7,8 +7,6 @@ var fs = require('fs');
 var colors = require('colors/safe');
 var exec = require('child_process').exec;
 
-
-
 module.exports = function(callback) {
   var cancel = false;
 
