@@ -3,17 +3,28 @@
 var spawn = require('child_process').spawn;
 var colors = require('colors');
 var os = require('os');
+var path = require('path');
 
-var cmd = 'wine';
-var argsTemplate = '{{runtime}}/hecprm.exe I={{prefix}}.pri O={{prefix}}.pro '+
-          'T={{prefix}}TS.dss P={{prefix}}PD.dss R={{prefix}}.dss';
+var checkRequired = require('../lib/checkRequired');
+var config = require('../config').get();
 
+var required = ['runtime', 'prefix'];
 
-module.exports = function(argv, callback) {
+module.exports = function(callback) {
   console.log('Running **Run** command.\n');
+  var cmd = 'wine';
 
-  var args = argsTemplate.replace(/{{runtime}}/, argv.runtime);
-  args = args.replace(/{{prefix}}/g, argv.prefix).split(' ');
+  checkRequired(required);
+
+  var runtime = path.join(config.runtime, 'hecprm.exe');
+  var prefix;
+  if( config.workspace ) {
+    prefix = path.join(config.workspace, config.prefix);
+  } else {
+    prefix = config.prefix;
+  }
+
+  var args = `{{runtime}} I={{prefix}}.pri O={{prefix}}.pro T={{prefix}}TS.dss P={{prefix}}PD.dss R={{prefix}}.dss`;
 
   if( os.type() === 'Windows_NT' ) {
     cmd = args.splice(0, 1)[0];

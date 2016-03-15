@@ -1,16 +1,12 @@
 'use strict';
 
+var config = require('../config').get();
 var crawler = require('hobbes-network-format');
 
-module.exports = function(argv, callback) {
+module.exports = function(callback) {
   console.log('Running **Crawl** command.\n');
 
-  var path = '';
-  if( argv.d ) {
-    path = argv.d;
-  } else if( argv.data ) {
-    path = argv.data;
-  }
+  var path = config.data;
 
   if( !path ) {
     console.log('No data path provided');

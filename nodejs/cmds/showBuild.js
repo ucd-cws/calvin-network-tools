@@ -2,88 +2,85 @@
 
 var crawler = require('hobbes-network-format');
 var parse = require('csv-parse');
+var fs = require('fs');
 
-var prepare = require('../lib/prepare');
+var pri = require('../pri');
 var debug = require('../lib/debug');
 var async = require('async');
-var fs = require('fs');
-var date = require('./date');
+var utils = require('../lib/utils');
+var config = require('../config').get();
+var checkRequired = require('../lib/checkRequired');
 
-module.exports = function(type, argv, callback) {
-  if( argv._.length === 0 && !argv.debug ) {
+var required = ['data'];
+
+module.exports = function(type, callback) {
+
+  checkRequired(required);
+
+  if( !config.nodes && !config.debug ) {
     console.log('You need to supply a prmname to show');
     return callback();
   }
-  var prmname = argv._.splice(0,1)[0];
 
-  var data;
-  if( argv.d ) {
-    data = argv.d;
-  } else if( argv.data ) {
-    data = argv.data;
-  }
-
-  if( !data ) {
-    console.log('You need to a data directory with --data');
-    process.exit(-1);
-  }
+  var prmname = config.nodes.splice(0,1)[0];
+  var data = config.data;
 
   var o = {};
-  if( argv['no-initialize'] ) {
+  if( config.noInitialize ) {
     o.initialize = false;
   } else {
-    o.initialize = argv.initialize !== undefined ? argv.initialize : 'init';
+    o.initialize = config.initialize !== undefined ? config.initialize : 'init';
   }
 
-  var config = prepare.init(argv);
+  var pridata = pri.init();
   crawler(data, {parseCsvData : false}, function(results){
 
     var nodes, all = false;
-    if( argv.debug ) {
+    if( config.debug ) {
       all = true;
-      nodes = debug(argv, results.nodes.features);
+      nodes = debug(results.nodes.features);
     } else {
       nodes = results.nodes.features;
     }
 
     for( var i = 0; i < nodes.length; i++ ) {
       if( all || nodes[i].properties.prmname.toUpperCase() === prmname.toUpperCase() ) {
-        prepare.format(nodes[i], config, o);
-        print(config, argv);
-        if( !argv.debug ) {
+        pri.format(nodes[i], pridata, o);
+        print(pridata);
+        if( !config.debug ) {
           return callback();
         }
       }
     }
 
-    if( !argv.debug ) {
+    if( !config.debug ) {
       console.log('prmname '+prmname+' not found.');
     }
     callback();
   });
 };
 
-function print(config, argv) {
+function print(pridata) {
   console.log('*** Time Series ***');
-  var csvFiles = [];
-  for( var i = 0; i < config.ts.data.length; i++ ) {
+  var csvFiles = [], i;
+  for( i = 0; i < config.ts.data.length; i++ ) {
     console.log(config.ts.data[i]);
     csvFiles.push(config.ts.data[i].csvFilePath);
   }
   console.log('*** Penalty ***');
-  for( var i = 0; i < config.pd.data.length; i++ ) {
+  for( i = 0; i < pridata.pd.data.length; i++ ) {
     console.log(config.pd.data[i]);
     csvFiles.push(config.pd.data[i].csvFilePath);
   }
 
-  if( !argv.showData ) {
+  if( !config.showData ) {
     return;
   }
 
   var start, stop;
-  if( argv.start && argv.stop ) {
-    start = date.toDate(argv.start);
-    stop = date.toDate(argv.stop, true);
+  if( config.start && config.stop ) {
+    start = utils.toDate(config.start);
+    stop = utils.toDate(config.stop, true);
   }
 
   async.eachSeries(
@@ -96,13 +93,15 @@ function print(config, argv) {
 
       parse(fs.readFileSync(file, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
         if( start && stop ) {
-          date.trim(start, stop, data);
+          utils.trimDates(start, stop, data);
         }
 
         console.log(data);
         next();
       });
     },
-    function() {}
+    function() {
+      // done
+    }
   );
 }

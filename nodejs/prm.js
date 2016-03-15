@@ -22,9 +22,13 @@ program
   .option('-l  --clean-cache', 'Optional flag for \'update\' command. clears local update cache')
   .option('-l  --cache', 'Optional flag for \'update\' command. cache data read from dss file in local json file')
   .option('-v, --verbose', 'Verbose output, including hec-dss library output')
+  .option('-d, --debug', 'Set debug nodes.  Either "ALL", "*" or comma seperated list of prmnames (no spaces)')
+  .option('-d, --debug-cost', 'set cost for debug nodes (default: 2000000)')
   .option('-o, --show-data', 'Optional flag for \'show-build\' command, will print the csv file data as well')
   .option('-x, --excel-path', 'flag for \'excel\' command, path to excel file to use')
   .option('-e, --debug-runtime', 'Keeps the PRM NodeJS json file used to pass information to the dssWriter (Calvin HEC Runtime) jar')
+  .option('-n, --no-initialize', 'Do not initialize the nodes/links (overrides initialize parameter)')
+  .option('-i, --initialize', 'Initialize parameter for nodes/links (default: init)')
   .option('-a, --args', 'dump the program arguments');
 
 var format = '%4.4s%-29.29s %s';

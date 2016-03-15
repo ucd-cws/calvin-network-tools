@@ -1,19 +1,11 @@
 'use strict';
 
-var excel = require('../../excel');
+var excel = require('../excel');
+var checkRequired = require('../lib/checkRequired');
+var required = ['excel-path', 'data'];
 
-module.exports = function(argv, callback) {
+module.exports = function(callback) {
   console.log('Running **Excel** command.\n');
-
-  if( !argv.data ) {
-    console.log('No path provided');
-    return callback();
-  }
-
-  if( !argv.x ) {
-    console.log('No excel provided');
-    return callback();
-  }
-
-  excel(argv, callback);
+  checkRequired(required);
+  excel(callback);
 };

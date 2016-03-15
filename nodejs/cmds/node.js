@@ -3,37 +3,41 @@
 var crawler = require('hobbes-network-format');
 
 var updateStorage = require('../lib/updateStorage');
-var prepare = require('../lib/prepare');
+var pri = require('../pri');
 var debug = require('../lib/debug');
 var link = require('../../pri/format/link');
 var path = require('path');
+var config = require('../config').get();
 
 var callback;
 
-module.exports = function(argv, cb) {
-  var label = argv.show ? 'Show' : 'List';
-  console.log('Running **'+label+'** command.\n');
+module.exports = function(cb) {
+  console.log('Running **'+config.nodeCmdType+'** command.\n');
 
   callback = cb;
 
-  if( argv.nodes === 0 && !argv.debug ) {
-    console.log('Please provide a nodes to '+label);
+
+  if( !config.nodes && !config.debug ) {
+    console.log('Please provide a nodes to '+config.nodeCmdType);
     return callback();
   }
 
-  if( !argv.data ) {
+  if( !config.data ) {
     console.log('Please provide a data repo location');
     return callback();
   }
 
-  if( argv.show ) {
-    show(argv.nodes, argv);
-  } else if( argv.list ) {
-    list(argv.nodes, argv.data);
+  if( config.nodeCmdType === 'show' ) {
+    show();
+  } else if( config.nodeCmdType === 'list' ) {
+    list();
   }
 };
 
-function list(nodes, datapath) {
+function list() {
+  var nodes = config.nodes;
+  var datapath = config.datapath;
+
   for (var i = 0 ; i < nodes.length; i++) {
     nodes[i] = nodes[i].toUpperCase();
   }
@@ -52,25 +56,28 @@ function list(nodes, datapath) {
   });
 }
 
-function show(nodes, argv) {
+function show() {
+  var nodes = config.nodes;
+  var datapath = config.datapath;
+
   var o = {};
-  if( argv['no-initialize'] ) {
+  if( config['no-initialize'] ) {
     o.initialize = false;
   } else {
-    o.initialize = argv.initialize !== undefined ? argv.initialize : 'init';
+    o.initialize = config.initialize !== undefined ? config.initialize : 'init';
   }
 
   for (var i = 0 ; i < nodes.length; i++) {
     nodes[i] = nodes[i].toUpperCase();
   }
 
-  var config = prepare.init();
-  crawler(argv.data, {parseCsvData : false}, function(results){
+  var pridata = pri.init();
+  crawler(config.data, {parseCsvData : false}, function(results){
     var node, i;
     var list = [];
 
-    if( argv.debug ) {
-      list = debug(argv, results.nodes);
+    if( config.debug ) {
+      list = debug(results.nodes);
     } else {
       for( i = 0; i < results.nodes.length; i++ ) {
         node = results.nodes[i];
@@ -80,12 +87,12 @@ function show(nodes, argv) {
       }
     }
 
-    updateStorage(argv.start, argv.stop, list, function(){
+    updateStorage(config.start, config.stop, list, function(){
       for( var i = 0; i < list.length; i++ ) {
-        prepare.format(list[i], config, o);
+        pri.format(list[i], pridata, o);
       }
 
-      console.log(prepare.pri(config, false));
+      console.log(pri.create(config, false));
       callback();
     });
   });

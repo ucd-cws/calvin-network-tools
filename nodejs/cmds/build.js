@@ -9,78 +9,77 @@ var stringify = require('csv-stringify');
 var async = require('async');
 var crawler = require('hobbes-network-format');
 
-var date = require('./date');
+var config = require('../config').get();
+var utils = require('../lib/utils');
 var runtime = require('../lib/runtime');
-var costs = require('../../dss/cost');
-var pri = require('../lib/prepare');
+var costs = require('../dss/cost');
+var pri = require('../pri');
 var debug = require('../lib/debug');
-var dummy = require('../../dss/dummy');
+var dummy = require('../dss/dummy');
 var updateStorage = require('../lib/updateStorage');
+var checkRequired = require('../lib/checkRequired');
 
-var options;
-var args;
 var callback;
+var required = ['data', 'runtime', 'prefix'];
 
-module.exports = function(argv, cb) {
+module.exports = function(cb) {
   console.log('Running **Build** command.\n');
-
+  checkRequired(required);
   callback = cb;
-  args = argv;
-  options = verify(argv);
 
-  crawler(options.data, {parseCsvData : false}, onCrawlComplete);
+  crawler(config.data, {parseCsvData : false}, onCrawlComplete);
 };
 
 function onCrawlComplete(results){
-  var config = prepare.init(args);
-  config.pd.path = path.join(options.output || process.cwd(), options.prefix+'PD.dss');
-  config.ts.path = path.join(options.output || process.cwd(), options.prefix+'TS.dss');
+  var pridata = pri.init();
+
+  pridata.pd.path = path.join(config.workspace || process.cwd(), config.prefix+'PD.dss');
+  pridata.ts.path = path.join(config.workspace || process.cwd(), config.prefix+'TS.dss');
 
   var start, stop, init, o = {};
-  if( args.start && args.stop ) {
-    start = date.toDate(args.start);
-    stop = date.toDate(args.stop, true);
+  if( config.start && config.stop ) {
+    start = utils.toDate(config.start);
+    stop = utils.toDate(config.stop, true);
   }
 
-  if( args['no-initialize'] ) {
+  if( config.noInitialize ) {
     o.initialize = false;
   } else {
-    o.initialize = args.initialize !== undefined ? args.initialize : 'init';
+    o.initialize = config.initialize !== undefined ? config.initialize : 'init';
   }
 
-  updateStorage(args.start, args.stop, results.nodes.features, function(){
-
+  updateStorage(config.start, config.stop, results.nodes.features, function(){
     var nodes;
-    if( args.debug ) {
-      nodes = debug(args, results.nodes.features);
+    if( config.debug ) {
+      nodes = debug(results.nodes.features);
     } else {
       nodes = results.nodes.features;
     }
 
     for( var i = 0; i < nodes.length; i++ ) {
-      prepare.format(nodes[i], config, o);
+      pri.format(nodes[i], pridata, o);
     }
 
-    write(config, start, stop);
+    write(pridata, start, stop);
   });
 }
 
-function write(config, start, stop) {
+function write(pridata, start, stop) {
   // add dummy pd record
-  config.pd.data.push(dummy());
+  pridata.pd.data.push(dummy());
 
-  var priPath = path.join(options.output || process.cwd(), options.prefix+'.pri');
+  var priPath = path.join(config.output || process.cwd(), config.prefix+'.pri');
 
   console.log('Writing PRI file: '+priPath);
-  fs.writeFileSync(priPath, prepare.pri(config));
+  fs.writeFileSync(priPath, pri.create(pridata));
 
-  console.log('Writing Penalty DSS file: '+config.pd.path);
-  writeDssFile(config.pd, function(err, resp){
+  console.log('Writing Penalty DSS file: '+pridata.pd.path);
+  writeDssFile(pridata.pd, function(err, resp){
 
     if( start && stop ) {
-      trimTsData(start, stop, config.ts, function(ts, tmpDir){
-        writeTsDssFile(config.ts, function(){
-          if( args.keep ) {
+      trimTsData(start, stop, pridata.ts, function(ts, tmpDir){
+        writeTsDssFile(pridata.ts, function(){
+          if( config.debugRuntime ) {
             console.log('Done. Keeping tmp.');
             callback();
           } else {
@@ -111,7 +110,7 @@ function trimTsData(start, stop, ts, callback) {
       function(node, next) {
 
         parse(fs.readFileSync(node.csvFilePath, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
-          date.trim(start, stop, data);
+          utils.trimDates(start, stop, data);
 
           var uid = uuid.v1();
           var newFilePath = path.join(dir, uid+'.csv');
@@ -155,62 +154,5 @@ function cleanTmpDir(dir, callback) {
 }
 
 function writeDssFile(dss, callback) {
-  var options = {};
-  if( args.debugRuntime ) {
-    args.keep = true;
-  }
-  if( args.verbose ) {
-    args.verbose = true;
-  }
-
-  runtime(args.runtime, dss, args, callback);
-}
-
-function verify(argv) {
-  var options = {
-    prefix : '',
-    runtime : '',
-    data : ''
-  };
-
-  if( argv.prefix ) {
-    options.prefix = argv.prefix;
-  }
-
-  if( argv.r ) {
-    options.runtime = argv.r;
-  } else if( argv.runtime ) {
-    options.runtime = argv.runtime;
-  }
-
-  if( argv.d ) {
-    options.data = argv.d;
-  } else if( argv.data ) {
-    options.data = argv.data;
-  }
-
-  if( argv.output ) {
-    options.output = argv.output;
-  }
-
-  for( var key in options ) {
-    if( !options[key] ) {
-      console.log('Missing '+key);
-      process.exit(-1);
-    }
-  }
-
-  if( !fs.existsSync(options.runtime) ) {
-    console.log('Invalid runtime path: '+options.runtime);
-    process.exit(-1);
-  } else if( !fs.existsSync(options.data) ) {
-    console.log('Invalid data repo path: '+options.data);
-    process.exit(-1);
-  }
-
-  return options;
-}
-
-function getUserHome() {
-  return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+  runtime(dss, callback);
 }

@@ -18,11 +18,7 @@ var extractTo = path.join(__dirname, '..', '..');
 var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/download/'+HEC_VERSION+'/HEC_Runtime.zip';
 var dataRepo = '';
 
-function getUserHome() {
-  return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-}
-
-var configPath = path.join(getUserHome(), '.prmconf');
+var configPath = path.join(utils.getUserHome(), '.prmconf');
 
 function getDataDir() {
   // if the data dir has already been set and dir exists, continue
@@ -105,12 +101,11 @@ function write() {
     runtime : runtimeFolder
   };
 
-  fs.writeFileSync(path.join(getUserHome(), '.prmconf'), JSON.stringify(config));
+  fs.writeFileSync(path.join(utils.getUserHome(), '.prmconf'), JSON.stringify(config));
   console.log('All set.');
+  console.log('Help: prm --help');
   console.log('Example build: prm build --prefix test');
-  console.log('Full Docs: https://github.com/ucd-cws/calvin-network-tools');
+  console.log('More Info: https://github.com/ucd-cws/calvin-network-tools');
 }
-
-
 
 getDataDir();

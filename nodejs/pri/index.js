@@ -7,27 +7,22 @@ var link = require('./format/link');
 var node = require('./format/node');
 var create = require('./create');
 
-var args;
+function format(node, config, options) {
+  var props = node.properties;
 
-
-function format(n, config, options) {
-  var np = n.properties;
-
-  if( np.type !== 'Diversion' && np.type !== 'Return Flow' ) {
-    config.pri.nodelist.push(node(np));
+  if( props.type !== 'Diversion' && props.type !== 'Return Flow' ) {
+    config.pri.nodelist.push(node(props));
   }
 
-  link(config, n, options);
+  link(config, node, options);
 }
 
 
 function create(config, showHeader) {
-  return create(config.pri, args, showHeader);
+  return create(config.pri, showHeader);
 }
 
-function init(argv) {
-  args = argv;
-
+function init() {
   return {
     pd : {
       path : '',
