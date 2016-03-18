@@ -5,7 +5,7 @@ var crawler = require('hobbes-network-format');
 var updateStorage = require('../lib/updateStorage');
 var pri = require('../pri');
 var debug = require('../lib/debug');
-var link = require('../../pri/format/link');
+var link = require('../pri/format/link');
 var path = require('path');
 var config = require('../config').get();
 
@@ -92,7 +92,7 @@ function show() {
         pri.format(list[i], pridata, o);
       }
 
-      console.log(pri.create(config, false));
+      console.log(pri.create(pridata.pri, config, false));
       callback();
     });
   });

@@ -19,14 +19,14 @@ program
   .option('-s, --start [YYYY-MM]', 'Specify start date for TimeSeries data')
   .option('-t, --stop [YYYY-MM]', 'Specify stop date for TimeSeries data')
   .option('-g, --regex', 'Optional flag for \'update\' command. regex to use when selecting dss path values to write back to repo.')
-  .option('-l  --clean-cache', 'Optional flag for \'update\' command. clears local update cache')
+  .option('-L  --clean-cache', 'Optional flag for \'update\' command. clears local update cache')
   .option('-l  --cache', 'Optional flag for \'update\' command. cache data read from dss file in local json file')
   .option('-v, --verbose', 'Verbose output, including hec-dss library output')
   .option('-d, --debug', 'Set debug nodes.  Either "ALL", "*" or comma seperated list of prmnames (no spaces)')
-  .option('-d, --debug-cost', 'set cost for debug nodes (default: 2000000)')
-  .option('-o, --show-data', 'Optional flag for \'show-build\' command, will print the csv file data as well')
+  .option('-D, --debug-cost', 'set cost for debug nodes (default: 2000000)')
+  .option('-S, --show-data', 'Optional flag for \'show-build\' command, will print the csv file data as well')
   .option('-x, --excel-path', 'flag for \'excel\' command, path to excel file to use')
-  .option('-e, --debug-runtime', 'Keeps the PRM NodeJS json file used to pass information to the dssWriter (Calvin HEC Runtime) jar')
+  .option('-R, --debug-runtime', 'Keeps the PRM NodeJS json file used to pass information to the dssWriter (Calvin HEC Runtime) jar')
   .option('-n, --no-initialize', 'Do not initialize the nodes/links (overrides initialize parameter)')
   .option('-i, --initialize', 'Initialize parameter for nodes/links (default: init)')
   .option('-a, --args', 'dump the program arguments');
@@ -53,6 +53,8 @@ program.on('--help', function(){
   console.log('');
 });
 
+program.parse(process.argv);
+
 // parse out non-commands, assume the are nodes for show/list command
 var nodes = [];
 for( var i = program.args.length-1; i >= 0; i-- ) {
@@ -65,9 +67,8 @@ program.nodes = nodes;
 // if nothing todo, leave, drop some help
 if( program.args.length === 0 ) {
   console.log('\nNo valid command provided\n');
-  program.outputHelp(function(){
-    process.exit();
-  });
+  process.argv.push('--help');
+  program.parse(process.argv);
   return;
 }
 

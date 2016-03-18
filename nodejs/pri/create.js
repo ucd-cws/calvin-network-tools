@@ -6,6 +6,8 @@ var utils = require('./format/utils');
 module.exports = function(pri, args, showHeader) {
   var outputtext = '';
 
+  console.log(pri);
+
   if( showHeader !== false ) {
     outputtext += header(args);
   }

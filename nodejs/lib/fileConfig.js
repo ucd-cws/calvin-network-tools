@@ -37,7 +37,7 @@ function readConfig(path, program) {
 
   for( var key in config ) {
     if( program[key] === undefined ) {
-      program[key] = program[key];
+      program[key] = config[key];
     }
   }
 }
