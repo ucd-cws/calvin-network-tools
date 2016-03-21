@@ -19,7 +19,13 @@ module.exports = function(type, callback) {
 
   if( !config.nodes && !config.debug ) {
     console.log('You need to supply a prmname to show');
-    return callback();
+    if( callback ) callback();
+    return;
+  }
+  if( config.nodes.length === 0 ) {
+    console.log('You need to supply a prmname to show');
+    if( callback ) callback();
+    return;
   }
 
   var prmname = config.nodes.splice(0,1)[0];
@@ -48,7 +54,8 @@ module.exports = function(type, callback) {
         pri.format(nodes[i], pridata, o);
         print(pridata);
         if( !config.debug ) {
-          return callback();
+          if( callback ) callback();
+          return;
         }
       }
     }
@@ -56,7 +63,8 @@ module.exports = function(type, callback) {
     if( !config.debug ) {
       console.log('prmname '+prmname+' not found.');
     }
-    callback();
+    
+    if( callback ) callback();
   });
 };
 
