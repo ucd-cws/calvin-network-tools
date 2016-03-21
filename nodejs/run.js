@@ -8,12 +8,12 @@ module.exports = function(cmd, callback) {
 
   // check for init command.
   if( cmd === 'init' ) {
-    require('./init.js');
+    require('./cmds/init.js');
     return callback();
   }
 
   if( cmd === 'update-library' ) {
-    require('./updateLibrary');
+    require('./cmds/updateLibrary');
     return;
   }
 

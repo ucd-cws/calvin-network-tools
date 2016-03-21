@@ -8,7 +8,7 @@ var rimraf = require('rimraf');
 var fs = require('fs');
 var path = require('path');
 var readline = require('readline');
-var utils = require('./lib/utils');
+var utils = require('../lib/utils');
 
 var runtimeZip = path.join(__dirname, '..', '..', 'HEC_Runtime.zip');
 var runtimeFolder = path.join(__dirname, '..', '..', 'HEC_Runtime');
