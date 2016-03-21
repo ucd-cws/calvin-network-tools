@@ -4,10 +4,11 @@ var path = require('path');
 var rimraf = require('rimraf');
 var fs = require('fs');
 
-var config = require('./config').get();
+var config = require('../../config').get();
 var processData = require('./processData');
 var runtime = require('../../lib/runtime');
 var git = require('../../lib/git');
+var utils = require('../../lib/utils');
 
 var dirPreFix = 'dssExportJson';
 
@@ -43,14 +44,17 @@ module.exports = function(callback) {
 function run(callback) {
   var t = new Date().getTime();
 
+  var root = utils.getWorkspacePath();
+
   var params = {
     export : true,
-    path : path.join(config.workspace || process.cwd(), config.prefix+'.dss'),
-    exportRoot : path.join(config.workspace || process.cwd(), dirPreFix+'_'+config.prefix),
+    path : path.join(root, config.prefix+'.dss'),
+    exportRoot : path.join(root, dirPreFix+'_'+config.prefix),
     regex : config.regex || '.*FLOW_LOC.*'
   };
 
-  if( config.cache && !config['clean-cache'] && fs.existsSync(params.exportRoot) ) {
+  if( config.cache && !config.cleanCache && fs.existsSync(params.exportRoot) ) {
+    console.log(1);
     processData(params.exportRoot, function(){
       console.log('Finished update: '+(new Date().getTime() - t)+'ms');
       callback();
@@ -58,17 +62,17 @@ function run(callback) {
     return;
   }
 
-  cleanTmpDir(params.exportRoot, args['clean-cache'], function() {
+  cleanTmpDir(params.exportRoot, config.cleanCache, function() {
     // kill this file
-    var dsc = path.join(args.output || process.cwd(), args.prefix+'.dsc');
+    var dsc = path.join(rootDir, config.prefix+'.dsc');
     if( fs.existsSync(dsc) ) {
       fs.unlinkSync(dsc);
     }
 
-    runtime(args.runtime, params, args, function(){
-      processData(params.exportRoot, args, function(){
+    runtime(params, function(){
+      processData(params.exportRoot, function(){
         console.log('Finished update: '+(new Date().getTime() - t)+'ms');
-        cleanTmpDir(params.exportRoot, args.cache, function(){
+        cleanTmpDir(params.exportRoot, config.cache, function(){
           callback();
         });
       });

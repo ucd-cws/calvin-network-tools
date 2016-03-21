@@ -5,7 +5,7 @@ var path = require('path');
 var diff = require('deep-diff').diff;
 var crawler = require('hobbes-network-format');
 
-var config = require('./config').get();
+var config = require('../../config').get();
 var ExportReader = require('./jsonExportReader');
 
 module.exports = function(dir, callback) {
@@ -59,8 +59,8 @@ module.exports = function(dir, callback) {
 };
 
 function updateCsvData(root, node, newData) {
-  var filepath = path.join(root, node.properties.repo.path, node.properties.repo.filename);
-  var csvpath = path.join(root, node.properties.repo.path, 'flow.csv');
+  var filepath = path.join(root, node.properties.hobbes.repo.path, node.properties.hobbes.repo.filename);
+  var csvpath = path.join(root, node.properties.hobbes.repo.path, 'flow.csv');
   var file = fs.readFileSync(filepath, 'utf-8');
 
   file = JSON.parse(file.replace(/\n|\r/g, ''));

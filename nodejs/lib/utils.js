@@ -1,6 +1,8 @@
 'use strict';
 
 var fs = require('fs');
+var path = require('path');
+var config = require('../config').get();
 var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function trimDates(start, stop, data) {
@@ -42,8 +44,16 @@ function getUserHome() {
   return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
 }
 
-function getCommands() {
-  
+function getWorkspacePath() {
+  if( !config.workspace ) {
+    return process.cwd();
+  }
+
+  if( config.workspace.match(/^\//) ) {
+    return config.workspace;
+  }
+
+  return path.join(process.cwd(), config.workspace);
 }
 
 module.exports = {
@@ -51,5 +61,5 @@ module.exports = {
   getUserHome : getUserHome,
   trimDates : trimDates,
   toDate : toDate,
-  getCommands : getCommands
+  getWorkspacePath : getWorkspacePath
 };

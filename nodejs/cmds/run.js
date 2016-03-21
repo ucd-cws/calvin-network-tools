@@ -5,6 +5,7 @@ var colors = require('colors');
 var os = require('os');
 var path = require('path');
 
+var utils = require('../lib/utils');
 var checkRequired = require('../lib/checkRequired');
 var config = require('../config').get();
 
@@ -17,12 +18,9 @@ module.exports = function(callback) {
   checkRequired(required);
 
   var runtime = path.join(config.runtime, 'hecprm.exe');
-  var prefix;
-  if( config.workspace ) {
-    prefix = path.join(config.workspace, config.prefix);
-  } else {
-    prefix = config.prefix;
-  }
+
+  var root = utils.getWorkspacePath();
+  var prefix = path.join(root, config.prefix);
 
   var args = `${runtime} I=${prefix}.pri O=${prefix}.pro T=${prefix}TS.dss P=${prefix}PD.dss R=${prefix}.dss`;
   args = args.split(' ');
@@ -31,7 +29,10 @@ module.exports = function(callback) {
     cmd = args.splice(0, 1)[0];
   }
 
-  var child = spawn(cmd, args);
+  var child = spawn(cmd, args, {
+    cwd: root,
+    shell: '/bin/bash'
+  });
 
   child.stdout.on('data', (data) => {
     if( data instanceof Buffer ) {

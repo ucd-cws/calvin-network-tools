@@ -36,8 +36,14 @@ module.exports = function(cb) {
 function onCrawlComplete(results){
   var pridata = pri.init();
 
-  pridata.pd.path = path.join(config.workspace || process.cwd(), config.prefix+'PD.dss');
-  pridata.ts.path = path.join(config.workspace || process.cwd(), config.prefix+'TS.dss');
+  var root = utils.getWorkspacePath();
+
+  if( !fs.existsSync(root) ) {
+    fs.mkdirSync(root);
+  }
+
+  pridata.pd.path = path.join(root, config.prefix+'PD.dss');
+  pridata.ts.path = path.join(root, config.prefix+'TS.dss');
 
   var start, stop, init, o = {};
   if( config.start && config.stop ) {
@@ -71,7 +77,7 @@ function write(pridata, start, stop) {
   // add dummy pd record
   pridata.pd.data.push(dummy());
 
-  var priPath = path.join(config.output || process.cwd(), config.prefix+'.pri');
+  var priPath = path.join(utils.getWorkspacePath(), config.prefix+'.pri');
 
   console.log('Writing PRI file: '+priPath);
   fs.writeFileSync(priPath, pri.create(pridata.pri));

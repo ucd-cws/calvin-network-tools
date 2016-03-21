@@ -11,6 +11,7 @@ var path = require('path');
 var exec = require('child_process').exec;
 
 var config = require('../config').get();
+var utils = require('../lib/utils');
 
 // temp file.  we write the JSON to a temp file which is then read in
 // by the jar and parsed using the jackson lib.
@@ -22,7 +23,7 @@ module.exports = function(params, options, callback) {
   }
 
   // create tmp file in current working directory
-  var paramFile = path.join(process.cwd(), PARAMS_TMP_FILE);
+  var paramFile = path.join(utils.getWorkspacePath(), PARAMS_TMP_FILE);
   fs.writeFileSync(paramFile, JSON.stringify(params, '  ', '  '));
 
   // run the custom dssWriter jar using the packaged java (Win 32bit), HEC's java lib and HEC's system DLL's
@@ -65,7 +66,7 @@ module.exports = function(params, options, callback) {
 
   child.on('close', (code) => {
     // first thing after program runs, remove the tmp file
-    if( options.keep !== true ) {
+    if( config.debugRuntime !== true ) {
       fs.unlinkSync(paramFile);
     }
 
