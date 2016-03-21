@@ -80,7 +80,7 @@ require('./config').set(program);
 
 
 // dump all args if user wants
-if( program.args ) {
+if( program.verbose ) {
   console.log('*** PRM Arguments ***');
   for( var key in program ) {
     var type = typeof program[key];

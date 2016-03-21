@@ -12,7 +12,9 @@ var config = require('../config').get();
 var callback;
 
 module.exports = function(cb) {
-  console.log('Running **'+config.nodeCmdType+'** command.\n');
+  if( config.verbose ) {
+    console.log('Running **'+config.nodeCmdType+'** command.\n');
+  }
 
   callback = cb;
 
@@ -36,7 +38,7 @@ module.exports = function(cb) {
 
 function list() {
   var nodes = config.nodes;
-  var datapath = config.datapath;
+  var datapath = config.data;
 
   for (var i = 0 ; i < nodes.length; i++) {
     nodes[i] = nodes[i].toUpperCase();
@@ -45,10 +47,10 @@ function list() {
   crawler(datapath, {parseCsvData : false}, function(results){
     var i, node;
 
-    for( i = 0; i < results.nodes.length; i++ ) {
-      node = results.nodes[i];
+    for( i = 0; i < results.nodes.features.length; i++ ) {
+      node = results.nodes.features[i];
       if( nodes[0] === '' || nodes[0] === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
-        console.log(node.properties.prmname+','+node.properties.repo.dir+'/'+node.properties.repo.filename);
+        console.log(node.properties.prmname+','+path.join(node.properties.hobbes.repo.path, node.properties.hobbes.repo.filename));
       }
     }
 
@@ -72,15 +74,16 @@ function show() {
   }
 
   var pridata = pri.init();
+
   crawler(config.data, {parseCsvData : false}, function(results){
     var node, i;
     var list = [];
 
     if( config.debug ) {
-      list = debug(results.nodes);
+      list = debug(results.nodes.features);
     } else {
-      for( i = 0; i < results.nodes.length; i++ ) {
-        node = results.nodes[i];
+      for( i = 0; i < results.nodes.features.length; i++ ) {
+        node = results.nodes.features[i];
         if( nodes[0] === '' || nodes[0].toUpperCase() === 'ALL' || nodes.indexOf(node.properties.prmname.toUpperCase()) > -1 ) {
           list.push(node);
         }

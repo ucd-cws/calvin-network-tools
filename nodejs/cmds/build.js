@@ -23,7 +23,10 @@ var callback;
 var required = ['data', 'runtime', 'prefix'];
 
 module.exports = function(cb) {
-  console.log('Running **Build** command.\n');
+  if( config.verbose ) {
+    console.log('Running **Build** command.\n');
+  }
+
   checkRequired(required);
   callback = cb;
 
@@ -71,7 +74,7 @@ function write(pridata, start, stop) {
   var priPath = path.join(config.output || process.cwd(), config.prefix+'.pri');
 
   console.log('Writing PRI file: '+priPath);
-  fs.writeFileSync(priPath, pri.create(pridata));
+  fs.writeFileSync(priPath, pri.create(pridata.pri));
 
   console.log('Writing Penalty DSS file: '+pridata.pd.path);
   writeDssFile(pridata.pd, function(err, resp){
@@ -91,7 +94,7 @@ function write(pridata, start, stop) {
         });
       });
     } else {
-      writeTsDssFile(config.ts);
+      writeTsDssFile(pridata.ts);
     }
 
   });

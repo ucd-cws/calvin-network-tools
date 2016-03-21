@@ -10,11 +10,13 @@ var colors = require('colors');
 var path = require('path');
 var exec = require('child_process').exec;
 
+var config = require('../config').get();
+
 // temp file.  we write the JSON to a temp file which is then read in
 // by the jar and parsed using the jackson lib.
 var PARAMS_TMP_FILE = '.dssWriterParams';
 
-module.exports = function(lib, params, options, callback) {
+module.exports = function(params, options, callback) {
   if( typeof options === 'function' ) {
     callback = options;
   }
@@ -27,9 +29,9 @@ module.exports = function(lib, params, options, callback) {
   // (DLL's supplied with -Djava.library.path).  The jar takes as it's first parameter the path to the tmp file.
   var cmd = [
       'java.exe',
-      '-Djava.library.path="'+path.join(lib,'lib')+';${env_var:PATH}"',
+      '-Djava.library.path="'+path.join(config.runtime,'lib')+';${env_var:PATH}"',
       '-jar',
-      path.join(lib,'dssWriter.jar'),
+      path.join(config.runtime,'dssWriter.jar'),
       paramFile
   ];
   // if we are not running in windows, we need to use wine.
@@ -39,7 +41,7 @@ module.exports = function(lib, params, options, callback) {
 
   // set current working directory of the exec env to the runtime/jre/bin path.
   // This makes working with wine a little easier.
-  var cwd = path.join(lib, 'jre', 'bin');
+  var cwd = path.join(config.runtime, 'jre', 'bin');
 
   // run
   if( options.verbose ) {

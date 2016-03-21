@@ -4,7 +4,9 @@ var config = require('../config').get();
 var crawler = require('hobbes-network-format');
 
 module.exports = function(callback) {
-  console.log('Running **Crawl** command.\n');
+  if( config.verbose ) {
+    console.log('Running **Crawl** command.\n');
+  }
 
   var path = config.data;
 

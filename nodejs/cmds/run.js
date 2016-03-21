@@ -24,7 +24,8 @@ module.exports = function(callback) {
     prefix = config.prefix;
   }
 
-  var args = `{{runtime}} I={{prefix}}.pri O={{prefix}}.pro T={{prefix}}TS.dss P={{prefix}}PD.dss R={{prefix}}.dss`;
+  var args = `${runtime} I=${prefix}.pri O=${prefix}.pro T=${prefix}TS.dss P=${prefix}PD.dss R=${prefix}.dss`;
+  args = args.split(' ');
 
   if( os.type() === 'Windows_NT' ) {
     cmd = args.splice(0, 1)[0];

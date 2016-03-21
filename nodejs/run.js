@@ -19,10 +19,10 @@ module.exports = function(cmd, callback) {
 
   // check for link, we are using node module for link commands
   if( cmd === 'show' ) {
-    cmd = 'node';
+    cmd = 'showOrList';
     config.nodeCmdType = 'show';
   } else if( cmd === 'list' ) {
-    cmd = 'node';
+    cmd = 'showOrList';
     config.nodeCmdType = 'list';
   } else if( cmd === 'show-build' ) {
     cmd = 'showBuild';
