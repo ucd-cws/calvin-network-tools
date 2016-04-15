@@ -32,7 +32,7 @@ program
   .option('-a, --args', 'dump the program arguments');
 
 var format = '%4.4s%-29.29s %s';
-var cmds = ['init', 'crawl', 'build', 'run', 'show', 'list', 'show-build', 'excel', 'update-library','update'];
+var cmds = ['init', 'crawl', 'build', 'run', 'show', 'list', 'show-build', 'excel', 'update-library','update','matrix'];
 
 program.on('--help', function(){
   console.log('  Commands:');

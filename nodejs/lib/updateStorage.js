@@ -40,7 +40,7 @@ module.exports = function(start, stop, nodes, callback) {
 };
 
 function shouldUpdate(start, stop, node ) {
-  if( !start ) {
+x  if( !start ) {
     return false;
   }
   if( !stop ) {

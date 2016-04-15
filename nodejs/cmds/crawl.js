@@ -17,8 +17,8 @@ module.exports = function(callback) {
 
   crawler(path, function(result){
     console.log('*********');
-    console.log('Regions: '+result.regions.length);
-    console.log('Nodes/Links: '+result.nodes.length);
+    console.log('Regions: '+result.regions.features.length);
+    console.log('Nodes/Links: '+result.nodes.features.length);
     console.log('done.');
     callback();
   });

@@ -28,6 +28,7 @@ module.exports = function(cmd, callback) {
     cmd = 'showBuild';
   }
 
+    
   var modulePath = path.join(__dirname, 'cmds', cmd+'.js');
   var modulePathDir = path.join(__dirname, 'cmds', cmd+'/index.js');
 
