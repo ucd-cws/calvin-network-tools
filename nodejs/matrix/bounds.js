@@ -20,7 +20,7 @@ module.exports = function(network, matrixObjects, hnf, callback) {
         node.properties.bounds,
         function(bound, cb) {
           if( bound.bound.$ref ) {
-            hnf.expand(node, ['bounds.'+c+'.bound'], function() {
+           hnf.expand(node, ['bounds.'+c+'.bound'], function() {
               c++;
               cb();
             });

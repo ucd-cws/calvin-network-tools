@@ -15,61 +15,69 @@
 //var hnf = require('hobbes-network-format');
 var hnf = require('../../../hobbes-network-format');
 var async = require('async');
-var workflow = ['links','costs','bounds'];
 
+var link=require('./link');
 
 function matrix(config, callback) {
 
     console.log('Reading network...');
     hnf.split(config.path, {}, config.nodes, function(network) {
-      var matrixObjects = [];
+	var rows_for={};
+	var inflow_source={};
 
-      async.eachSeries(
-        workflow,
-        function(action, next) {
-          console.log('Running Action: '+action);
-          require('./'+action)(network, matrixObjects, hnf, function(resp){
-            matrixObjects = resp;
-            next();
-          });
-        },
-        function() {
-          var props;
-          for( var i = 0; i < matrixObjects.length; i++ ) {
-            props = matrixObjects[i].properties;
-            matrixObjects[i] = [
-              props.origin,
-              props.terminus,
-              props.id.join(':'),
-              props.costSlope,
-              props.amplitude || 0,
-              props.lowerBound,
-              props.upperBound
-            ];
-          }
-
-          callback(matrixObjects);
-        }
-      );
+	async.eachSeries(
+            network.in,
+            function(item,next) {
+		var p=item.properties;
+		var id=p.hobbes.networkId;
+		var inf_at; // INFLOW names
+		var row;
+		if( p.hobbes.type === 'node' ) {
+		    //=node(item,hnf,inflow_source);
+		    if (p.inflows ) {
+			rows_for[id]=[];
+			hnf.expand(item, ['inflows.default.inflow'], function(){
+			    var inflow = item.properties.inflows.default.inflow;
+			    
+			    for( var i = 1; i < inflow.length; i++ ) {
+				if (( ! config.start || config.start<inflow[i][0]) &&
+				    (! config.end || inflow[i][0]<config.end)) {
+				    inf_at=['INFLOW',inflow[i][0]].join('@');
+				    inflow_source[inf_at]++;
+				    row=[inf_at,
+					 [id,inflow[i][0]].join('@'),
+					 0,1,
+					 inflow[i][1],
+					 inflow[i][1]].join(',');
+				    rows_for[id].push(row);
+				}
+			    }
+			});
+		    }
+		} else {  // Link
+		    console.log('LinK');
+		    console.log(link(item,hnf,config));
+		    console.log('Linked');
+		    rows_for[id]=link(item,hnf,config);
+		}
+		next();
+            },
+            function() {
+		var i;
+		var rows=[];
+		console.log(config.start);
+		// Add Inflows
+		Object.keys(inflow_source).forEach(function(key) {
+		    rows.unshift(['SOURCE',key,0,1,null,null].join(','));
+		});
+		for (var i in rows_for) {
+		    rows_for[i].forEach(function(r) { rows.push(r) });
+		}
+		//rows.forEach(function(r) { console.log(r) });
+		callback(rows);
+            }
+	);
     });
-
-    // Need to consider what updateStorge does with times
-    // for( var i = 0; i < list.length; i++ ) {
-    //   var net = list[i].properties;
-    //
-    //   if( (config.matrixB || true) && net.inflows) {
-    //     for (var key in net.inflows) {
-    //       var fn = net.inflows[key].inflow;
-    //       if( fn.match(/.*\.csv$/) ) {
-    //         parse_csv(fn,function(err,data) {
-    //           data.forEach(function(d) {
-    //             console.log([[net.prmname,d[0]].join('@'),d[1]].join(','));
-    //           });
-    //         });
-    //       }
-    //     }
-    //   }
-    // }
 }
 
 module.exports = matrix;
