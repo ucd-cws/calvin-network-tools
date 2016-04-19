@@ -28,12 +28,13 @@ function penalty_costs(penalty) {
       costs.push([0, 0, penalty[1][0]]);
     }
   }
-
+    
   for( var i = 2; i < penalty.length; i++ ) {
     bound = penalty[i][0] - penalty[i-1][0];
     marg_cost = (penalty[i][1] - penalty[i-1][1]) / bound;
     costs.push([marg_cost, 0, bound]);
   }
+    console.log(costs);
 
   // Extrapolation above last cost.
   if (marg_cost < 0) {
@@ -74,6 +75,7 @@ module.exports = function(link, steps, hnf, callback) {
             if( !month_cost[month] ) {
               hnf.expand(link, ['costs.costs.'+month], function(){
                   penalty = link.properties.costs.costs[month];
+		  console.log('Month:'+month+'-'+penalty);
                   month_cost[month] = penalty_costs(penalty);
                   step_cost.push(month_cost[month]);
               });

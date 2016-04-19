@@ -14,7 +14,6 @@ module.exports = function(link, hnf, config, callback) {
     var step_costs;
     var step_bounds;
     var i,c;
-    var lb,ub,costs,lb_left,ub_left;
     var rows = [];
 
     console.log(p.hobbes.networkId);
@@ -34,20 +33,25 @@ module.exports = function(link, hnf, config, callback) {
 
       cost(link, steps, hnf, function(step_costs){
         bound(link, steps, hnf, function(step_bounds){
-          // Now add i,j,k links
-          console.log('Steps:'+steps);
+          var i;
+          var lb,ub,costs;
 
           for(i = 1; i < steps.length; i++ ) { // i=0 is header;
             lb = step_bounds[i][0];
             ub = step_bounds[i][1];
-            ub_left = ub;
-            lb_left = lb;
             costs = step_costs[i];
 
             for( c = 0; c < costs.length; c++ ){
+              // clb is greatest of link lower bound and cost lower bound
+              // Make sure to satisfy link lb constraint, fill up each link till lb is met.
+              clb=(cost[c][0]>lb)?cost[c][0]:(cost[c][1]<=lb)?cost[c][1]:lb;
+              lb-=clb;
+              cub=(cost[c][1]>=ub)?cost[c][1]:ub;
+              ub-=clb;
+
               rows.push([
                 [p.origin, steps[i]].join('@'),
-                [p.terminal,steps[i]].join('@'),
+                [p.terminus,steps[i]].join('@'),
                 c,
                 costs[c][0],
                 costs[c][1]
@@ -59,4 +63,4 @@ module.exports = function(link, hnf, config, callback) {
         }); // end bounds
       }); // end costs
     }); // end expand
-};
+  };
