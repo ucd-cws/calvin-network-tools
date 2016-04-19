@@ -22,8 +22,10 @@ describe('testing matrix', function() {
     };
 
     matrix(config, function(matrix){
-      console.log(matrix);
-      console.log(matrix.length);
+//      console.log(matrix);
+      matrix.forEach(function(r) {
+      console.log(r.join(','));
+      });
       next();
     });
   });

@@ -35,6 +35,7 @@ module.exports = function(link, hnf, config, callback) {
         bound(link, steps, hnf, function(step_bounds){
           var i;
           var lb,ub,costs;
+          var clb,cub;
 
           for(i = 1; i < steps.length; i++ ) { // i=0 is header;
             lb = step_bounds[i][0];
@@ -42,20 +43,18 @@ module.exports = function(link, hnf, config, callback) {
             costs = step_costs[i];
 
             for( c = 0; c < costs.length; c++ ){
+              //console.log(i+"/"+c+":"+costs[c]);
               // clb is greatest of link lower bound and cost lower bound
               // Make sure to satisfy link lb constraint, fill up each link till lb is met.
-              clb=(cost[c][0]>lb)?cost[c][0]:(cost[c][1]<=lb)?cost[c][1]:lb;
+              clb=(costs[c][1]>lb)?costs[c][1]:((costs[c][2]||0)<=lb)?(costs[c][2]||0):lb;
               lb-=clb;
-              cub=(cost[c][1]>=ub)?cost[c][1]:ub;
+              cub=(costs[c][2]>=ub)?costs[c][2]:ub;
               ub-=clb;
 
               rows.push([
                 [p.origin, steps[i]].join('@'),
                 [p.terminus,steps[i]].join('@'),
-                c,
-                costs[c][0],
-                costs[c][1]
-              ]);
+                c,costs[c][0],amp,clb,cub]);
             }
 
           }

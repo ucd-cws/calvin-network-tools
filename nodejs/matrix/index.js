@@ -16,6 +16,7 @@
 var hnf = require('../../../hobbes-network-format');
 var async = require('async');
 var link = require('./link');
+var node = require('./node');
 
 function matrix(config, callback) {
     console.log('Reading network...');
@@ -34,63 +35,32 @@ function matrix(config, callback) {
       async.eachSeries(
         network.in,
         function(item, next) {
-          var p = item.properties;
-          var id = p.hobbes.networkId;
-          var inf_at; // INFLOW names
-          var row;
-
+          var p=item.properties;
+          var id=p.hobbes.networkId;
           if( p.hobbes.type === 'node' ) {
-            //=node(item,hnf,inflow_source);
-            if( p.inflows ) {
-              rows_for[id] = [];
-
-              hnf.expand(item, ['inflows.default.inflow'], function() {
-                var inflow = item.properties.inflows.default.inflow;
-                var time;
-
-                for( var i = 1; i < inflow.length; i++ ) {
-                  time = new Date(inflow[i][0]);
-
-                  if( ( !config.start || config.start < time ) && (!config.end || time < config.end) ) {
-                    inf_at = ['INFLOW', inflow[i][0]].join('@');
-                    inflow_source[inf_at] = true;
-
-                    row = [
-                      inf_at,
-                      [id, inflow[i][0]].join('@'),
-                      0,
-                      1,
-                      inflow[i][1],
-                      inflow[i][1]
-                    ].join(',');
-
-                    rows_for[id].push(row);
-                  }
-                }
-
-                next();
-             });
-           } else { // no inflow, ignore
-             next();
-           }
-         } else {  // Link
-          //  console.log('Link');
-           link(item, hnf, config, function(linkRows){
-             rows_for[id] = linkRows;
-            //  console.log(linkRows);
-            //  console.log('Linked');
-             next();
-           });
-         }
+            node(item,hnf,config,function(res) {
+              var i;
+              for (i in res.inflows) {
+                inflow_source[i]=true;
+              }
+              rows_for[id]=res.rows;
+              next();
+            }); // end node
+          } else {  // Link
+            link(item, hnf, config, function(linkRows){
+              var id=item.properties.hobbes.networkId;
+              rows_for[id] = linkRows;
+              next();
+            }); // end link
+          }
         },
         function() {
           var i;
           var rows = [];
           // console.log(config.start);
-
           // Add Inflows
           Object.keys(inflow_source).forEach(function(key) {
-            rows.unshift(['SOURCE',key,0,1,null,null].join(','));
+            rows.push(['SOURCE',key,0,1,0,null]);
           });
 
           for( i in rows_for ) {
@@ -101,7 +71,7 @@ function matrix(config, callback) {
 
           callback(rows);
         }); // end async
-    }); // end split
-}
+      }); // end split
+    }
 
-module.exports = matrix;
+    module.exports = matrix;
