@@ -72,6 +72,7 @@ module.exports = function(link, steps, hnf, callback) {
           function(time, next) {
             month = getMonth(time);
             if( !month_cost[month] ) {
+
               hnf.expand(link, ['costs.costs.'+month], function(){
                   penalty = link.properties.costs.costs[month];
                   month_cost[month] = penalty_costs(penalty);

@@ -74,11 +74,11 @@ function matrix(config, callback) {
              next();
            }
          } else {  // Link
-           console.log('Link');
+          //  console.log('Link');
            link(item, hnf, config, function(linkRows){
              rows_for[id] = linkRows;
-             console.log(linkRows);
-             console.log('Linked');
+            //  console.log(linkRows);
+            //  console.log('Linked');
              next();
            });
          }
@@ -86,7 +86,7 @@ function matrix(config, callback) {
         function() {
           var i;
           var rows = [];
-          console.log(config.start);
+          // console.log(config.start);
 
           // Add Inflows
           Object.keys(inflow_source).forEach(function(key) {
