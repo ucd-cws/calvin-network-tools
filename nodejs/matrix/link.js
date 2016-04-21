@@ -6,28 +6,43 @@
 
 var cost = require('./cost');
 var bound = require('./bound');
+var netu=require('./split_utils');
 
-module.exports = function(link, hnf, config, callback) {
+module.exports = function(link, hnf, config,split,callback) {
     var steps = [];
     var p = link.properties;
+    var id= p.hobbes.networkId;
     var amp = p.amplitude;
     var step_costs;
     var step_bounds;
     var i,c;
     var rows = [];
 
-    console.log(p.hobbes.networkId);
+    var u=require('./utils')(config);
 
     hnf.expand(link, ['flow'], function(){
       var flow = link.properties.flow;
-      var time;
+      var time,step;
 
       for( i = 1; i < flow.length; i++ ) { // i=0 is header;
-        time = new Date(flow[i][0]).getTime();
-
+        step = flow[i][0];
+        time = new Date(step).getTime();
         // Get boundary Conditions
         if( ( !config.start || config.start < time) && ( !config.end || time < config.end) ) {
           steps.push(flow[i][0]);
+          debugger;
+          if (netu.is_inbound(split,p.origin)) {
+            rows.push([
+              u.id('INBOUND',step),
+              u.id(p.origin,step),
+              0,0,1,flow[i][1],flow[i][1]]);
+          }
+          if (netu.is_outbound(split,p.terminus)) {
+            rows.push([
+              u.id(p.terminus,step),
+              u.id('OUTBOUND',step),
+              0,0,1,flow[i][1],flow[i][1]]);
+          }
         }
       }
 
@@ -37,7 +52,7 @@ module.exports = function(link, hnf, config, callback) {
           var lb,ub,costs;
           var clb,cub;
 
-          for(i = 1; i < steps.length; i++ ) { // i=0 is header;
+          for(i = 0; i < steps.length; i++ ) { // i=0 is header;
             lb = step_bounds[i][0];
             ub = step_bounds[i][1];
             costs = step_costs[i];

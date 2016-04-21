@@ -15,9 +15,10 @@ describe('testing matrix', function() {
 
     var config = {
       nodes : ["SR_WHI-D5"],
+      separator : ".",
       path : '/home/quinn/calvin-network-data/data',
       //path : '/Users/jrmerz/dev/watershed/calvin-network-data/data',
-      start: '2001-07-01',
+      start: '2001-08-01',
       end: '2001-09-01'
     };
 
