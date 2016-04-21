@@ -1,7 +1,9 @@
 /* General Utilities
 */
 
-module.exports=function(config) {
+module.exports=function() {
+  var config = require('./mconfig')();
+  
   return {
     id:function(id,step) {
       return [id,step].join(config.separator||'@');

@@ -1,7 +1,5 @@
 'use strict';
 
-var async = require('async');
-
 // Given a link, and the time steps,
 // return a list of every set of cost links at each timestep.
 // List is in format of [cost,lb,ub]
@@ -45,7 +43,7 @@ function penalty_costs(penalty) {
   return costs;
 }
 
-module.exports = function(link, steps, hnf, callback) {
+module.exports = function(link, steps) {
     var step_cost = [];
     var penalty;
     var month, month_cost = {};
@@ -57,61 +55,35 @@ module.exports = function(link, steps, hnf, callback) {
         steps.forEach(function(time) {
           step_cost.push([[0, 0, null]]);
         });
-        return callback(step_cost);
+        return step_cost;
 
       case 'Constant':
         steps.forEach(function(time) {
           step_cost.push([[costs.cost,0,null]]);
         });
-        return callback(step_cost);
+        return step_cost;
 
       case 'Monthly Variable':
-
-        async.eachSeries(
-          steps,
-          function(time, next) {
-            month = getMonth(time);
-            if( !month_cost[month] ) {
-
-              hnf.expand(link, ['costs.costs.'+month], function(){
-                  penalty = link.properties.costs.costs[month];
-                  month_cost[month] = penalty_costs(penalty);
-                  step_cost.push(month_cost[month]);
-              });
-              next();
-            } else {
-              step_cost.push(month_cost[month]);
-              next();
-            }
-          },
-          function(err) {
-            callback(step_cost);
-          }
-        );
-        return;
+        steps.forEach(function(time){
+          month = getMonth(time);
+           if( !month_cost[month] ) {
+              penalty = link.properties.costs.costs[month];
+              month_cost[month] = penalty_costs(penalty);
+           }
+           step_cost.push(month_cost[month]);
+        });
+        return step_cost;
 
       case 'Annual Variable':
-        async.eachSeries(
-          steps,
-          function(time, next) {
-            month = 'JAN-DEC';
-            if( !month_cost[month] ) {
-              hnf.expand(link, ['costs.costs.'+month], function(){
-                penalty = link.properties.costs.costs[month];
-                month_cost[month] = penalty_costs(penalty);
-                step_cost.push(month_cost[month]);
-                next();
-              });
-            } else {
-              step_cost.push(month_cost[month]);
-              next();
-            }
-          },
-          function(err) {
-            callback(step_cost);
+        steps.forEach(function(){
+          month = 'JAN-DEC';
+          if( !month_cost[month] ) {
+            penalty = link.properties.costs.costs[month];
+            month_cost[month] = penalty_costs(penalty);
           }
-        );
-        return;
+          step_cost.push(month_cost[month]);
+        });
+        return step_cost;
 
       default :
         throw new Error('Bad Cost Type: '+link.properties.hobbes.networkId);

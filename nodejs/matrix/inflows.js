@@ -4,37 +4,34 @@
   we won't add it in, so  this can always be called.  Returns 0 rows otherwise
 */
 
-module.exports = function(item,steps,hnf,callback) {
+module.exports = function(item, steps) {
   var rows=[];
-  var p=items.properties;
+  var p=item.properties;
 
   if (p.inflows) {
     // This should be done for every inflow
-    hnf.expand(item, ['inflows.default.inflow'],function(){
-      var inflow = p.inflows.default.inflow;
-      var time;
-      var row;
-      var inflow_at={};
-      var inf;
+    var inflow = p.inflows.default.inflow;
+    var time;
+    var row;
+    var inflow_at={};
+    var inf, i;
 
-      // Lookup evap - could be faster
-      inflow.forEach(function(e) {
-        inflow_at[e[0]] = e[1];
-      });
-
-      for( i = 0; i < steps.length; i++ ){
-        inf = inflow_at[steps[i]];
-        if( typeof inf !=='undefined' && inf !== null && inf !== 0) {
-          rows.push([
-            u.id('INFLOW',steps[i]),
-            u.id(id,steps[i]),
-            0,1,inf,inf]);
-          );
-        }
-      }
-      callback(rows);
+    // Lookup evap - could be faster
+    inflow.forEach(function(e) {
+      inflow_at[e[0]] = e[1];
     });
-  } else {
-    callback(rows);
+
+    for( i = 0; i < steps.length; i++ ){
+      inf = inflow_at[steps[i]];
+      if( typeof inf !=='undefined' && inf !== null && inf !== 0) {
+        rows.push([
+          u.id('INFLOW',steps[i]),
+          u.id(id,steps[i]),
+          0,1,inf,inf
+        ]);
+      }
+    }
   }
+  
+  return rows;
 };
