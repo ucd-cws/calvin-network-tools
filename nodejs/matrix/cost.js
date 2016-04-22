@@ -43,12 +43,10 @@ function penalty_costs(penalty) {
   return costs;
 }
 
-module.exports = function(link, steps) {
+module.exports = function(costs, steps) {
     var step_cost = [];
     var penalty;
     var month, month_cost = {};
-
-    var costs = link.properties.costs || {type: 'None'};
 
     switch(costs.type) {
       case 'None':
@@ -67,7 +65,7 @@ module.exports = function(link, steps) {
         steps.forEach(function(time){
           month = getMonth(time);
            if( !month_cost[month] ) {
-              penalty = link.properties.costs.costs[month];
+              penalty = costs.costs[month];
               month_cost[month] = penalty_costs(penalty);
            }
            step_cost.push(month_cost[month]);
@@ -78,7 +76,7 @@ module.exports = function(link, steps) {
         steps.forEach(function(){
           month = 'JAN-DEC';
           if( !month_cost[month] ) {
-            penalty = link.properties.costs.costs[month];
+            penalty = costs.costs[month];
             month_cost[month] = penalty_costs(penalty);
           }
           step_cost.push(month_cost[month]);
@@ -86,6 +84,6 @@ module.exports = function(link, steps) {
         return step_cost;
 
       default :
-        throw new Error('Bad Cost Type: '+link.properties.hobbes.networkId);
+        throw new Error('Bad Cost Type: '+costs.type);
     }
 };

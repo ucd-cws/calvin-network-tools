@@ -3,10 +3,12 @@
   Add Inflows, i,j,k,amp,cost,lb,ub into the system.  If inflow==0
   we won't add it in, so  this can always be called.  Returns 0 rows otherwise
 */
+var u = require('./utils');
 
 module.exports = function(item, steps) {
   var rows=[];
   var p=item.properties;
+  var id=p.hobbes.networkId;
 
   if (p.inflows) {
     // This should be done for every inflow
@@ -32,6 +34,6 @@ module.exports = function(item, steps) {
       }
     }
   }
-  
+
   return rows;
 };

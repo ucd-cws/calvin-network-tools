@@ -13,6 +13,8 @@
 'use strict';
 
 var matrix = require('../matrix');
+var config = require('../config').get();
+var callback;
 
 module.exports = function(cb) {
   if( config.verbose ) {
@@ -32,7 +34,6 @@ module.exports = function(cb) {
   }
   // TODO:  Add output file parameter
 
-    matrix(config);
-    // TODO: Should I catch errors here? 
+    matrix(config,callback);
+    // TODO: Should I catch errors here?
 };
-

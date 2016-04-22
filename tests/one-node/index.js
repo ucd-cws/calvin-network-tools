@@ -20,10 +20,10 @@ describe('testing matrix', function() {
 
   });
 
-  it('Should match sr_cle-d94.csv', function(next) {
+  it('Should match d94.csv', function(next) {
     this.timeout(10000);
 
-    config.nodes=["SR_CLE-D94"],
+    config.nodes=["D94"],
     matrix(config, function(matrix){
       matrix.forEach(function(r) {
       console.log(r.join(','));
@@ -32,11 +32,10 @@ describe('testing matrix', function() {
     });
   });
 
-  it('should match sr_whi-d5.csv', function(next) {
+      it('Should match sr_whi.csv', function(next) {
     this.timeout(10000);
 
-    config.nodes=["SR_WHI-D5"],
-
+    config.nodes=["SR_WHI"],
     matrix(config, function(matrix){
       matrix.forEach(function(r) {
       console.log(r.join(','));

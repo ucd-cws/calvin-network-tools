@@ -1,105 +1,97 @@
 'use strict';
 
-// Given a storage node
-// return a list of every set of cost storage links at each timestep.
-// How do you get the total number of storage links to make?
-// We are grabbing the storage.
+/* Given a storage node
+return a list of every set of cost storage links at each timestep.
+*/
 
 var cost = require('./cost');
 var bound = require('./bound');
 var netu = require('./split_utils');
 var evaporation = require('./evaporation');
+var u=require('./utils');
 
-module.exports = function(stor, callback) {
-    var config = require('./mconfig')();
-    var steps = [];
-    var p = stor.properties;
-    var id= p.hobbes.networkId;
-    var amp = p.amplitude;
-    var step_costs;
-    var step_bounds;
-    var i,c;
-    var rows = [];
+module.exports = function(stor, steps) {
+  var p = stor.properties;
+  var id= p.hobbes.networkId;
+  var step_costs;
+  var step_bounds;
+  var i,c;
+  var rows = [];
 
-    var u = require('./utils')();
+  // Assume there IS a storage, otherwise, we need steps!
+  var cap = p.storage;
 
-    // Assume there IS a storage, otherwise, we need steps!
-    var cap = p.storage;
-    var time,step;
+  // Boundary conditions
+  var initial=p.initialstorage;
+  var ending=p.endingstorage;
+  var first=null;
+  var last=null;
 
-    // Boundary conditions
-    var initial;
-    var ending;
-    var first=null;
-    var last=null;
+  var step_keys={};
+  steps.forEach(function(s){step_keys[s]++;});
 
-    for( i = 1; i < cap.length; i++ ) { // i=0 is header;
-      step = cap[i][0];
-      time = new Date(step).getTime();
-      // Get boundary Conditions
-      if ( ( !config.start || config.start < time) &&
-            ( !config.end || time < config.end) ) {
-        if (first===null) { first=i; }
-        steps.push(cap[i][0]);
+  // Get initial and Final storage capacities
+  for( i = 1; i < cap.length; i++ ) { // i=0 is header;
+    if (step_keys[i]) {
+      if (! first) {
+        if (i>1) initial=cap[i-1][1];
+        first++;
+        }
         last=i;
-      }
-    }
-    
-    // set initial / final
-    if (first===1) {
-      initial=p.initialstorage;
-    } else {
-      initial=cap[first-1][1];
-    }
-    
-    if (last===cap.length-1) {
-      ending=p.endingstorage;
-    } else {
-      ending=cap[last+1][1];
-    }
+        }
+        }
+        if (last !==cap.length-1) {
+          ending=cap[last+1][1];
+          }
 
-    // Add Initial [i,j,k,cost,amplitude,lower,upper]
-    rows.push(['INITIAL',u.id(id,steps[0]),0,0,1,initial,initial]);
+          // Add Initial [i,j,k,cost,amplitude,lower,upper]
+          rows.push(['INITIAL',u.id(id,steps[0]),0,0,1,initial,initial]);
 
-    var step_costs = cost(stor, steps);
-    var step_bounds = bound(stor, steps);
-    var step_amp = evaporation(stor, steps);
-    var i;
-    var lb,ub,costs;
-    var clb,cub;
-    var amp;
-    var next;
+          var step_costs = cost(p.costs, steps);
+          var step_bounds = bound(p.bounds, steps);
+          var step_amp = evaporation(stor, steps);
+          var i;
+          var lb,ub,costs;
+          var clb,cub;
+          var amp;
+          var next;
 
-    for(i = 0; i < steps.length; i++ ) { // i=0 is header;
-      lb = step_bounds[i][0];
-      ub = step_bounds[i][1];
-      costs = step_costs[i];
-      amp=step_amp[i];
+          for(i = 0; i < steps.length; i++ ) { // i=0 is header;
+            lb = step_bounds[i][0];
+            ub = step_bounds[i][1];
+            costs = step_costs[i];
+            amp=step_amp[i];
 
-      if(i===steps.length-1) { // Fixed to final storage
-        // JM - what is 'final'?
-        // lb=final;
-        // ub=final;
-        lb = ending;
-        ub = ending;
-        next='FINAL';
-      } else {
-        next=u.id(id,steps[i+1]);
-      }
+            if(i===steps.length-1) { // Fixed to final storage
+              lb = ending;
+              ub = ending;
+              next='FINAL';
+              } else {
+                next=u.id(id,steps[i+1]);
+                }
 
-      for( c = 0; c < costs.length; c++ ){
-        //console.log(i+"/"+c+":"+costs[c]);
-        // clb is greatest of stor lower bound and cost lower bound
-        // Make sure to satisfy stor lb constraint, fill up each stor till lb is met.
-        clb=(costs[c][1]>lb)?costs[c][1]:((costs[c][2]||0)<=lb)?(costs[c][2]||0):lb;
-        lb-=clb;
-        cub=(costs[c][2]>=ub)?costs[c][2]:ub;
-        ub-=clb;
+                for( c = 0; c < costs.length; c++ ){
+                  clb=( costs[c][1] > lb )
+                  ? costs[c][1]
+                  : ( (costs[c][2] || 0) <= lb )
+                  ? (costs[c][2] || 0)
+                  : lb;
 
-        rows.push([u.id(id,step),next,
-          c,costs[c][0],amp,clb,cub]);
-      }
-    }
-    
-    return rows;
-};
+                  lb -= clb;
+                  if (ub===null) {
+                    cub=costs[c][2];
+                    } else {
+                      cub = ( costs[c][2]!==null && costs[c][2] <= ub ) ? costs[c][2] : ub;
+                      ub -= cub;
+                      }
+
+                      if (cub===null || cub>0) {
+                        rows.push([u.id(id,steps[i]),next,
+                        c, costs[c][0], amp, clb, cub
+                        ]);
+                        }
+                        }
+                        }
+
+                        return rows;
+                      };

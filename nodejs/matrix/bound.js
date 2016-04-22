@@ -1,6 +1,6 @@
 'use strict';
 
-// Given a link, and the time steps,
+// Given a bound list and the time steps,
 // return the LB and UB at each timestep.
 // List is in format of [lb,ub]
 
@@ -10,13 +10,12 @@ function getMonth(dateString) {
   return months[m];
 }
 
-module.exports = function(link, steps, hnf, callback) {
+module.exports = function(bounds, steps, callback) {
     var steps_bound = [];
     var month, month_cost = {};
-    var bounds,i,bound;
+    var i,bound;
 
     var bm = []; // Temporary bounds
-    var p = link.properties;
 
     // Start with no bounds
     steps.forEach(function(step) {
@@ -24,8 +23,7 @@ module.exports = function(link, steps, hnf, callback) {
     });
 
     var c = 0;
-    
-    p.bounds.forEach(function(bound, index){
+    bounds.forEach(function(bound, index){
       switch(bound.type) {
         case 'NOB':    // We are good
           return;
@@ -46,7 +44,6 @@ module.exports = function(link, steps, hnf, callback) {
           bound.bound.forEach(function(b) {
               bm[b[0]] = b[1];
           });
-
           for(i = 0; i < steps.length; i++) {
               // Almost the same code for LBM and LBT
               b = (bound.type === 'LBM') ? bm[getMonth(steps[i])] : bm[steps[i]];
@@ -75,7 +72,7 @@ module.exports = function(link, steps, hnf, callback) {
             // Almost the same code for BM and BT
 
             b = (bound.type === 'UBM') ? bm[getMonth(steps[i])] : bm[steps[i]];
-            if( (typeof b === 'undefined' && b !== null ) && (steps_bound[i][1] === null || steps_bound[i][1] > b) ) {
+            if( (typeof b !== 'undefined' && b !== null ) && (steps_bound[i][1] === null || steps_bound[i][1] > b) ) {
               steps_bound[i][1] = b;
             }
           }
@@ -104,9 +101,9 @@ module.exports = function(link, steps, hnf, callback) {
           return;
 
         default :
-            throw new Error('Bad Bound Type: '+link.properties.hobbes.networkId);
+            throw new Error('Bad Bound Type: '+bound.type);
         }
     });
-    
+
     return steps_bound;
 };

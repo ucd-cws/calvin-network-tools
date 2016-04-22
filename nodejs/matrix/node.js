@@ -8,12 +8,13 @@
 var netu = require('./split_utils');
 var storage = require('./storage');
 var inflows = require('./inflows');
+var sink=require('./sink');
+var u = require('./utils');
 
 module.exports = function(item, subnet) {
   var config = require('./mconfig')();
   var p = item.properties;
   var id = p.hobbes.networkId;
-  var u = require('./utils')(config);
   var rows=[];
 
   // Look through flow, get boundaries
@@ -22,54 +23,50 @@ module.exports = function(item, subnet) {
 
   var flow = item.properties.flow;
   var time, step, steps = [];
+  var e,edge;
+  var inbound=netu.inbound_to(subnet,id);
+  var outbound=netu.outbound_from(subnet,id);
 
   for( var i = 1; i < flow.length; i++ ) { // i=0 is header;
     step = flow[i][0];
     time = new Date(step).getTime();
     // Get boundary Conditions
-    if( ( !config.start || config.start < time) && ( !config.end || time < config.end) ) {
+    if( ( !config.start || config.start < time) &&
+    ( !config.end || time < config.end) ) {
       steps.push(flow[i][0]);
 
-      // For every link that is in an edge, you need to add as an inbound here
-      // Every edge is a new k.
-      if (netu.is_inbound(subnet,p.origin)) {
+      // Add Inflows from edge links
+      debugger;
+      for (e=0;e<inbound.length;e++) {
+        edge=inbound[e].properties;
         rows.push([
           u.id('INBOUND',step),
-          u.id(p.origin,step),
-          0,0,1,flow[i][1],flow[i][1]]);
-      }
-      if (netu.is_outbound(subnet,p.terminus)) {
-        rows.push([
-          u.id(p.terminus,step),
-          u.id('OUTBOUND',step),
-          0,0,1,flow[i][1],flow[i][1]]);
-      }
-    }
-  }
+          u.id(id,step),
+          e,0,1,edge.flow[i][1],edge.flow[i][1]]);
+          }
+          for (e=0;e<outbound.length;e++) {
+            edge=outbound[e].properties;
+            rows.push([
+              u.id(id,step),
+              u.id('OUTBOUND',step),
+              e,0,1,edge.flow[i][1],edge.flow[i][1]]);
+              }
+              }
+              }
 
-  // If there is a storage, than we have a reservior.
-  // Strange, if we call storage with steps, that makes things a bit more confusing
-// in returning the initial and final storages.    
-  if (p.storage) {
-    var rows = storage(item);
-    var steps=[];
-    
-    rows.forEach(function(r){
-      steps.push(r[0]);
-    });
-    
-    var more_rows = inflows(item, steps);
-    more_rows.forEach(function(r){
-      rows.push(r);
-    });
-  } else {
-    // I guess no storage, so we just add inflows to our steps.
-    // here Rows are all the above boundary conditions.
-    var more_rows = inflows(item, steps);
-    more_rows.forEach(function(r){
-      rows.push(r);
-    });
-  }
-  
-  return rows;
-}
+              sink(item,steps).forEach(function(r) {
+                rows.push(r);
+                });
+
+                if (p.storage) {
+                  storage(item,steps).forEach(function(r){
+                    rows.push(r);
+                    });
+                    }
+
+                    inflows(item, steps).forEach(function(r){
+                      rows.push(r);
+                      });
+
+                      return rows;
+                      }
