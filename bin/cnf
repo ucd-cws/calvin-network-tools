@@ -1,0 +1,27 @@
+#! /usr/bin/env node
+
+var program = require('commander');
+
+//program
+//  .version('0.0.1')
+//  .option('-v, --verbose', 'Verbose')
+//  .option('-e, --verify', 'Verify geojson')
+//  .option('-d, --dir <directory>', 'Root data directory');
+
+program
+    .command('matrix [this]')
+    .option('-m, --matrix [directory]', 'Root data directory')
+    .action(function() { console.log('ERRR');});
+    
+
+program
+    .command('log [this]')
+  .option('-b, --bar [directory]', 'Root data directory')
+    .action(function(env,options) {
+	console.log('ENV:'+env);
+	console.log('options:'+options.bar)
+    });
+
+program.parse(process.argv);
+
+console.log('Do Something'+program.args);
