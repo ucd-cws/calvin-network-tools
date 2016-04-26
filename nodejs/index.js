@@ -1,45 +1,62 @@
 'use strict';
 
-var argv = require('minimist')(process.argv.slice(2));
+var program = require('commander');
+var sprintf = require('sprintf-js').sprintf;
 var async = require('async');
-var run = require('./runCmd');
-var checkVersion = require('./checkVersion');
-var docsUrl = 'https://github.com/ucd-cws/calvin-network-tools#commands';
 
-var noCommand = false;
-if( !argv._ ) {
-  noCommand = true;
-} else if ( argv._.length === 0 ) {
-  noCommand = true;
-}
+var fileConfig = require('./lib/fileConfig');
+var checkVersion = require('./lib/checkVersion');
+var run = require('./run');
 
-if( noCommand ) {
-  return console.log('Please provide a command.\nSee docs here: '+docsUrl);
-}
+program
+  .version(require('../package.json').version)
+  .option('-v, --verbose', 'Verbose output, including hec-dss library output')
 
-checkVersion(function(){
-  var nodes = [];
-  for( var i = argv._.length-1; i >= 0; i-- ) {
-    if( cmds.indexOf(argv._[i]) === -1 ) {
-      nodes.push(argv._.splice(i, 1)[0]);
+function onReady() {
+  // assume extra commands are the are nodes for show/list command
+  program.nodes = [];
+  for( var i = 0; i < program.args.length; i++ ) {
+    if( typeof program.args[i] === 'string' ) {
+      program.nodes.push(program.args[i]);
     }
   }
-  argv.nodes = nodes;
 
-  if( argv._.length === 0 ) {
-    console.log('No known commands given.');
-    console.log('Commands: ['+cmds.join(', ')+']');
-    console.log('See docs here: '+docsUrl);
-    return;
+  // read arguments from config file;
+  fileConfig(program);
+
+  // stash program arguments.
+  require('./config').set(program);
+
+  // dump all args if user wants
+  if( program.verbose ) {
+    console.log('*** PRM Arguments ***');
+    for( var key in program ) {
+      var type = typeof program[key];
+      if( type === 'string' || type === 'boolean' ) {
+        console.log('  '+key+': '+program[key]);
+      }
+    }
+    console.log('**********************\n');
   }
 
-  async.eachSeries(
-    argv._,
-    function(cmd, next) {
-      run(cmd, argv, docsUrl, next);
-    },
-    function(err) {
-      // done with all cmds
+  checkVersion(function(){
+    var cmd = program.args[program.args.length-1]._name;
+    run(cmd);
+    
+    // done with all cmds
+    if( program.verbose ) {
+      console.log('\nPRM COMPLETE');
     }
-  );
-});
+  });
+}
+
+// register Commander command definitions 
+require('./cmds/register')(program, onReady);
+
+// default, dump help and quit
+if (!process.argv.slice(2).length) {
+    program.outputHelp();
+}
+  
+// actually parse the args
+program.parse(process.argv);
