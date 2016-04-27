@@ -8,7 +8,8 @@
     "init": "npm install && node init.js"
   },
   "bin": {
-    "prm": "bin/prm.bin.js"
+    "prm": "bin/cnf.bin.js",
+    "cnf": "bin/cnf.bin.js"
   },
   "repository": {
     "type": "git",

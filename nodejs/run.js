@@ -4,6 +4,10 @@ var fs = require('fs');
 var path = require('path');
 
 module.exports = function(cmd, callback) {
+   if( !callback ) {
+     callback = function() {}
+   }
+  
   var config = require('./config').get();
 
   // check for init command.
