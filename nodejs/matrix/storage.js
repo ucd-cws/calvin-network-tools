@@ -28,11 +28,11 @@ module.exports = function(stor, steps) {
   var last=null;
 
   var step_keys={};
-  steps.forEach(function(s){step_keys[s]++;});
+  steps.forEach(function(s){step_keys[s]=1;});
 
   // Get initial and Final storage capacities
   for( i = 1; i < cap.length; i++ ) { // i=0 is header;
-    if (step_keys[i]) {
+    if (step_keys[cap[i][0]]) {
       if (! first) {
         if (i>1) initial=cap[i-1][1];
         first++;
