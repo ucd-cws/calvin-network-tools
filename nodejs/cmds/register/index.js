@@ -1,5 +1,9 @@
 module.exports = function(program, run) {
-    program.on('--help', function(){
+    program
+    .option('-s, --start <date>','Starting Date')
+    .option('-e, --end <date>','Ending Date of Interest')
+    .option('-B, --bs <sep>','Time step separator, default=@')
+    .on('--help', function(){
         console.log('');
         console.log('  More Info:');
         console.log('    See the github repo & README: https://github.com/ucd-cws/calvin-network-tools');
@@ -16,4 +20,5 @@ module.exports = function(program, run) {
     require('./excel')(program, run);
     require('./init')(program, run);
     require('./updateLibrary')(program, run);
+    require('./matrix')(program,run);
 }

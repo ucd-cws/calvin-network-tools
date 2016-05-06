@@ -29,7 +29,10 @@ function matrix(config, callback) {
     config.end = new Date(config.end).getTime();
   }
 
-  hnf.split(config.path, {}, config.nodes, function(subnet) {
+  hnf.split(config.data, {}, config.nodes, function (subnet) {
+    if (subnet.in.length === 0) {
+      subnet.in = subnet.out;
+    }
     expand(subnet, function(){
       onSubnetReady(subnet, config, callback);
     });
@@ -39,9 +42,13 @@ function matrix(config, callback) {
 function onSubnetReady(subnet, config, callback) {
   var rows_for = {};
   var inflow_source = {};
+  // Links to source and SINK
   var inbound={};
   var outbound={};
+  var final=false;
+  var initial=false;
 
+  
   subnet.in.forEach(function(item){
     var p = item.properties;
     var id = p.hobbes.networkId;
@@ -59,16 +66,26 @@ function onSubnetReady(subnet, config, callback) {
 
   for( i in rows_for ) {
     rows_for[i].forEach(function(r) {
+            if ( r[0].indexOf("INITIAL")===0 && ! initial) {
+        rows.push(['SOURCE',r[0],0,0,1,0,null]);
+        initial=true;
+      }
+      if (r[1].indexOf("FINAL")===0 && ! final) {
+        rows.push([r[1],'SINK',0,0,1,0,null]);
+        final=true;
+      }
+
       if ( (r[0].indexOf("INFLOW")===0 ||
       r[0].indexOf("INBOUND")===0 ) && ! inbound[r[0]]) {
         rows.push(['SOURCE',r[0],0,0,1,0,null]);
-        inbound[r[0]]++
+        inbound[r[0]]=true;
       }
       if ((r[1].indexOf("OUTBOUND")===0 ||
       r[1].indexOf("SINK")===0 ) && ! outbound[r[1]]) {
         rows.push([r[1],'SINK',0,0,1,0,null]);
-        outbound[r[1]]++
+        outbound[r[1]]=true;
       }
+
       rows.push(r);
     });
   }

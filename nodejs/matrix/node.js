@@ -43,7 +43,7 @@ module.exports = function(item, subnet) {
       steps.push(flow[i][0]);
 
       // Add Inflows from edge links
-      debugger;
+      // debugger;
       for (e = 0; e < inbound.length; e++) {
         edge = inbound[e].properties;
         rows.push([
@@ -75,5 +75,5 @@ module.exports = function(item, subnet) {
     rows.push(r);
   });
 
-  return rows;
+   return rows;
 }

@@ -48,7 +48,12 @@ module.exports = function(costs, steps) {
     var penalty;
     var month, month_cost = {};
 
+    if (! costs || ! costs.type) {
+      costs = {};
+      costs.type='None';
+    }
     switch(costs.type) {
+      case 'NONE':
       case 'None':
         steps.forEach(function(time) {
           step_cost.push([[0, 0, null]]);

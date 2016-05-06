@@ -1,7 +1,7 @@
 var hnf;
 
 function load() {
-  var dev = false;
+  var dev = true;
   process.argv.forEach(function(arg){
     if( arg === '--dev' ) {
      dev = true; 

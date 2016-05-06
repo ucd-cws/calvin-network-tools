@@ -20,7 +20,6 @@ function onReady() {
       program.nodes.push(program.args[i]);
     }
   }
-
   // read arguments from config file;
   fileConfig(program);
 
@@ -29,7 +28,7 @@ function onReady() {
 
   // dump all args if user wants
   if( program.verbose ) {
-    console.log('*** PRM Arguments ***');
+    console.log('*** CNF Arguments ***');
     for( var key in program ) {
       var type = typeof program[key];
       if( type === 'string' || type === 'boolean' ) {
