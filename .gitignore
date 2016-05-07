@@ -14,3 +14,4 @@ dssWriter.jar
 *.dsc
 dssExportJson*
 tempPrm.txt
+npm-debug.log

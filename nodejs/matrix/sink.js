@@ -6,7 +6,7 @@
 var cost = require('./cost');
 var bound = require('./bound');
 var netu = require('./split_utils');
-
+var u = require('./utils');
 
 function sink(sink, id,steps) {
   var amp = 1;
@@ -55,8 +55,8 @@ function sink(sink, id,steps) {
 
       if (cub === null || cub > 0) {
         rows.push([
-          [id, steps[i]].join('@'),
-          ['SINK', steps[i]].join('@'),
+          u.id(id, steps[i]),
+          u.id('SINK', steps[i]),
           c, costs[c][0], amp, clb, cub
         ]);
       }
