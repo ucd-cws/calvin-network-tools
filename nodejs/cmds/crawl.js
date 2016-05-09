@@ -1,7 +1,7 @@
 'use strict';
 
 var config = require('../config').get();
-var crawler = require('hobbes-network-format');
+var crawler = require('../hnf')();
 
 module.exports = function(callback) {
   if( config.verbose ) {
@@ -15,7 +15,7 @@ module.exports = function(callback) {
     process.exit(-1);
   }
 
-  crawler(path, function(result){
+  crawler.crawl(path, function(result){
     console.log('*********');
     console.log('Regions: '+result.regions.features.length);
     console.log('Nodes/Links: '+result.nodes.features.length);
