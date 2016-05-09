@@ -78,7 +78,7 @@ module.exports = function(bounds, steps, callback) {
           }
           return;
 
-        case 'EQC':
+        case 'EQT':
            var b;
             bm = {};
 

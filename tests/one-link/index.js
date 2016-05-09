@@ -1,6 +1,7 @@
 'use strict';
 
 var assert = require('assert');
+var fs=require("fs");
 
 describe('testing matrix', function() {
 
@@ -11,38 +12,41 @@ describe('testing matrix', function() {
     matrix = require('../../nodejs/matrix');
 
     config = {
-      separator : ".",
-      path : '/home/quinn/calvin-network-data/data',
+      "field-sep" : ".",
+      data : '/home/quinn/calvin-network-data/data',
       //path : '/Users/jrmerz/dev/watershed/calvin-network-data/data',
       start: '2001-08-01',
-      end: '2001-10-01'
+      end: '2001-10-01',
+      fs: "\t",
+      ts: '.'
     };
 
   });
 
-  it('Should match sr_cle-d94.csv', function(next) {
-    this.timeout(10000);
+  ["SR_CLE-D94", "SR_WHI-D5"].forEach(
+    function (link) {
+      var name = link.toLowerCase();
+      var data = [];
 
-    config.nodes=["SR_CLE-D94"],
-    matrix(config, function(matrix){
-      matrix.forEach(function(r) {
-      console.log(r.join(','));
+      it('Should match '+name+'.tab', function (next) {
+        this.timeout(10000);
+
+        config.nodes = [link],
+          matrix(config, function (matrix) {
+            matrix.forEach(function (r) {
+              if (r[6] === null) {
+                r[6]=1000000;
+              }
+              var line = r.join("\t");
+              data.push(line);
+              console.log(line);
+            });
+            if (true) {
+              fs.writeFileSync(name + '.dat', data.join("\n")+"\n");
+            }
+            next();
+          });
       });
-      next();
     });
-  });
-
-  it('should match sr_whi-d5.csv', function(next) {
-    this.timeout(10000);
-
-    config.nodes=["SR_WHI-D5"],
-
-    matrix(config, function(matrix){
-      matrix.forEach(function(r) {
-      console.log(r.join(','));
-      });
-      next();
-    });
-  });
 
 });

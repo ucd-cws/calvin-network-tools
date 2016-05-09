@@ -1,6 +1,7 @@
 'use strict';
 
 var assert = require('assert');
+var fs = require('fs');
 
 describe('testing matrix', function() {
 
@@ -20,28 +21,29 @@ describe('testing matrix', function() {
 
   });
 
-  it('Should match d94.csv', function(next) {
-    this.timeout(10000);
+  ["D94", "SR_WHI"].forEach(
+    function (link) {
+      var name = link.toLowerCase();
+      var data = [];
 
-    config.nodes=["D94"],
-    matrix(config, function(matrix){
-      matrix.forEach(function(r) {
-      console.log(r.join(','));
+      it('Should match '+name+'.tab', function (next) {
+        this.timeout(10000);
+
+        config.nodes = [link],
+          matrix(config, function (matrix) {
+            matrix.forEach(function (r) {
+              if (r[6] === null) {
+                r[6]=1000000;
+              }
+              var line = r.join("\t");
+              data.push(line);
+              console.log(line);
+            });
+            if (false) {
+              fs.writeFileSync(name + '.dat', data.join("\n")+"\n");
+            }
+            next();
+          });
       });
-      next();
     });
-  });
-
-      it('Should match sr_whi.csv', function(next) {
-    this.timeout(10000);
-
-    config.nodes=["SR_WHI"],
-    matrix(config, function(matrix){
-      matrix.forEach(function(r) {
-      console.log(r.join(','));
-      });
-      next();
-    });
-  });
-
 });

@@ -1,0 +1,92 @@
+{
+    "Problem": [
+        {
+            "Lower bound": 0.0,
+            "Name": "unknown",
+            "Number of constraints": 43,
+            "Number of nonzeros": 57,
+            "Number of objectives": 1,
+            "Number of variables": 17,
+            "Sense": "minimize",
+            "Upper bound": 0.0
+        }
+    ],
+    "Solution": [
+        {
+            "number of solutions": 1,
+            "number of solutions displayed": 1
+        },
+        {
+            "Constraint": {},
+            "Gap": 0.0,
+            "Message": null,
+            "Objective": {},
+            "Problem": {},
+            "Status": "feasible",
+            "Variable": {
+                "X[D94.2001-08-31,OUTBOUND.2001-08-31,0]": {
+                    "Value": 203.0
+                },
+                "X[D94.2001-08-31,SINK.2001-08-31,0]": {
+                    "Value": 27.669269
+                },
+                "X[D94.2001-09-30,OUTBOUND.2001-09-30,0]": {
+                    "Value": 186.470001
+                },
+                "X[D94.2001-09-30,SINK.2001-09-30,0]": {
+                    "Value": 26.776711
+                },
+                "X[INBOUND.2001-08-31,D94.2001-08-31,0]": {
+                    "Value": 230.580612
+                },
+                "X[INBOUND.2001-09-30,D94.2001-09-30,0]": {
+                    "Value": 213.177673
+                },
+                "X[INFLOW.2001-08-31,D94.2001-08-31,0]": {
+                    "Value": 0.088657
+                },
+                "X[INFLOW.2001-09-30,D94.2001-09-30,0]": {
+                    "Value": 0.069038
+                },
+                "X[OUTBOUND.2001-08-31,SINK,0]": {
+                    "Value": 203.0
+                },
+                "X[OUTBOUND.2001-09-30,SINK,0]": {
+                    "Value": 186.470001
+                },
+                "X[SINK.2001-08-31,SINK,0]": {
+                    "Value": 27.669269
+                },
+                "X[SINK.2001-09-30,SINK,0]": {
+                    "Value": 26.776711
+                },
+                "X[SOURCE,INBOUND.2001-08-31,0]": {
+                    "Value": 230.580612
+                },
+                "X[SOURCE,INBOUND.2001-09-30,0]": {
+                    "Value": 213.177673
+                },
+                "X[SOURCE,INFLOW.2001-08-31,0]": {
+                    "Value": 0.088657
+                },
+                "X[SOURCE,INFLOW.2001-09-30,0]": {
+                    "Value": 0.069038
+                }
+            }
+        }
+    ],
+    "Solver": [
+        {
+            "Error rc": 0,
+            "Statistics": {
+                "Branch and bound": {
+                    "Number of bounded subproblems": 0,
+                    "Number of created subproblems": 0
+                }
+            },
+            "Status": "ok",
+            "Termination condition": "optimal",
+            "Time": 0.037000179290771484
+        }
+    ]
+}

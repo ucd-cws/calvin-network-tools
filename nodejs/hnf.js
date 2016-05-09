@@ -1,8 +1,9 @@
 var hnf;
 
 function load() {
-  var dev = false;
-  console.log(process.argv);
+
+  var dev = true;
+
   process.argv.forEach(function(arg){
     if( arg === '--dev' ) {
      dev = true; 

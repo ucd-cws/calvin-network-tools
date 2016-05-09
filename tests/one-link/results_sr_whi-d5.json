@@ -1,0 +1,133 @@
+{
+    "Problem": [
+        {
+            "Lower bound": -541.646060278945,
+            "Name": "unknown",
+            "Number of constraints": 45,
+            "Number of nonzeros": 69,
+            "Number of objectives": 1,
+            "Number of variables": 19,
+            "Sense": "minimize",
+            "Upper bound": -541.646060278945
+        }
+    ],
+    "Solution": [
+        {
+            "number of solutions": 1,
+            "number of solutions displayed": 1
+        },
+        {
+            "Constraint": {
+                "flow[D5.2001-08-31]": {
+                    "Dual": -1.26439264175451
+                },
+                "flow[D5.2001-09-30]": {
+                    "Dual": -1.36000516604451
+                },
+                "limit_upper[D5.2001-08-31,OUTBOUND.2001-08-31,0]": {
+                    "Dual": -1.26439264175451
+                },
+                "limit_upper[D5.2001-09-30,OUTBOUND.2001-09-30,0]": {
+                    "Dual": -1.36000516604451
+                },
+                "limit_upper[SR_WHI.2001-08-31,D5.2001-08-31,0]": {
+                    "Dual": -0.226611785544668
+                },
+                "limit_upper[SR_WHI.2001-08-31,D5.2001-08-31,1]": {
+                    "Dual": -0.21260892308305
+                },
+                "limit_upper[SR_WHI.2001-08-31,D5.2001-08-31,2]": {
+                    "Dual": -0.207194611425828
+                },
+                "limit_upper[SR_WHI.2001-08-31,D5.2001-08-31,3]": {
+                    "Dual": -0.199518661643994
+                },
+                "limit_upper[SR_WHI.2001-09-30,D5.2001-09-30,0]": {
+                    "Dual": -0.021516271077376
+                },
+                "limit_upper[SR_WHI.2001-09-30,D5.2001-09-30,1]": {
+                    "Dual": -0.00844314590237838
+                },
+                "limit_upper[SR_WHI.2001-09-30,D5.2001-09-30,2]": {
+                    "Dual": -0.00417996160923328
+                }
+            },
+            "Gap": 0.0,
+            "Message": null,
+            "Objective": {
+                "total": {
+                    "Value": -541.6460602789454
+                }
+            },
+            "Problem": {},
+            "Status": "feasible",
+            "Variable": {
+                "X[D5.2001-08-31,OUTBOUND.2001-08-31,0]": {
+                    "Value": 202.909302
+                },
+                "X[D5.2001-09-30,OUTBOUND.2001-09-30,0]": {
+                    "Value": 176.010254
+                },
+                "X[INBOUND.2001-08-31,SR_WHI.2001-08-31,0]": {
+                    "Value": 202.909302
+                },
+                "X[INBOUND.2001-09-30,SR_WHI.2001-09-30,0]": {
+                    "Value": 176.010254
+                },
+                "X[OUTBOUND.2001-08-31,SINK,0]": {
+                    "Value": 202.909302
+                },
+                "X[OUTBOUND.2001-09-30,SINK,0]": {
+                    "Value": 176.010254
+                },
+                "X[SOURCE,INBOUND.2001-08-31,0]": {
+                    "Value": 202.909302
+                },
+                "X[SOURCE,INBOUND.2001-09-30,0]": {
+                    "Value": 176.010254
+                },
+                "X[SR_WHI.2001-08-31,D5.2001-08-31,0]": {
+                    "Value": 81.163704
+                },
+                "X[SR_WHI.2001-08-31,D5.2001-08-31,1]": {
+                    "Value": 40.581848
+                },
+                "X[SR_WHI.2001-08-31,D5.2001-08-31,2]": {
+                    "Value": 40.581856
+                },
+                "X[SR_WHI.2001-08-31,D5.2001-08-31,3]": {
+                    "Value": 40.581848
+                },
+                "X[SR_WHI.2001-08-31,D5.2001-08-31,4]": {
+                    "Value": 4.5999999997548e-05
+                },
+                "X[SR_WHI.2001-09-30,D5.2001-09-30,0]": {
+                    "Value": 78.636559
+                },
+                "X[SR_WHI.2001-09-30,D5.2001-09-30,1]": {
+                    "Value": 39.318283
+                },
+                "X[SR_WHI.2001-09-30,D5.2001-09-30,2]": {
+                    "Value": 39.318275
+                },
+                "X[SR_WHI.2001-09-30,D5.2001-09-30,3]": {
+                    "Value": 18.737137
+                }
+            }
+        }
+    ],
+    "Solver": [
+        {
+            "Error rc": 0,
+            "Statistics": {
+                "Branch and bound": {
+                    "Number of bounded subproblems": 0,
+                    "Number of created subproblems": 0
+                }
+            },
+            "Status": "ok",
+            "Termination condition": "optimal",
+            "Time": 0.01900005340576172
+        }
+    ]
+}

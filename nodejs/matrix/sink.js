@@ -6,7 +6,7 @@
 var cost = require('./cost');
 var bound = require('./bound');
 var netu = require('./split_utils');
-
+var u = require('./utils');
 
 function sink(sink, id,steps) {
   var amp = 1;
@@ -23,63 +23,63 @@ function sink(sink, id,steps) {
   var lb,ub,costs;
   var clb,cub;
 
-  for(i = 0; i < steps.length; i++ ) { // i=0 is header;
+  for (i = 0; i < steps.length; i++) { // i=0 is header;
     lb = step_bounds[i][0];
     ub = step_bounds[i][1];
     costs = step_costs[i];
 
-    for( c = 0; c < costs.length; c++ ){
+    for (c = 0; c < costs.length; c++) {
       //console.log(i+"/"+c+":"+costs[c]);
       // clb is greatest of item lower bound and cost lower bound
       // Make sure to satisfy item lb constraint, fill up each item till lb is met.
-      console.log('cost:'+c+' lb:'+lb+'clb:'+clb);
+      // console.log('cost:' + c + ' lb:' + lb + 'clb:' + clb);
 
-      if (ub===null) {
-        clb=( costs[c][1] > lb )
-        ? costs[c][1]
-        : lb;
+      if (ub === null) {
+        clb = (costs[c][1] > lb)
+          ? costs[c][1]
+          : lb;
         lb -= clb;
 
-        cub=costs[c][2];
-        } else {
-          clb=( costs[c][1] > lb )
+        cub = costs[c][2];
+      } else {
+        clb = (costs[c][1] > lb)
           ? costs[c][1]
-          : ( (costs[c][2] || 0) <= lb )
-          ? (costs[c][2] || 0)
-          : lb;
-          lb -= clb;
+          : ((costs[c][2] || 0) <= lb)
+            ? (costs[c][2] || 0)
+            : lb;
+        lb -= clb;
 
-          cub = ( costs[c][2]!==null && costs[c][2] <= ub ) ? costs[c][2] : ub;
-          ub -= cub;
-          }
+        cub = (costs[c][2] !== null && costs[c][2] <= ub) ? costs[c][2] : ub;
+        ub -= cub;
+      }
 
-          if (cub===null || cub>0) {
-            rows.push([
-              [id, steps[i]].join('@'),
-              ['SINK', steps[i]].join('@'),
-              c, costs[c][0], amp, clb, cub
-              ]);
-              }
-              }
-              }
+      if (cub === null || cub > 0) {
+        rows.push([
+          u.id(id, steps[i]),
+          u.id('SINK', steps[i]),
+          c, costs[c][0], amp, clb, cub
+        ]);
+      }
+    }
+  }
 
-              return rows;
-            };
+  return rows;
+};
 
-            module.exports = function (item,steps) {
-              var p=item.properties;
-              var id=p.hobbes.networkId;
-              var rows=[]
-              var i,s;
+module.exports = function (item, steps) {
+  var p = item.properties;
+  var id = p.hobbes.networkId;
+  var rows = []
+  var i, s;
 
-              if (p.sinks) {
-                for (i=0;i<=p.sinks.length;i++) {
-                  for (s in p.sinks[i]) {
-                    sink(p.sinks[i][s],id,steps).forEach(function(r) {
-                      rows.push(r);
-                      });
-                      }
-                      }
-                      }
-                      return rows;
-                    };
+  if (p.sinks) {
+    for (i = 0; i <= p.sinks.length; i++) {
+      for (s in p.sinks[i]) {
+        sink(p.sinks[i][s], id, steps).forEach(function (r) {
+          rows.push(r);
+        });
+      }
+    }
+  }
+  return rows;
+};
