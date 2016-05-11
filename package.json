@@ -39,6 +39,7 @@
     "csv-stringify": "0.0.8",
     "deep-diff": "^0.3.3",
     "extend": "^3.0.0",
+    "graphviz": "0.0.8",
     "hobbes-network-format": "0.0.6",
     "minimist": "^1.2.0",
     "node-uuid": "^1.4.7",

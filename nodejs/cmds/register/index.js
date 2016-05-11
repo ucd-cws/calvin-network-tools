@@ -1,14 +1,11 @@
 module.exports = function(program, run) {
     program
-    .option('-s, --start <date>','Starting Date')
-    .option('-e, --end <date>','Ending Date of Interest')
-    .option('-B, --bs <sep>','Time step separator, default=@')
-    .on('--help', function(){
-        console.log('');
-        console.log('  More Info:');
-        console.log('    See the github repo & README: https://github.com/ucd-cws/calvin-network-tools');
-        console.log('');
-    });
+        .on('--help', function(){
+            console.log('');
+            console.log('  More Info:');
+            console.log('    See the github repo & README: https://github.com/ucd-cws/calvin-network-tools');
+            console.log('');
+        });
     
     require('./build')(program, run);
     require('./showBuild')(program, run);

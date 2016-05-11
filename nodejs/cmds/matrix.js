@@ -14,37 +14,24 @@
 var matrix = require('../matrix');
 var config = require('../config').get();
 var fs = require('fs');
+var graphviz = require('graphviz');
+var path = require('path');
 
 module.exports = function (callback) {
   var cmd_opts;
   var matrix_output=[];
+  var matrix_data=[];
   var nodes_output=[];
   var node_list = {};
-
-  function command_options(program, cmd) {
-    var opts;
-    var i;
-    for (i = 0; i <= program.commands.length; i++) {
-      opts = program.commands[i];
-      if (opts._name === cmd) {
-        return opts;
-      }
-    }
-    return {};
-  }
-  // There has got to be a better way :)
-  cmd_opts = command_options(config, 'matrix');
-
-  // Defaults
-  cmd_opts.fs = cmd_opts.fs || ',';
-  if (cmd_opts.fs === ':tab:') {
-    cmd_opts.fs = "\t";
-  }
-  config.ts = cmd_opts.ts || '@';
-  cmd_opts.rs = cmd_opts.rs || "\n";
-  cmd_opts.matrix = cmd_opts.matrix || "STDOUT";
-  cmd_opts.nodes = cmd_opts.nodes || null;
   
+  config.fs = config.fs || ',';
+  if (config.fs === ':tab:') {
+    config.fs = '\t';
+  }
+  
+  config.ts = config.ts || '@';
+  config.rs = config.rs || '\n';
+  config.matrix = config.matrix || 'STDOUT';
   
   if (config.verbose) {
     console.log('Running matrix command.\n');
@@ -59,46 +46,86 @@ module.exports = function (callback) {
     console.log('Please provide a data repo location');
     return callback();
   }
+
   matrix(config, function (rows) {
     
     var header = ["i", "j", "k", "cost", "amplitude", "lower_bound", "upper_bound"];
-    if (!cmd_opts.no-header) {
-      matrix_output.push(header.join(cmd_opts.rs));
-      node_output.push("node");
+    if (!config['no-header']) {
+      matrix_output.push(header.join(config.fs));
+      nodes_output.push("node");
      }
 
     rows.forEach(function (r) {
       node_list[r[0]]=true;
       node_list[r[1]]=true;
-      if (cmd_opts.max_ub) {
+      if (config.max_ub) {
         if (r[6] === null) {
-          r[6] = cmd_opts.max_ub;
+          r[6] = config.max_ub;
         }
       }
-      var line=r.join(cmd_opts.fs);
+      var line = r.join(config.fs);
       matrix_output.push(line);
+      matrix_data.push(r);
     });
-    if (cmd_opts.nodes !== null) {
+    
+    if( config.outnodes ) {
       nodes_output=Object.keys(node_list).sort();
-      if (cmd_opts.nodes === "STDOUT") {
-        console.log(nodes_output.join(cmd_opts.rs) + cmd_opts.rs);
+      if (config.nodes === "STDOUT") {
+        console.log(nodes_output.join(config.rs) + config.rs);
       } else {
-        fs.writeFile(cmd_opts.nodes, 
-          nodes_output.join(cmd_opts.rs)+cmd_opts.rs,'utf8',
+        fs.writeFile(config.outnodes, 
+          nodes_output.join(config.rs)+config.rs,'utf8',
          (err) => { if (err) {throw err;}});
       }
     }
 
-    if (cmd_opts.matrix !== null) {
-        if (cmd_opts.matrix==="STDOUT") {
-          console.log(matrix_output.join(cmd_opts.rs)+cmd_opts.rs);
-        }  else {
-          fs.writeFile(cmd_opts.matrix,
-            matrix_output.join(cmd_opts.rs)+cmd_opts.rs,'utf8',
-            (err) => {if (err) { throw err;}});
-        }
+    if ( config.matrix ) {
+      if( config.matrix.match(/\.dot$/i) ) {
+        toDot(matrix_data);
+      } else if( config.matrix.match(/\.png$/i) ) {
+        toPng(matrix_data);
+      } else if( config.matrix === 'STDOUT' ) {
+        console.log(matrix_output.join(config.rs)+config.rs);
+      } else {
+        fs.writeFile(config.matrix,
+          matrix_output.join(config.rs)+config.rs,'utf8',
+          (err) => {if (err) { throw err;}});
+      }
     }
+
+    
     callback();
   });
   // TODO: Should I catch errors here?
 };
+
+function toPng(matrix) {
+  var g = createGraph(matrix);
+  g.output('png', path.join(process.cwd(), config.matrix));
+}
+
+function toDot(matrix) {
+  var g = createGraph(matrix);
+  fs.writeFileSync(path.join(process.cwd(), config.matrix), g.to_dot()); 
+}
+
+function createGraph(matrix) {
+  var nodes = {};
+  var g = graphviz.digraph('G');
+  
+  matrix.forEach((link) => {
+    if( !nodes[link[0]] ) {
+      nodes[link[0]] = g.addNode(link[0], {});
+    }
+    if( !nodes[link[1]] ) {
+      nodes[link[1]] = g.addNode(link[1], {});
+    }
+    
+    var origin = nodes[link[0]];
+    var terminal = nodes[link[1]];
+    
+    g.addEdge(origin, terminal, {label: link[2]+':'+link[3]});
+  });
+  
+  return g;
+}

@@ -25,11 +25,11 @@ function matrix(config, callback) {
   if( config.start ) {
     config.start = new Date(config.start).getTime();
   }
-  if( config.end ) {
-    config.end = new Date(config.end).getTime();
+  if( config.stop ) {
+    config.stop = new Date(config.stop).getTime();
   }
 
-  hnf.split(config.data, {}, config.nodes, function (subnet) {
+  hnf.split(config.data, {id:'prmname'}, config.nodes, function (subnet) {
     if (subnet.in.length === 0) {
       subnet.in = subnet.out;
     }
@@ -66,7 +66,7 @@ function onSubnetReady(subnet, config, callback) {
 
   for( i in rows_for ) {
     rows_for[i].forEach(function(r) {
-            if ( r[0].indexOf("INITIAL")===0 && ! initial) {
+      if ( r[0].indexOf("INITIAL")===0 && ! initial) {
         rows.push(['SOURCE',r[0],0,0,1,0,null]);
         initial=true;
       }
@@ -76,12 +76,12 @@ function onSubnetReady(subnet, config, callback) {
       }
 
       if ( (r[0].indexOf("INFLOW")===0 ||
-      r[0].indexOf("INBOUND")===0 ) && ! inbound[r[0]]) {
+            r[0].indexOf("INBOUND")===0 ) && ! inbound[r[0]]) {
         rows.push(['SOURCE',r[0],0,0,1,0,null]);
         inbound[r[0]]=true;
       }
       if ((r[1].indexOf("OUTBOUND")===0 ||
-      r[1].indexOf("SINK")===0 ) && ! outbound[r[1]]) {
+           r[1].indexOf("SINK")===0 ) && ! outbound[r[1]]) {
         rows.push([r[1],'SINK',0,0,1,0,null]);
         outbound[r[1]]=true;
       }

@@ -8,10 +8,11 @@
 			"program": "${workspaceRoot}/bin/cnf.bin.js",
 			"stopOnEntry": false,
 			"args": [
-				"--start=2003-09-15",
-				"--end=2003-11-15",
-				"--bs=X",
 				"matrix",
+				"--start=2003-09-15",
+				"--stop=2003-11-15",
+				//"--bs=X",
+				
 				"--ts=.",
 				"--fs=\t",
 				"SR_WHI"

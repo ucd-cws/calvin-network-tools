@@ -27,9 +27,9 @@ module.exports = function(link, subnet) {
     step = flow[i][0];
     time = new Date(step).getTime();
     // Get boundary Conditions
-    if( ( !config.start || config.start < time) && ( !config.end || time < config.end) ) {
+    if( ( !config.start || config.start < time) && ( !config.stop || time < config.stop) ) {
       steps.push(flow[i][0]);
-      debugger;
+
       if (netu.is_inbound(subnet,p.origin)) {
         rows.push([
           u.id('INBOUND',step),
@@ -56,7 +56,7 @@ module.exports = function(link, subnet) {
         lb = step_bounds[i][0];
         ub = step_bounds[i][1];
         costs = step_costs[i];
-        debugger;
+
         for( c = 0; c < costs.length; c++ ){
           //console.log(i+"/"+c+":"+costs[c]);
           // clb is greatest of link lower bound and cost lower bound
