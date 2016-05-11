@@ -41,7 +41,7 @@ module.exports = function(stor, steps) {
     }
   }
   if (last !==cap.length-1) {
-    ending=cap[last+1][1];
+    ending=cap[last][1];
   }
 
   // Add Initial [i,j,k,cost,amplitude,lower,upper]
