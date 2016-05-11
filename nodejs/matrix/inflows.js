@@ -29,7 +29,7 @@ module.exports = function(item, steps) {
         rows.push([
           u.id('INFLOW',steps[i]),
           u.id(id,steps[i]),
-          0,1,inf,inf
+          0,1,0,inf,inf
         ]);
       }
     }

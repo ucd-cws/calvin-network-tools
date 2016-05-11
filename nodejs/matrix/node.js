@@ -38,8 +38,8 @@ module.exports = function(item, subnet) {
     step = flow[i][0];
     time = new Date(step).getTime();
     // Get boundary Conditions
-    if ((!config.start || config.start < time) &&
-      (!config.end || time < config.end)) {
+    if ((!config.start || config.start <= time) &&
+      (!config.end || time <= config.end)) {
       steps.push(flow[i][0]);
 
       // Add Inflows from edge links
