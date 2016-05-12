@@ -29,9 +29,14 @@ module.exports = function (callback) {
     config.fs = '\t';
   }
   
+  config.format = config.format || 'csv';
   config.ts = config.ts || '@';
   config.rs = config.rs || '\n';
-  config.matrix = config.matrix || 'STDOUT';
+  config.to = config.to || 'STDOUT';
+  
+  if( config.outboundPenalty ) {
+    config.outboundPenalty = JSON.parse(config.outboundPenalty);
+  }
   
   if (config.verbose) {
     console.log('Running matrix command.\n');
@@ -58,9 +63,9 @@ module.exports = function (callback) {
     rows.forEach(function (r) {
       node_list[r[0]]=true;
       node_list[r[1]]=true;
-      if (config.max_ub) {
+      if (config.maxUb) {
         if (r[6] === null) {
-          r[6] = config.max_ub;
+          r[6] = config.maxUb;
         }
       }
       var line = r.join(config.fs);
@@ -79,17 +84,23 @@ module.exports = function (callback) {
       }
     }
 
-    if ( config.matrix ) {
-      if( config.matrix.match(/\.dot$/i) ) {
-        toDot(matrix_data);
-      } else if( config.matrix.match(/\.png$/i) ) {
-        toPng(matrix_data);
-      } else if( config.matrix === 'STDOUT' ) {
-        console.log(matrix_output.join(config.rs)+config.rs);
+    if( config.format === 'png' ) {
+      toPng(matrix_data);
+    } else {
+      var output;
+      if( config.format === 'dot' ) {
+        output = toDot(matrix_data);
       } else {
-        fs.writeFile(config.matrix,
-          matrix_output.join(config.rs)+config.rs,'utf8',
-          (err) => {if (err) { throw err;}});
+        output = matrix_output.join(config.rs)+config.rs;
+      }
+      
+      if( config.to === 'STDOUT' ) {
+        console.log(output);
+      } else {
+        fs.writeFileSync(
+          path.join(process.cwd(), `${config.output}.${config.format}`),
+          output
+        );
       }
     }
 
@@ -101,12 +112,12 @@ module.exports = function (callback) {
 
 function toPng(matrix) {
   var g = createGraph(matrix);
-  g.output('png', path.join(process.cwd(), config.matrix));
+  g.output('png', path.join(process.cwd(), `${config.output}.png`));
 }
 
 function toDot(matrix) {
   var g = createGraph(matrix);
-  fs.writeFileSync(path.join(process.cwd(), config.matrix), g.to_dot()); 
+  return g.to_dot(); 
 }
 
 function createGraph(matrix) {
