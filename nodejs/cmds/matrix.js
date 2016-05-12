@@ -98,7 +98,7 @@ module.exports = function (callback) {
         console.log(output);
       } else {
         fs.writeFileSync(
-          path.join(process.cwd(), `${config.output}.${config.format}`),
+          path.join(process.cwd(), `${config.to}.${config.format}`),
           output
         );
       }
@@ -112,7 +112,8 @@ module.exports = function (callback) {
 
 function toPng(matrix) {
   var g = createGraph(matrix);
-  g.output('png', path.join(process.cwd(), `${config.output}.png`));
+  console.log(path.join(process.cwd(), `${config.to}.png`));
+  g.output('png', path.join(process.cwd(), `${config.to}.png`));
 }
 
 function toDot(matrix) {

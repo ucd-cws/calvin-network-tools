@@ -10,7 +10,7 @@ module.exports = function(program, run) {
         .option('-t, --stop [YYYY-MM]', 'Specify stop date for TimeSeries data')
         .option('-M, --max-ub <number>','Replace null upperbound with a big number.  Like 1000000')
         //.option('-m, --matrix <filename>','Send matrix to filename, default=STDOUT')
-        .option('-t, --to <filename>','Send matrix to filename, default=STDOUT')
+        .option('-T, --to <filename>','Send matrix to filename, default=STDOUT')
         .option('-O, --outnodes <filename>','Send list of nodes to filename, default=no output, can use STDOUT')
         .option('-p, --outbound-penalty <json>','Specify a penalty function for outbound boundary conditions. eg. [[10000,"-10%"],[0,0],[-10000,"10%"]]')
         .action(run);
