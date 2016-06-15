@@ -7,7 +7,7 @@ var uuid = require('node-uuid');
 var parse = require('csv-parse');
 var stringify = require('csv-stringify');
 var async = require('async');
-var crawler = require('hobbes-network-format');
+var crawler = require('hobbes-network-format').crawl;
 
 var config = require('../config').get();
 var utils = require('../lib/utils');

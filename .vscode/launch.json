@@ -62,9 +62,8 @@
 			"stopOnEntry": false,
 			"args": [
 				"build",
-				"-v",
-				"SR-19",
-				"SR-20"
+				"--prefix",
+				"test"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
