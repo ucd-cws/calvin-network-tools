@@ -67,14 +67,14 @@ module.exports = function(params, options, callback) {
     if( !config.verbose ) {
       return;
     }
-    console.log(data.replace(/\n$/,''));
+    console.log(data.toString().replace(/\n$/,''));
   });
 
   child.stderr.on('data', (data) => {
     if( !config.verbose ) {
       return;
     }
-    console.log(colors.red(data.replace(/\n$/,'')));
+    console.log(colors.red(data.toString().replace(/\n$/,'')));
   });
 
   child.on('close', (code) => {
