@@ -46,17 +46,30 @@ module.exports = function(params, options, callback) {
 
   // run
   if( config.verbose ) {
-    console.log(cwd);
-    console.log(cmd.join(' '));
+    console.log(`\n${cwd}`);
+    console.log(`${cmd.join(' ')}\n`);
   }
 
-  var child = exec(cmd.join(' '), {maxBuffer: 1024 * 100000, cwd: cwd, shell: '/bin/bash'});
+  var cmdOptions = {
+    maxBuffer: 1024 * 100000, 
+    cwd: cwd
+  }
+
+  // Use bash if we are not on windows
+  if( os.type() !== 'Windows_NT' ) {
+    cmdOptions.shell = '/bin/bash';
+  }
+
+
+  var child = exec(cmd.join(' '), cmdOptions);
+
   child.stdout.on('data', (data) => {
     if( !config.verbose ) {
       return;
     }
     console.log(data.replace(/\n$/,''));
   });
+
   child.stderr.on('data', (data) => {
     if( !config.verbose ) {
       return;
