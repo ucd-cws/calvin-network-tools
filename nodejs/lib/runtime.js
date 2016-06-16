@@ -45,20 +45,20 @@ module.exports = function(params, options, callback) {
   var cwd = path.join(config.runtime, 'jre', 'bin');
 
   // run
-  if( options.verbose ) {
+  if( config.verbose ) {
     console.log(cwd);
     console.log(cmd.join(' '));
   }
 
   var child = exec(cmd.join(' '), {maxBuffer: 1024 * 100000, cwd: cwd, shell: '/bin/bash'});
   child.stdout.on('data', (data) => {
-    if( !options.verbose ) {
+    if( !config.verbose ) {
       return;
     }
     console.log(data.replace(/\n$/,''));
   });
   child.stderr.on('data', (data) => {
-    if( !options.verbose ) {
+    if( !config.verbose ) {
       return;
     }
     console.log(colors.red(data.replace(/\n$/,'')));

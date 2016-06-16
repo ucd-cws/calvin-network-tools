@@ -63,7 +63,9 @@
 			"args": [
 				"build",
 				"--prefix",
-				"test"
+				"test",
+				"--verbose",
+				"--debug-runtime"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,

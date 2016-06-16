@@ -5,7 +5,7 @@ var path = require('./path');
 
 module.exports = function(prmname, file) {
   return {
-    csvFilePath : file,
+    csvFilePath : file.$ref,
     type : 'timeseries',
     parameter : 'EVAP_RATE(FT)',
     location : prmname,

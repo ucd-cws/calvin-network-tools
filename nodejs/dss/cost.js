@@ -5,7 +5,7 @@ var path = require('./path');
 
 module.exports = function(prmname, month, file) {
   return {
-    csvFilePath : file,
+    csvFilePath : file.$ref,
     type : 'paired',
     label : month,
     date : month,

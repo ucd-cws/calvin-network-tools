@@ -6,7 +6,7 @@ var path = require('./path');
 module.exports = function(prmname, name, file) {
 
   return {
-    csvFilePath : file,
+    csvFilePath : file.$ref,
     type : 'timeseries',
     parameter : 'FLOW_LOC(KAF)',
     location : prmname,
