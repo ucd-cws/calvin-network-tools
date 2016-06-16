@@ -12,7 +12,8 @@ program
   .version(require('../package.json').version)
   .option('-v, --verbose', 'Verbose output, including hec-dss library output')
 
-function onReady(...nodes) {
+function onReady() {
+  var nodes = Array.prototype.slice.call(arguments);
 
   // assume extra commands are the are nodes for show/list command
   var env = this;
@@ -38,6 +39,7 @@ function onReady(...nodes) {
         console.log('  '+key+': '+env[key]);
       }
     }
+    console.log(env.nodes);
     console.log('**********************\n');
   }
 
