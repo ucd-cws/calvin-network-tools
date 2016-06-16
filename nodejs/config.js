@@ -24,7 +24,6 @@ function mergeParent(env) {
     if( key[0] === '_' ) continue;
     var type = typeof env.parent[key];
     if( type === 'string' || type === 'number' || type === 'boolean' ) {
-      console.log(`${key}: ${env.parent[key]}`);
       env[key] = env.parent[key];
     }
   }

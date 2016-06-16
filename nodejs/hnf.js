@@ -2,7 +2,7 @@ var hnf;
 
 function load() {
 
-  var dev = true;
+  var dev = false;
 
   process.argv.forEach(function(arg){
     if( arg === '--dev' ) {

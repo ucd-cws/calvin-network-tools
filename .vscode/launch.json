@@ -30,7 +30,7 @@
 			"outDir": null
 		},
 				{
-			"name": "all",
+			"name": "matrix",
 			"type": "node",
 			"request": "launch",
 			"program": "${workspaceRoot}/bin/cnf.bin.js",
@@ -38,7 +38,8 @@
 			"args": [
 				"matrix",
 				"--ts=.",
-				"--fs=\t"
+				"--fs=\t",
+				"SR_WHI","D5", "SR_WHI-D5"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,

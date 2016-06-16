@@ -12,13 +12,15 @@ program
   .version(require('../package.json').version)
   .option('-v, --verbose', 'Verbose output, including hec-dss library output')
 
-function onReady(env) {
+function onReady(...nodes) {
 
   // assume extra commands are the are nodes for show/list command
+  var env = this;
   env.nodes = [];
-  for( var i = 0; i < env._args.length; i++ ) {
-    if( typeof env._args[i] === 'string' ) {
-      env.nodes.push(env._args[i]);
+
+  for( var i = 0; i < nodes.length; i++ ) {
+    if( typeof nodes[i] === 'string' ) {
+      env.nodes.push(nodes[i]);
     }
   }
   // read arguments from config file;
@@ -40,7 +42,6 @@ function onReady(env) {
   }
 
   checkVersion(function(){
-    debugger;
     var cmd = env._name;
     run(cmd);
     
