@@ -3,7 +3,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
-var utils = require('./lib/utils');
+var utils = require('../lib/utils');
 
 
 var runtimePath = path.join(__dirname, '..','..','HEC_Runtime');
