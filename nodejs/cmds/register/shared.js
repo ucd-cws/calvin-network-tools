@@ -10,5 +10,5 @@ module.exports = function(cmd) {
         .option('-r, --runtime [path]', 'path to Calvin HEC Runtime')
         .option('-w, --workspace [path]', 'directory to read/write all dss/hec-prm files')
         .option('-n, --no-initialize', 'Do not initialize the nodes/links (overrides initialize parameter)')
-        .option('-i, --initialize', 'Initialize parameter for nodes/links (default: init)');
+        .option('-i, --initialize [name]', 'Initialize parameter for nodes/links (default: init)');
 }

@@ -55,7 +55,7 @@ function onCrawlComplete(results){
   if( config.noInitialize ) {
     o.initialize = false;
   } else {
-    o.initialize = config.initialize !== undefined ? config.initialize : 'init';
+    o.initialize = (typeof config.initialize === 'string') ? config.initialize : 'init';
   }
 
   readUBMandLBM(results.nodes.features, function() {

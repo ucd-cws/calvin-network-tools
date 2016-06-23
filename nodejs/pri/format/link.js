@@ -43,7 +43,7 @@ function writeLink(config, np, options) {
   var eac = '';
   var inf = '';
   var qi = '';
-  var cost = '', lowerBound = '', upperBound = '', constantBound = '';
+  var cost = '0.0000', lowerBound = '', upperBound = '', constantBound = '';
 
 
   var prmname = np.prmname;
@@ -139,12 +139,13 @@ function writeLink(config, np, options) {
         config.pd.data.push(dss.cost(prmname, month, np.costs.costs[month]));
       }
 
-    } else if( np.costs.cost != 0 ) {
+    } else if( np.costs.cost !== undefined && np.costs.cost !== 0 ) {
       cost = np.costs.cost.toFixed(4);
 
     //IF COST IS ZERO, we need a PQ
     } else {
-      pq += dss.path.empty()+'\n';
+      // JM - this is not in the working file
+      //pq += dss.path.empty()+'\n';
     }
   }
 

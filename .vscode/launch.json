@@ -54,7 +54,31 @@
 			"sourceMaps": false,
 			"outDir": null
 		},
-
+		{
+			"name": "Run",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/nodejs/index.js",
+			"stopOnEntry": false,
+			"args": [
+				"run",
+				"--prefix",
+				"test",
+				"--verbose"
+			],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"externalConsole": false,
+			"sourceMaps": false,
+			"outDir": null
+		},
 		{
 			"name": "Build",
 			"type": "node",
@@ -66,6 +90,8 @@
 				"--prefix",
 				"test",
 				"--verbose",
+				"--debug",
+				"SR_GNT,SR_HID,SR_ISB,SR_ML,SR_TL",
 				"--debug-runtime"
 			],
 			"cwd": "${workspaceRoot}",

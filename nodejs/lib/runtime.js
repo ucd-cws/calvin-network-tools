@@ -35,29 +35,27 @@ module.exports = function(params, options, callback) {
       path.join(config.runtime,'dssWriter.jar'),
       paramFile
   ];
-  // if we are not running in windows, we need to use wine.
-  if( os.type() !== 'Windows_NT' ) {
-    cmd.unshift('wine');
-  }
 
   // set current working directory of the exec env to the runtime/jre/bin path.
   // This makes working with wine a little easier.
   var cwd = path.join(config.runtime, 'jre', 'bin');
-
-  // run
-  if( config.verbose ) {
-    console.log(`\n${cwd}`);
-    console.log(`${cmd.join(' ')}\n`);
-  }
 
   var cmdOptions = {
     maxBuffer: 1024 * 100000, 
     cwd: cwd
   }
 
-  // Use bash if we are not on windows
+  // Use bash and wine if we are not on windows
   if( os.type() !== 'Windows_NT' ) {
     cmdOptions.shell = '/bin/bash';
+    cmd.unshift('wine');
+  }
+
+    // run
+  if( config.verbose ) {
+    console.log(`\n${cwd}`);
+    console.log(`${cmd.join(' ')}\n`);
+    console.log(cmdOptions);
   }
 
 
