@@ -7,7 +7,8 @@ var uuid = require('node-uuid');
 var parse = require('csv-parse');
 var stringify = require('csv-stringify');
 var async = require('async');
-var crawler = require('hobbes-network-format').crawl;
+var hnf = require('../hnf')();
+var crawler = hnf.crawl;
 
 var config = require('../config').get();
 var utils = require('../lib/utils');
@@ -57,20 +58,46 @@ function onCrawlComplete(results){
     o.initialize = config.initialize !== undefined ? config.initialize : 'init';
   }
 
-  updateStorage(config.start, config.stop, results.nodes.features, function(){
-    var nodes;
-    if( config.debug ) {
-      nodes = debug(results.nodes.features);
-    } else {
-      nodes = results.nodes.features;
-    }
+  readUBMandLBM(results.nodes.features, function() {
+    updateStorage(config.start, config.stop, results.nodes.features, function(){
+      var nodes;
+      if( config.debug ) {
+        nodes = debug(results.nodes.features);
+      } else {
+        nodes = results.nodes.features;
+      }
 
-    for( var i = 0; i < nodes.length; i++ ) {
-      pri.format(nodes[i], pridata, o);
-    }
+      for( var i = 0; i < nodes.length; i++ ) {
+        pri.format(nodes[i], pridata, o);
+      }
 
-    write(pridata, start, stop);
+      write(pridata, start, stop);
+    });
   });
+}
+
+function readUBMandLBM(nodes, callback) {
+  var array = [], bounds, bound;
+
+  for( var i = 0; i < nodes.length; i++ ) {
+    bounds = nodes[i].properties.bounds;
+    if( bounds ) {
+      for( var j = 0; j < bounds.length; j++ ) {
+        bound = bounds[j];
+        if( bound.type === 'UBM' || bound.type === 'LBM' ) {
+          array.push(bound);
+        }
+      }
+    }
+  }
+
+  async.eachSeries(
+    array,
+    function(bound, next) {
+      hnf.readFile(bound, 'bound', next);
+    },
+    callback
+  );
 }
 
 function write(pridata, start, stop) {

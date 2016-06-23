@@ -5,7 +5,8 @@ module.exports = function(program, run) {
             console.log('  More Info:');
             console.log('    See the github repo & README: https://github.com/ucd-cws/calvin-network-tools');
             console.log('');
-        });
+        })
+        .option('--dev', 'Use local hobbes-network-format module (for development)')
     
     require('./build')(program, run);
     require('./showBuild')(program, run);
