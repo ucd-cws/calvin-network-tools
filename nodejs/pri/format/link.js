@@ -43,7 +43,7 @@ function writeLink(config, np, options) {
   var eac = '';
   var inf = '';
   var qi = '';
-  var cost = '0.0000', lowerBound = '', upperBound = '', constantBound = '';
+  var cost = '', lowerBound = '', upperBound = '', constantBound = '';
 
 
   var prmname = np.prmname;
@@ -145,7 +145,7 @@ function writeLink(config, np, options) {
     //IF COST IS ZERO, we need a PQ
     } else {
       // JM - this is not in the working file
-      //pq += dss.path.empty()+'\n';
+      pq += dss.path.empty()+'\n';
     }
   }
 

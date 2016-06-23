@@ -110,6 +110,10 @@ function write(pridata, start, stop) {
   fs.writeFileSync(priPath, pri.create(pridata.pri));
 
   console.log('Writing Penalty DSS file: '+pridata.pd.path);
+  if( fs.existsSync(pridata.pd.path) ) {
+    fs.unlinkSync(pridata.pd.path);
+  }
+
   writeDssFile(pridata.pd, function(err, resp){
 
     if( start && stop ) {
@@ -172,6 +176,11 @@ function trimTsData(start, stop, ts, callback) {
 
 function writeTsDssFile(tsConfig, callback) {
   console.log('Writing TimeSeries DSS file: '+tsConfig.path);
+
+  if( fs.existsSync(tsConfig.path) ) {
+    fs.unlinkSync(tsConfig.path);
+  }
+
   writeDssFile(tsConfig, function(err, resp){
     if( callback ) {
       callback();
