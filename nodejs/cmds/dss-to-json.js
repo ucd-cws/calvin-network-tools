@@ -48,7 +48,7 @@ function run(callback) {
 }
 
 function cleanTmpDir(dir, callback) {
-  if( fs.existsSync(dir) && clearCache ) {
+  if( fs.existsSync(dir)  ) {
     console.log('cleaning dir: '+dir);
     rimraf(dir, callback);
   } else {

@@ -23,6 +23,8 @@ var checkRequired = require('../lib/checkRequired');
 var callback;
 var required = ['data', 'runtime', 'prefix'];
 
+// var ignoreList = ['HXI201-EXT_YUBA', 'HXI101-EXT_REDDIN'];
+
 module.exports = function(cb) {
   if( config.verbose ) {
     console.log('Running **Build** command.\n');
@@ -38,6 +40,12 @@ function onCrawlComplete(results){
   var pridata = pri.init();
 
   var root = utils.getWorkspacePath();
+
+  // for( var i = results.nodes.features.length-1; i >= 0; i-- ) {
+  //   if( ignoreList.indexOf(results.nodes.features[i].properties.prmname.toUpperCase()) > -1 ) {
+  //     results.nodes.features.splice(i, 1);
+  //   }
+  // }
 
   if( !fs.existsSync(root) ) {
     fs.mkdirSync(root);
@@ -61,6 +69,7 @@ function onCrawlComplete(results){
   readUBMandLBM(results.nodes.features, function() {
     updateStorage(config.start, config.stop, results.nodes.features, function(){
       var nodes;
+
       if( config.debug ) {
         nodes = debug(results.nodes.features);
       } else {

@@ -4,6 +4,7 @@ var exec = require('child_process').exec;
 var colors = require('colors');
 var os = require('os');
 var path = require('path');
+var fs = require('fs');
 
 var utils = require('../lib/utils');
 var checkRequired = require('../lib/checkRequired');
@@ -47,20 +48,38 @@ module.exports = function(callback) {
 
   child.stdout.on('data', (data) => {
     if( data instanceof Buffer ) {
-      console.log(data.toString('utf-8'));
-    } else {
-      console.log(data);
+      data = data.toString('utf-8');
     }
+    console.log(data.replace(/\n/g,''));
   });
 
   child.stderr.on('data', (data) => {
-    console.log(colors.red(data));
+    if( data instanceof Buffer ) {
+      data = data.toString('utf-8');
+    }
+    console.log(data.replace(/\n/g,''));
   });
 
   child.on('close', (code) => {
     console.log('hecprm.exe exited with code '+code);
+    print(`${prefix}.pro`);
     console.log('done.');
     callback();
   });
 
 };
+
+function print(file) {
+  var data = fs.readFileSync(file, 'utf-8').split('\n');
+
+  var re1 = /^\s(\.\.|NODE|ND|LINK|IN|PS|EV|QI|LD|QU|BU|PQ|QL|BL)/;
+  var re2 = /^\s-----DSS---ZWRITE/;
+
+  for( var i = data.length-1; i >= 0; i-- ) {
+    if( data[i].match(re1) || data[i].match(re2) ) {
+      data.splice(i, 1);
+    }
+  }
+
+  console.log(data.join('\n'));
+}

@@ -144,7 +144,6 @@ function writeLink(config, np, options) {
 
     //IF COST IS ZERO, we need a PQ
     } else {
-      // JM - this is not in the working file
       pq += dss.path.empty()+'\n';
     }
   }
@@ -206,7 +205,8 @@ function writeLink(config, np, options) {
 
   if( np.type === 'Diversion' || np.type === 'Return Flow' ) {
     link = sprintf(LINK_FORMAT, 'LINK', '', type, np.origin, np.terminus, amplitude, cost, lowerBound, upperBound, constantBound)+'\n';
-    link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
+    // JM - HACK
+    //link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
     link += b;
     link += ev;
     link += eac;
@@ -222,7 +222,8 @@ function writeLink(config, np, options) {
     }
 
     link = sprintf(LINK_FORMAT, 'LINK', '', 'RSTO', prmname, prmname, amplitude.toFixed(3), cost, lowerBound, upperBound, constantBound)+'\n';
-    link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
+    // JM - HACK
+    //link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
     link += b;
     link += ev;
     link += eac;
@@ -249,7 +250,8 @@ function writeMonthlyBound(type, bound) {
 
 function writeIn(prmname, name, description) {
   var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFL', 'SOURCE', prmname, '1.000', '0.000', '', '', '')+'\n';
-  inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
+  // JM - HACK
+  //inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
   inf += dss.path.in(prmname, name);
   return inf;
 }

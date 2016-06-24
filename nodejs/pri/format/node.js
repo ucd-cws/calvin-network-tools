@@ -17,7 +17,6 @@ module.exports = function(np) {
     if( np.areacapfactor > 10000000 ) {
       np.areacapfactor = 0;
     }
-    if( np.prmname === 'Sink_C41' ) return '';
 
     NODE = sprintf('%-8.8s  %-10.10s','NODE', np.prmname);
     NODE += (np.initialstorage !== undefined ) ? sprintf('%10.3f', np.initialstorage) : sprintf('%10.10s','');
@@ -25,7 +24,9 @@ module.exports = function(np) {
     NODE += (np.endingstorage !== undefined ) ? sprintf('%10.3f', np.endingstorage) : sprintf('%10.10s','');
 
   if( np.description !== undefined ) {
-    NODE += sprintf('\n%-8.8s  %-70.70s', 'ND', np.description);
+    // JM - HACK
+    //NODE += sprintf('\n%-8.8s  %-70.70s', 'ND', np.description);
   }
+
   return NODE;
 };
