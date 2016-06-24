@@ -12,6 +12,7 @@ dssWriter.jar
 *.LOC
 *.BIN
 *.dsc
+*_json
 dssExportJson*
 tempPrm.txt
 npm-debug.log

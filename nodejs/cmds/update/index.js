@@ -54,7 +54,6 @@ function run(callback) {
   };
 
   if( config.cache && !config.cleanCache && fs.existsSync(params.exportRoot) ) {
-    console.log(1);
     processData(params.exportRoot, function(){
       console.log('Finished update: '+(new Date().getTime() - t)+'ms');
       callback();

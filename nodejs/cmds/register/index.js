@@ -19,4 +19,5 @@ module.exports = function(program, run) {
     require('./init')(program, run);
     require('./updateLibrary')(program, run);
     require('./matrix')(program,run);
+    require('./dss-to-json')(program,run);
 }
