@@ -12,7 +12,8 @@ module.exports.parts = function(type, p, outputType) {
       (p.C) ? p.C : '',
       (p.D) ? p.D : '',
       (p.E) ? p.E : '',
-      (p.F) ? p.F : ''
+      ''
+      //(p.F) ? p.F : ''
     );
   } else {
     return sprintf('%-3.3s%6.6s%sA=%s B=%s C=%s D=%s E=%s F=%s',
@@ -24,7 +25,8 @@ module.exports.parts = function(type, p, outputType) {
       (p.C) ? p.C : '',
       (p.D) ? p.D : '',
       (p.E) ? p.E : '',
-      (p.F) ? p.F : ''
+      ''
+      //(p.F) ? p.F : ''
     );
   }
 

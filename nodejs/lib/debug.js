@@ -50,18 +50,22 @@ module.exports = function(nodes) {
     matches = config.debug.toLowerCase().split(',');
   }
 
-  var newList = [dbgsrc, dbgsinks], np;
-
-  sinkLink.properties.costs.cost = cost;
-  sourceLink.properties.costs.cost = cost;
-
-  newList.push(sourceLink);
-  newList.push(sinkLink);
+  var newList = [], np;
 
   for( var i = 0; i < nodes.length; i++ ) {
     np = nodes[i].properties;
     if( np.type !== 'Diversion' &&
 	     (all || matches.indexOf(np.prmname.toLowerCase()) > -1 )) {
+
+      newList.push({
+        properties : {
+          type : 'Diversion',
+          prmname : np.prmname+'DBUGSNK',
+          origin : np.prmname,
+          terminus : 'DBUGSNK',
+          costs : {}
+        }
+      });
 
       newList.push({
         properties : {
@@ -73,20 +77,22 @@ module.exports = function(nodes) {
         }
       });
 
-      newList.push({
-        properties : {
-          type : 'Diversion',
-          prmname : np.prmname+'DBUGSNK',
-          origin : np.prmname,
-          terminus : 'DBUGSNK',
-          costs : {}
-        }
-      });
     }
 
     // Push this regardless
     newList.push(nodes[i]);
   }
+
+  sinkLink.properties.costs.cost = cost;
+  sourceLink.properties.costs.cost = cost;
+
+  
+  newList.push(sinkLink);
+  newList.push(sourceLink);
+
+  
+  newList.push(dbgsinks);
+  newList.push(dbgsrc);
 
   return newList;
 };

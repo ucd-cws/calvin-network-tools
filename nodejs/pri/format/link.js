@@ -168,10 +168,14 @@ function writeLink(config, np, options) {
         continue;
       }
 
-      config.pri.inflowlist.push(writeIn(prmname, name, np.description));
+      // HACK - JM
+      if( np.prmname !== 'GW_MWD' ) {
+        config.pri.inflowlist.push(writeIn(prmname, name, np.description));
 
-      // set dss writer json object
-      config.ts.data.push(dss.inflow(prmname, name, np.inflows[name].inflow));
+        // set dss writer json object
+        config.ts.data.push(dss.inflow(prmname, name, np.inflows[name].inflow));
+      }
+
     }
   }
 
