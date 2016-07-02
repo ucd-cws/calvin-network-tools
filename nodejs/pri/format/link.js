@@ -67,7 +67,7 @@ function writeLink(config, np, options) {
 
         var o = extend(true, {}, options);
         o.type = 'DIVR';
-
+	  console.log(JSON.stringify(sink));
         writeLink(config, sink, o);
       }
     }
@@ -96,7 +96,15 @@ function writeLink(config, np, options) {
       } else if( bound.type === 'UBM' ) {
         b += writeMonthlyBound('BU', bound)+'\n';
       } else if( bound.type === 'LBM' ) {
-        b += writeMonthlyBound('BL', bound)+'\n';
+          b += writeMonthlyBound('BL', bound)+'\n';
+      } else if( bound.type === 'EQT' ) {
+        if( !fs.existsSync(bound.bound.$ref) ) {
+          console.log('Bound file '+bound.bound.$ref+'not found, ignoring: ');
+          console.log(bound.bound);
+          continue;
+        }
+        b += dss.path.timeBound('QC', prmname, boundType)+'\n';
+        config.ts.data.push(dss.bound('QC', prmname, boundType, bound.bound));
       } else if( bound.type === 'UBT' ) {
         if( !fs.existsSync(bound.bound.$ref) ) {
           console.log('Bound file not found, ignoring: ');
@@ -107,8 +115,6 @@ function writeLink(config, np, options) {
         b += dss.path.timeBound('QU', prmname, boundType)+'\n';
         // set dss writer json object
         config.ts.data.push(dss.bound('QU', prmname, boundType, bound.bound));
-
-
       } else if( bound.type === 'LBT' ) {
         // set pri path
         b += dss.path.timeBound('QL', prmname, boundType)+'\n';
