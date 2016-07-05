@@ -33,7 +33,7 @@ module.exports = function(params, options, callback) {
       '-Djava.library.path="'+path.join(config.runtime,'lib')+';${env_var:PATH}"',
       '-jar',
       path.join(config.runtime,'dssWriter.jar'),
-      '"'+escapePath(paramFile)+'"'
+      '"'+paramFile+'"'
   ];
 
   // set current working directory of the exec env to the runtime/jre/bin path.

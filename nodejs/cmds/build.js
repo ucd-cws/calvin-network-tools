@@ -33,7 +33,16 @@ module.exports = function(cb) {
   checkRequired(required);
   callback = cb;
 
-  crawler(config.data, {parseCsvData : false}, onCrawlComplete);
+  var crawlerOptions = {
+    parseCsvData: false,
+    reindex : config.reindex ? true : false
+  }
+
+  if( crawlerOptions.reindex ) {
+    console.log('** Regenerating calvin-network-data indexes **');
+  }
+
+  crawler(config.data, crawlerOptions, onCrawlComplete);
 };
 
 function onCrawlComplete(results){

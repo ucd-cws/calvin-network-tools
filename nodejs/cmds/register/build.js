@@ -7,7 +7,8 @@ module.exports = function(program, run) {
         .option('-d, --debug [nodes]', 'Set debug nodes.  Either "ALL", "*" or comma seperated list of prmnames (no spaces)')
         .option('-D, --debug-cost', 'set cost for debug nodes (default: 2000000)')
         .option('-R, --debug-runtime', 'Keeps the PRM NodeJS json file used to pass information to the dssWriter (Calvin HEC Runtime) jar')
-        .option('-n, --no-descriptions', 'If you exceed the max number of allowed descriptions in pri file, use this flag');
+        .option('-n, --no-descriptions', 'If you exceed the max number of allowed descriptions in pri file, use this flag')
+        .option('-r, --reindex', 'Regenerate index files for calvin-network-data repo.  Required if you have made edits to repo');
 
     require('./shared')(cmd);
     
