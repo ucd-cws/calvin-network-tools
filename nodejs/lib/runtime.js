@@ -30,10 +30,10 @@ module.exports = function(params, options, callback) {
   // (DLL's supplied with -Djava.library.path).  The jar takes as it's first parameter the path to the tmp file.
   var cmd = [
       'java.exe',
-      '-Djava.library.path="'+path.join(escapePath(config.runtime),'lib')+';${env_var:PATH}"',
+      '-Djava.library.path="'+path.join(config.runtime,'lib')+';${env_var:PATH}"',
       '-jar',
-      escapePath(path.join(config.runtime,'dssWriter.jar')),
-      escapePath(paramFile)
+      path.join(config.runtime,'dssWriter.jar'),
+      '"'+escapePath(paramFile)+'"'
   ];
 
   // set current working directory of the exec env to the runtime/jre/bin path.
@@ -84,12 +84,3 @@ module.exports = function(params, options, callback) {
     callback();
   });
 };
-
-
-function escapePath(path) {
-  if( os.type() !== 'Windows_NT' ) {
-    return path.replace(/ /g, '\\ ');
-  } else {
-    return path.replace(/ /g, '^ ');
-  }
-}
