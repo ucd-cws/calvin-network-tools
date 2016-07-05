@@ -86,15 +86,17 @@ function onCrawlComplete(results){
 }
 
 function readUBMandLBM(nodes, callback) {
-  var array = [], bounds, bound;
+  var array = [], bounds, sinks;
 
   for( var i = 0; i < nodes.length; i++ ) {
-    bounds = nodes[i].properties.bounds;
-    if( bounds ) {
-      for( var j = 0; j < bounds.length; j++ ) {
-        bound = bounds[j];
-        if( bound.type === 'UBM' || bound.type === 'LBM' ) {
-          array.push(bound);
+    // read in bounds if they exist
+    addBoundsToArray(nodes[i].properties.bounds, array);
+
+    sinks = nodes[i].properties.sinks;
+    if( sinks ) {
+      for( var j = 0; j < sinks.length; j++ ) {
+        for( var key in sinks[j] ) {
+          addBoundsToArray(sinks[j][key].bounds, array);
         }
       }
     }
@@ -107,6 +109,19 @@ function readUBMandLBM(nodes, callback) {
     },
     callback
   );
+}
+
+// helper for readUBMandLBM
+function addBoundsToArray(bounds, array) {
+    if( !bounds ) return;
+    var bound;
+
+    for( var j = 0; j < bounds.length; j++ ) {
+      bound = bounds[j];
+      if( bound.type === 'UBM' || bound.type === 'LBM' ) {
+        array.push(bound);
+      }
+    }
 }
 
 function write(pridata, start, stop) {

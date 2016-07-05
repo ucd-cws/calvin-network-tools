@@ -5,6 +5,7 @@ var utils = require('./utils');
 var fs = require('fs');
 var extend = require('extend');
 var dss = require('../../dss');
+var programConfig = require('../../config').get();
 
 // from page 58 of manual
 var LINK_SPACING = [
@@ -67,7 +68,6 @@ function writeLink(config, np, options) {
 
         var o = extend(true, {}, options);
         o.type = 'DIVR';
-	  console.log(JSON.stringify(sink));
         writeLink(config, sink, o);
       }
     }
@@ -96,7 +96,7 @@ function writeLink(config, np, options) {
       } else if( bound.type === 'UBM' ) {
         b += writeMonthlyBound('BU', bound)+'\n';
       } else if( bound.type === 'LBM' ) {
-          b += writeMonthlyBound('BL', bound)+'\n';
+        b += writeMonthlyBound('BL', bound)+'\n';
       } else if( bound.type === 'EQT' ) {
         if( !fs.existsSync(bound.bound.$ref) ) {
           console.log('Bound file '+bound.bound.$ref+'not found, ignoring: ');
@@ -209,7 +209,7 @@ function writeLink(config, np, options) {
 
   if( np.type === 'Diversion' || np.type === 'Return Flow' ) {
     link = sprintf(LINK_FORMAT, 'LINK', '', type, np.origin, np.terminus, amplitude, cost, lowerBound, upperBound, constantBound)+'\n';
-    if( np.description && !config.noDescriptions ) {
+    if( np.description && programConfig.descriptions !== false ) {
       link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
     }
     link += b;
@@ -228,7 +228,7 @@ function writeLink(config, np, options) {
 
     link = sprintf(LINK_FORMAT, 'LINK', '', 'RSTO', prmname, prmname, amplitude.toFixed(3), cost, lowerBound, upperBound, constantBound)+'\n';
  
-    if( np.description && !config.noDescriptions ) {
+    if( np.description && programConfig.descriptions !== false ) {
       link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
     }
     link += b;
@@ -257,7 +257,7 @@ function writeMonthlyBound(type, bound) {
 
 function writeIn(prmname, name, description, config) {
   var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFL', 'SOURCE', prmname, '1.000', '0.000', '', '', '')+'\n';
-  if( description && !config.noDescriptions ) {
+  if( description && programConfig.descriptions !== false ) {
     inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
   }
   inf += dss.path.in(prmname, name);

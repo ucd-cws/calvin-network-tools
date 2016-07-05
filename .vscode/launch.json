@@ -89,11 +89,9 @@
 				"build",
 				"--prefix",
 				"test",
-				"--verbose",
 				"--debug",
 				//"SR_GNT,SR_HID,SR_ISB,SR_ML,SR_TL",
-				"SR_HID,SR_ISB,SR_ML,SR_TL",
-				"--debug-runtime"
+				"SR_HID,SR_ISB,SR_ML,SR_TL"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
