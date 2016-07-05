@@ -167,13 +167,11 @@ function writeLink(config, np, options) {
         continue;
       }
 
-      // HACK - JM
-      if( np.prmname !== 'GW_MWD' ) {
-        config.pri.inflowlist.push(writeIn(prmname, name, np.description));
 
-        // set dss writer json object
-        config.ts.data.push(dss.inflow(prmname, name, np.inflows[name].inflow));
-      }
+      config.pri.inflowlist.push(writeIn(prmname, name, np.description, config));
+
+      // set dss writer json object
+      config.ts.data.push(dss.inflow(prmname, name, np.inflows[name].inflow));
 
     }
   }
@@ -205,8 +203,9 @@ function writeLink(config, np, options) {
 
   if( np.type === 'Diversion' || np.type === 'Return Flow' ) {
     link = sprintf(LINK_FORMAT, 'LINK', '', type, np.origin, np.terminus, amplitude, cost, lowerBound, upperBound, constantBound)+'\n';
-    // JM - HACK
-    //link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
+    if( np.description && !config.noDescriptions ) {
+      link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
+    }
     link += b;
     link += ev;
     link += eac;
@@ -222,8 +221,10 @@ function writeLink(config, np, options) {
     }
 
     link = sprintf(LINK_FORMAT, 'LINK', '', 'RSTO', prmname, prmname, amplitude.toFixed(3), cost, lowerBound, upperBound, constantBound)+'\n';
-    // JM - HACK
-    //link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
+ 
+    if( np.description && !config.noDescriptions ) {
+      link += sprintf('%-8.8s  %-80.80s', 'LD', np.description || '')+'\n';
+    }
     link += b;
     link += ev;
     link += eac;
@@ -248,10 +249,11 @@ function writeMonthlyBound(type, bound) {
   return type+'        '+data.join(',');
 }
 
-function writeIn(prmname, name, description) {
+function writeIn(prmname, name, description, config) {
   var inf = sprintf(LINK_FORMAT, 'LINK', '', 'INFL', 'SOURCE', prmname, '1.000', '0.000', '', '', '')+'\n';
-  // JM - HACK
-  //inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
+  if( description && !config.noDescriptions ) {
+    inf += sprintf('%-8.8s  %-80.80s', 'LD', description || '')+'\n';
+  }
   inf += dss.path.in(prmname, name);
   return inf;
 }
