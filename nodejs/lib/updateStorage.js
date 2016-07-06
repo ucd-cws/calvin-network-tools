@@ -22,7 +22,7 @@ module.exports = function(start, stop, nodes, callback) {
   function updateNode(node, next) {
     // update initial and ending storage if start and stop provided
     if( shouldUpdate(start, stop, node) ) {
-      parse(fs.readFileSync(node.properties.storage, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
+      parse(fs.readFileSync(node.properties.storage.$ref, 'utf-8'), {comment: '#', delimiter: ','}, function(err, data){
         utils.trimDates(start, stop, data);
 
           if( data.length > 1 ){

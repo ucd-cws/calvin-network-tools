@@ -107,6 +107,36 @@
 			"outDir": null
 		},
 		{
+			"name": "Build2",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/nodejs/index.js",
+			"stopOnEntry": false,
+			"args": [
+				"--debug",
+				"SR_GNT",
+				"--prefix",
+				"wy2002",
+				"--start",
+				"2002-10",
+				"--stop",
+				"2003-09",
+				"build"
+			],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"externalConsole": false,
+			"sourceMaps": false,
+			"outDir": null
+		},
+		{
 			"name": "DssToJSON",
 			"type": "node",
 			"request": "launch",
