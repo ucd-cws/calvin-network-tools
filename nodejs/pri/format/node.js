@@ -20,9 +20,9 @@ module.exports = function(np) {
     }
 
     NODE = sprintf('%-8.8s  %-10.10s','NODE', np.prmname);
-    NODE += (np.initialstorage !== undefined ) ? sprintf('%10.3f', np.initialstorage) : sprintf('%10.10s','');
-    NODE += (np.areacapfactor !== undefined ) ? sprintf('%10.4f', np.areacapfactor) : sprintf('%10.10s','');
-    NODE += (np.endingstorage !== undefined ) ? sprintf('%10.3f', np.endingstorage) : sprintf('%10.10s','');
+    NODE += (typeof np.initialstorage === 'number' ) ? sprintf('%10.3f', np.initialstorage) : sprintf('%10.10s','');
+    NODE += (typeof np.areacapfactor === 'number' ) ? sprintf('%10.4f', np.areacapfactor) : sprintf('%10.10s','');
+    NODE += (typeof np.endingstorage === 'number' ) ? sprintf('%10.3f', np.endingstorage) : sprintf('%10.10s','');
 
   if( np.description && config.descriptions !== false ) {
     NODE += sprintf('\n%-8.8s  %-70.70s', 'ND', np.description);
