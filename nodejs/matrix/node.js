@@ -63,7 +63,7 @@ module.exports = function(item, subnet) {
     }
   }
 
-  sink(item, steps).forEach(function (r) {
+  sink(item, steps, config).forEach(function (r) {
     rows.push(r);
   });
 

@@ -8,7 +8,7 @@ var bound = require('./bound');
 var netu = require('./split_utils');
 var u = require('./utils');
 
-function sink(sink, id,steps) {
+function createSink(sink, id, steps) {
   var amp = 1;
   var step_costs;
   var step_bounds;
@@ -66,16 +66,45 @@ function sink(sink, id,steps) {
   return rows;
 };
 
-module.exports = function (item, steps) {
+function stepsFromSink(flow, config) {
+  var steps = [], time, step;
+  
+  for (var i = 1; i < flow.length; i++) { // i=0 is header;
+    step = flow[i][0];
+    time = new Date(step).getTime();
+
+    // Get boundary Conditions
+    if ((!config.start || config.start < time) &&
+      (!config.stop || time < config.stop)) {
+
+      steps.push(flow[i][0]);
+    }
+  }
+
+  return steps;
+}
+
+
+module.exports = function (item, steps, config) {
   var p = item.properties;
   var id = p.hobbes.networkId;
   var rows = []
-  var i, s;
+  var i, sinkName, sink;
 
   if (p.sinks) {
+
     for (i = 0; i <= p.sinks.length; i++) {
-      for (s in p.sinks[i]) {
-        sink(p.sinks[i][s], id, steps).forEach(function (r) {
+      for (sinkName in p.sinks[i]) {
+        sink = p.sinks[i][sinkName];
+
+        // JM
+        // fix for issue #34 where there is no flow to another node, instead
+        // it's a direct flow to a sink
+        if( steps.length === 0 && sink.flow && sink.flow.length > 0 ) {
+          steps = stepsFromSink(sink.flow, config);
+        }
+
+        createSink(sink, id, steps).forEach(function (r) {
           rows.push(r);
         });
       }
