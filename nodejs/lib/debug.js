@@ -38,7 +38,9 @@ var sinkLink = {
       networkId : 'DBUGSNK-SINK',
       type : 'link'
     },
-    costs : {}
+    costs : {
+      type : 'Constant'
+    }
   }
 };
 
@@ -54,7 +56,9 @@ var sourceLink = {
       networkId : 'SOURCE-DBUGSRC',
       type : 'link'
     },
-    costs : {}
+    costs : {
+      type : 'Constant'
+    }
   }
 };
 
