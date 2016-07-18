@@ -53,13 +53,14 @@ function createSink(sink, id, steps) {
         ub -= cub;
       }
 
-      if (cub === null || cub > 0) {
+      // JM - including as part of issue #33 discussion
+      //if (cub === null || cub > 0) {
         rows.push([
           u.id(id, steps[i]),
           u.id('SINK', steps[i]),
           c, costs[c][0], amp, clb, cub
         ]);
-      }
+      //}
     }
   }
 
@@ -98,7 +99,7 @@ module.exports = function (item, steps, config) {
         sink = p.sinks[i][sinkName];
 
         // JM
-        // fix for issue #34 where there is no flow to another node, instead
+        // fix for issue #33 where there is no flow to another node, instead
         // it's a direct flow to a sink
         if( steps.length === 0 && sink.flow && sink.flow.length > 0 ) {
           steps = stepsFromSink(sink.flow, config);
