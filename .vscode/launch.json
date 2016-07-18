@@ -37,9 +37,14 @@
 			"stopOnEntry": false,
 			"args": [
 				"matrix",
+				"--verbose",
+				"--format=csv",
+				"--start=2002-08",
+				"--stop=2002-10",
 				"--ts=.",
-				"--fs=\t",
-				"SR_WHI","D5", "SR_WHI-D5"
+				"--to=network",
+				"--max-ub=1000000",
+				"--outnodes=node"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,

@@ -75,13 +75,16 @@ module.exports = function(link, subnet) {
             ub -= cub;
           }
 
-          if (cub===null || cub>0) {
+          // JM
+          // fix for second part of issue #2
+          // need to include links that have 0 upper bound for mass balance
+          //if (cub===null || cub>0) {
             rows.push([
               u.id(p.origin, steps[i]),
               u.id(p.terminus, steps[i]),
               c, costs[c][0], amp, clb, cub
             ]);
-          }
+          //}
         }
       }
 

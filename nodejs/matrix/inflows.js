@@ -29,7 +29,13 @@ module.exports = function(item, steps) {
         rows.push([
           u.id('INFLOW',steps[i]),
           u.id(id,steps[i]),
-          0,1,0,inf,inf
+          // JM - fixing issue #32.
+          // old values: k=0, cost=1
+          0,   // k
+          0,   // cost
+          1,   // amplitude
+          inf, // lower bound
+          inf  // upper bound
         ]);
       }
     }
