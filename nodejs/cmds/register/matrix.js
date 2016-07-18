@@ -9,6 +9,7 @@ module.exports = function(program, run) {
         .option('-s, --start [YYYY-MM]', 'Specify start date for TimeSeries data')
         .option('-t, --stop [YYYY-MM]', 'Specify stop date for TimeSeries data')
         .option('-M, --max-ub <number>','Replace null upperbound with a big number.  Like 1000000')
+        .option('-d, --debug [nodes]', 'Set debug nodes.  Either "ALL", "*" or comma seperated list of prmnames (no spaces)')
         //.option('-m, --matrix <filename>','Send matrix to filename, default=STDOUT')
         .option('-T, --to <filename>','Send matrix to filename, default=STDOUT')
         .option('-O, --outnodes <filename>','Send list of nodes to filename, default=no output, can use STDOUT')

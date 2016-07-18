@@ -4,7 +4,12 @@ var dbgsrc = {
   properties : {
     type : 'debugnode',
     prmname : 'DBUGSRC',
-    description : 'Dummy source node to test infeasibilities'
+    description : 'Dummy source node to test infeasibilities',
+    hobbes : {
+      debug: true,
+      networkId : 'DBUGSRC',
+      type : 'node'
+    }
   }
 };
 
@@ -12,7 +17,12 @@ var dbgsinks = {
   properties : {
     type : 'debugnode',
     prmname : 'DBUGSNK',
-    description : 'Dummy source node to test infeasibilities'
+    description : 'Dummy source node to test infeasibilities',
+    hobbes : {
+      debug: true,
+      networkId : 'DBUGSNK',
+      type : 'node'
+    }
   }
 };
 
@@ -23,6 +33,11 @@ var sinkLink = {
     origin : 'DBUGSNK',
     terminus : 'SINK',
     description : 'Debug link from DBUGSINK to SINK with high unit cost.',
+    hobbes : {
+      debug: true,
+      networkId : 'DBUGSNK-SINK',
+      type : 'link'
+    },
     costs : {}
   }
 };
@@ -34,6 +49,11 @@ var sourceLink = {
     origin : 'SOURCE',
     terminus : 'DBUGSRC',
     description : 'Debug link from source to DBUGSOURCE with high unit cost.',
+    hobbes : {
+      debug: true,
+      networkId : 'SOURCE-DBUGSRC',
+      type : 'link'
+    },
     costs : {}
   }
 };
@@ -63,6 +83,11 @@ module.exports = function(nodes) {
           prmname : np.prmname+'DBUGSNK',
           origin : np.prmname,
           terminus : 'DBUGSNK',
+          hobbes : {
+            debug: true,
+            networkId : np.prmname+'DBUGSNK',
+            type : 'link'
+          },
           costs : {}
         }
       });
@@ -73,6 +98,11 @@ module.exports = function(nodes) {
           prmname : 'DBUGSRC-'+np.prmname,
           origin : 'DBUGSRC',
           terminus : np.prmname,
+          hobbes : {
+            debug: true,
+            networkId : 'DBUGSRC-'+np.prmname,
+            type : 'link'
+          },
           costs : {}
         }
       });

@@ -16,3 +16,6 @@ dssWriter.jar
 dssExportJson*
 tempPrm.txt
 npm-debug.log
+network.csv
+network_old.csv
+node

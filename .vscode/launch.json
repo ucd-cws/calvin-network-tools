@@ -44,6 +44,7 @@
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000",
+				"--debug=ALL",
 				"--outnodes=node"
 			],
 			"cwd": "${workspaceRoot}",

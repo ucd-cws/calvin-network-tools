@@ -17,6 +17,7 @@ var expand = require('./expand');
 var async = require('async');
 var link = require('./link');
 var node = require('./node');
+var debug = require('../lib/debug');
 
 function matrix(config, callback) {
   require('./mconfig')(config); // set the config
@@ -33,7 +34,21 @@ function matrix(config, callback) {
     if (subnet.in.length === 0) {
       subnet.in = subnet.out;
     }
+
+    // JM
+    // Attempting to add debug for issue #34
+    if( config.debug ) {
+      subnet.in = debug(subnet.in);
+    }
+
     expand(subnet, function(){
+
+      // JM - same as above
+      // Attempting to add debug for issue #34
+      if( config.debug ) {
+        addFlowsToDebug(subnet);
+      }
+
       onSubnetReady(subnet, config, callback);
     });
   }); // end split
@@ -91,4 +106,34 @@ function onSubnetReady(subnet, config, callback) {
   }
   callback(rows);
 }
+
+function addFlowsToDebug(subnet) {
+  // now we need to fake the flows so we add rows to the matrix
+  var dates = {}, p;
+  for( var i = 0; i < subnet.in.length; i++ ) {
+    p = subnet.in[i].properties;
+    if( !p.flow ) continue;
+    
+    for( var j = 1; j < p.flow.length; j++ ) {
+      dates[p.flow[j][0]] = true;
+    }
+  }
+
+  var flow = Object.keys(dates);
+  flow.sort();
+  flow.unshift('');
+
+  for( var i = 0; i < flow.length; i++ ) {
+    flow[i] = [flow[i], 0];
+  }
+
+  for( var i = 0; i < subnet.in.length; i++ ) {
+    if( subnet.in[i].properties.hobbes.debug ) {
+      subnet.in[i].properties.flow = flow;
+      subnet.in[i].properties.amplitude = 1;
+    }
+  }
+}
+
+
 module.exports = matrix;
