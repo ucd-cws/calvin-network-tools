@@ -80,7 +80,7 @@ module.exports = function(link, subnet) {
           // need to include links that have 0 upper bound for mass balance
           //if (cub===null || cub>0) {
             rows.push([
-              u.id(p.origin, steps[i]),
+              ( p.origin === 'SOURCE' ) ? 'SOURCE' : u.id(p.origin, steps[i]),
               u.id(p.terminus, steps[i]),
               c, costs[c][0], amp, clb, cub
             ]);
