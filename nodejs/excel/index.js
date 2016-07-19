@@ -6,19 +6,21 @@ var fs = require('fs');
 var parse = require('csv-parse');
 var stringify = require('csv-stringify');
 var path = require('path');
-var crawler = require('hobbes-network-format');
+var hnf = require('../hnf')();
+var crawler = hnf.crawl;
 
 var callback;
 
 module.exports = function(args, cb) {
   var callback = cb;
 
-  if( !fs.existsSync(args.x) ) {
-    console.log('Invalid file: '+args.x);
-    return callback();
+  if( !fs.existsSync(args.excelPath) ) {
+    console.log('Invalid file: '+args.excelPath);
+    if( callback ) callback();
+    return;
   }
 
-  var workbook = xlsx.readFile(args.x);
+  var workbook = xlsx.readFile(args.excelPath);
 
   var items = [];
 
@@ -47,11 +49,11 @@ function update(items, args) {
 
     async.eachSeries(items,
       function(item, next){
-        updateNode(item, result.nodes.features, args.data.replace(/data\/?$/, ''), next);
+        updateNode(item, result.nodes.features, args.data, next);
       },
       function(err) {
         console.log('done.');
-        callback();
+        if( callback ) callback();
       }
     );
 
@@ -61,7 +63,7 @@ function update(items, args) {
 function updateNode(item, nodes, root, callback) {
   for( var i = 0; i < nodes.length; i++ ) {
     if( item.prmname === nodes[i].properties.prmname ) {
-      var file = path.join(root, nodes[i].properties.repo.dir, item.folder);
+      var file = path.join(root, nodes[i].properties.hobbes.repo.path, item.folder);
       console.log('found and updating: '+item.prmname+' '+file);
 
       stringify(item.data, {}, function(err, string){

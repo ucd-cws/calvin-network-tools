@@ -61,6 +61,30 @@
 			"outDir": null
 		},
 		{
+			"name": "excel",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/bin/cnf.bin.js",
+			"stopOnEntry": false,
+			"args": [
+				"excel",
+				"--excel-path",
+				"/Users/jrmerz/Desktop/PMP_ONeill-D814.xls"
+			],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"externalConsole": false,
+			"sourceMaps": false,
+			"outDir": null
+		},
+		{
 			"name": "Run",
 			"type": "node",
 			"request": "launch",

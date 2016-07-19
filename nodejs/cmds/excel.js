@@ -3,7 +3,7 @@
 var config = require('../config').get();
 var excel = require('../excel');
 var checkRequired = require('../lib/checkRequired');
-var required = ['excel-path', 'data'];
+var required = ['excelPath', 'data'];
 
 module.exports = function(callback) {
   if( config.verbose ) {
@@ -11,5 +11,5 @@ module.exports = function(callback) {
   }
 
   checkRequired(required);
-  excel(callback);
+  excel(config, callback);
 };
