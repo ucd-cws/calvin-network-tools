@@ -90,17 +90,29 @@ module.exports = function (callback) {
       var output;
       if( config.format === 'dot' ) {
         output = toDot(matrix_data);
+
+        if( config.to === 'STDOUT' ) {
+          console.log(output);
+        } else {
+          fs.writeFileSync(
+            path.join(process.cwd(), `${config.to}.${config.format}`),
+            output
+          );
+        }
+
+      // This needs to be able to handle large outputs
       } else {
-        output = matrix_output.join(config.rs)+config.rs;
-      }
-      
-      if( config.to === 'STDOUT' ) {
-        console.log(output);
-      } else {
-        fs.writeFileSync(
-          path.join(process.cwd(), `${config.to}.${config.format}`),
-          output
-        );
+        if( config.to === 'STDOUT' ) {
+          matrix_output.forEach((row) => {
+            console.log(row+config.rs);
+          });
+        } else {
+          var file = fs.createWriteStream(`${config.to}.${config.format}`);
+          matrix_output.forEach(function(row) { 
+            file.write(row+config.rs); 
+          });
+          file.end();
+        }
       }
     }
 
