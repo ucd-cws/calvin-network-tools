@@ -25,11 +25,14 @@ module.exports = function (callback) {
   var node_list = {};
   
   config.fs = config.fs || ',';
-  if (config.fs === ':tab:') {
+
+  config.format = config.format || 'csv';
+  config.format = config.format.toLowerCase();
+
+  if (config.fs === ':tab:' || config.format === 'tsv' ) {
     config.fs = '\t';
   }
-  
-  config.format = config.format || 'csv';
+
   config.ts = config.ts || '@';
   config.rs = config.rs || '\n';
   config.to = config.to || 'STDOUT';
