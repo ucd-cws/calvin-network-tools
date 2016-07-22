@@ -38,9 +38,9 @@
 			"args": [
 				"matrix",
 				"--verbose",
-				"--format=tsv",
-				"--start=2002-08",
-				"--stop=2002-10",
+				"--format=csv",
+				"--start=2002-10",
+				"--stop=2003-10",
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000",
