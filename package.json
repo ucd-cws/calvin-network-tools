@@ -1,6 +1,6 @@
 {
   "name": "calvin-network-tools",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "Command line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
   "main": "index.js",
   "scripts": {

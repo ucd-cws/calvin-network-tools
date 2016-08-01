@@ -16,6 +16,19 @@ function createSink(sink, id, steps) {
   var rows = [];
   var u = require('./utils');
 
+  // JM - for issue #33
+  // It seems like the bounds function overrides itself...
+  // just looking at first bound
+  var isConstrained = false;
+  var bounds = sink.bounds || [];
+  if( bounds.length > 0 ) {
+    var boundType = bounds[0].type;
+    if( boundType === 'EQC' ||  boundType === 'EQT' || boundType === 'EQM' ) {
+      isConstrained = true;
+    }
+  }
+
+
   var step_costs = cost(sink.costs||{type:"NONE"}, steps);
   var step_bounds = bound(sink.bounds||[], steps);
 
@@ -58,7 +71,13 @@ function createSink(sink, id, steps) {
         rows.push([
           u.id(id, steps[i]),
           u.id('SINK', steps[i]),
-          c, costs[c][0], amp, clb, cub
+          c, 
+          costs[c][0], 
+          amp, 
+          // JM - for issue #33
+          // if constrained bound, lower bound should equal upper bound
+          isConstrained ? cub : clb, 
+          cub
         ]);
       //}
     }
