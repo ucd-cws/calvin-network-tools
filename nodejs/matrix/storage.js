@@ -63,8 +63,14 @@ module.exports = function(stor, steps) {
     amp=step_amp[i];
 
     if(i===steps.length-1) { // Fixed to final storage
-      lb = ending;
+      // JM fix for issue 35
+      if( ending === null ) {
+        lb = 0;
+      } else {
+        lb = ending;
+      }
       ub = ending;
+
       next='FINAL';
       rows.push([u.id(id,steps[i]),next,0,0,1,lb,ub]);
     } else {
