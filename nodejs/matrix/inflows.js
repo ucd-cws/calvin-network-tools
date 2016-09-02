@@ -10,6 +10,8 @@ module.exports = function(item, steps) {
   var p=item.properties;
   var id=p.hobbes.networkId;
 
+  if( id === 'C86' ) debugger;
+
   if (p.inflows) {
     // This should be done for every inflow
     var inflow = p.inflows.default.inflow;

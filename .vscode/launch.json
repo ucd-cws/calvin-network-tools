@@ -118,7 +118,7 @@
 			"args": [
 				"build",
 				"--prefix",
-				"test",
+				"testsorted",
 				"--debug",
 				//"SR_GNT,SR_HID,SR_ISB,SR_ML,SR_TL",
 				"SR_HID,SR_ISB,SR_ML,SR_TL"

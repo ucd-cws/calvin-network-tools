@@ -85,6 +85,12 @@ function onCrawlComplete(results){
         nodes = results.nodes.features;
       }
 
+      nodes.sort(function(a, b){
+        if( a.properties.prmname > b.properties.prmname ) return 1;
+        if( a.properties.prmname < b.properties.prmname ) return -1;
+        return 0;
+      });
+
       for( var i = 0; i < nodes.length; i++ ) {
         pri.format(nodes[i], pridata, o);
       }

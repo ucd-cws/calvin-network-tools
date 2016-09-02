@@ -19,14 +19,27 @@ module.exports = function(np) {
       np.areacapfactor = 0;
     }
 
-    NODE = sprintf('%-8.8s  %-10.10s','NODE', np.prmname);
-    NODE += (typeof np.initialstorage === 'number' ) ? sprintf('%10.3f', np.initialstorage) : sprintf('%10.10s','');
-    NODE += (typeof np.areacapfactor === 'number' ) ? sprintf('%10.4f', np.areacapfactor) : sprintf('%10.10s','');
-    NODE += (typeof np.endingstorage === 'number' ) ? sprintf('%10.3f', np.endingstorage) : sprintf('%10.10s','');
+    var hasInitialStorage = typeof np.initialstorage === 'number';
+    var hasAreaCapFactor = typeof np.areacapfactor === 'number';
+    var hasEndingStorage = typeof np.endingstorage === 'number';
 
-  if( np.description && config.descriptions !== false ) {
-    NODE += sprintf('\n%-8.8s  %-70.70s', 'ND', np.description);
-  }
+    
+
+    // JM - trying to match the Netbuilder output
+    if( !hasInitialStorage && !hasAreaCapFactor && !hasEndingStorage ) {
+      NODE = sprintf('%-8.8s  %-30.10s','NODE', np.prmname);
+    } else {
+      NODE = sprintf('%-8.8s  %-10.10s','NODE', np.prmname);
+      NODE += hasInitialStorage ? sprintf('%-10.1f', np.initialstorage) : sprintf('%10s','');
+      NODE += hasAreaCapFactor ? sprintf('%-10.3f', np.areacapfactor) : sprintf('%-10.3f', 0);
+      NODE += hasEndingStorage ? sprintf('%-10.1f', np.endingstorage).trim() : '';
+    }
+
+    if( np.description && config.descriptions !== false ) {
+      NODE += sprintf('\n%-8.8s  %-70.70s', 'ND', np.description).replace(/\s*$/,'');
+    } else {
+      NODE += sprintf('\n%-10.10s', 'ND');
+    }
 
   return NODE;
 };
