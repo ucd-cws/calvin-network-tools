@@ -9,7 +9,7 @@ module.exports = function(type, prmname, boundType, file) {
     csvFilePath : file.$ref,
     type : 'timeseries',
     parameter : '1MON',
-    xunits : 'KAF',
+    units : 'KAF',
     location : prmname,
     xtype : 'UNT',
     path : path.timeBound(type, prmname, boundType, 'dss')

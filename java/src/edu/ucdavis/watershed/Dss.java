@@ -28,6 +28,7 @@ public class Dss {
 	public static LocalDateTime EPOCH = LocalDateTime.of(1899, Month.of(12), 31, 0, 0, 0);
 
 	public static HecDss open(String file) throws Exception {
+		HecDSSUtilities.setMessageLevel(0);
 		return HecDss.open(file);
 	}
 

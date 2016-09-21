@@ -40,7 +40,7 @@ module.exports = function(stor, steps) {
       last=i;
     }
   }
-  if (last !==cap.length-1) {
+  if (last !== cap.length-1 && last !== null) {
     ending=cap[last][1];
   }
 

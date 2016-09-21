@@ -39,13 +39,13 @@
 				"matrix",
 				"--verbose",
 				"--format=csv",
-				"--start=2002-10",
-				"--stop=2003-10",
+				"--start=1999-10",
+				"--stop=2000-10",
 				"--ts=.",
 				"--to=network",
-				"--max-ub=1000000",
+				"--max-ub=1000000"
 				//"--debug=ALL",
-				"--outnodes=node"
+				//"--outnodes=node"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
@@ -118,10 +118,10 @@
 			"args": [
 				"build",
 				"--prefix",
-				"testsorted",
-				"--debug",
-				//"SR_GNT,SR_HID,SR_ISB,SR_ML,SR_TL",
-				"SR_HID,SR_ISB,SR_ML,SR_TL"
+				"testsorted"
+				// "--debug",
+				// //"SR_GNT,SR_HID,SR_ISB,SR_ML,SR_TL",
+				// "SR_HID,SR_ISB,SR_ML,SR_TL"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
