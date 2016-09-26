@@ -2,7 +2,7 @@
 
 // Given a bound list and the time steps,
 // return the LB and UB at each timestep.
-// List is in format of [lb,ub]
+// List is in format of {LB:lb,UB:ub}
 
 var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 function getMonth(dateString) {
@@ -105,5 +105,10 @@ module.exports = function(bounds, steps, callback) {
         }
     });
 
-    return steps_bound;
+    return steps_bound.map((bound) => {
+      return {
+        LB : bound[0],
+        UB : bound[1]
+      }
+    });
 };

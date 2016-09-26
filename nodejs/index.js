@@ -61,6 +61,6 @@ require('./cmds/register')(program, onReady);
 if (!process.argv.slice(2).length) {
     program.outputHelp();
 }
-  
+
 // actually parse the args
 program.parse(process.argv);

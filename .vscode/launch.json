@@ -29,7 +29,7 @@
 			"sourceMaps": false,
 			"outDir": null
 		},
-				{
+		{
 			"name": "matrix",
 			"type": "node",
 			"request": "launch",
@@ -44,6 +44,7 @@
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000"
+
 				//"--debug=ALL",
 				//"--outnodes=node"
 			],

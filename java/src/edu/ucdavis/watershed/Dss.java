@@ -149,10 +149,8 @@ public class Dss {
 				}
 				
 				dc = dssFile.get(hecpath, true);
-			
-				try {
-					
-					
+				
+				if( dc instanceof TimeSeriesContainer ) {
 					ts.timeSeriesContainer = (TimeSeriesContainer) dc;
 					name = ts.timeSeriesContainer.getLocationName();
 					parameter = ts.timeSeriesContainer.getParameterName();
@@ -165,15 +163,12 @@ public class Dss {
 					for( int i = 0; i < ts.timeSeriesContainer.times.length; i++ ) {
 						ts.dates.add(Dss.calcDate(ts.timeSeriesContainer.times[i]));
 					}
-				} catch(Exception e) {
-					try {
-						ts.pairedDataContainer = (PairedDataContainer) dc;
-						parameter = "pairedData";
-						name = ts.pairedDataContainer.location;
-					} catch(Exception e2) {
-						continue;
-					}
+				} else {
+					ts.pairedDataContainer = (PairedDataContainer) dc;
+					parameter = "pairedData";
+					name = ts.pairedDataContainer.location;
 				}
+			
 			} catch(Exception e2) {
 				continue;
 			}

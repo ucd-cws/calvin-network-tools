@@ -47,8 +47,9 @@ module.exports = function(stor, steps) {
   // Add Initial [i,j,k,cost,amplitude,lower,upper]
   rows.push(['INITIAL',u.id(id,steps[0]),0,0,1,initial,initial]);
 
-  var step_costs = cost(p.costs, steps);
   var step_bounds = bound(p.bounds, steps);
+  var step_costs = cost(p.costs, step_bounds, steps);
+  
   var step_amp = evaporation(stor, steps);
   var i;
   var lb,ub,costs;

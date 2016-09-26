@@ -28,9 +28,8 @@ function createSink(sink, id, steps) {
     }
   }
 
-
-  var step_costs = cost(sink.costs||{type:"NONE"}, steps);
   var step_bounds = bound(sink.bounds||[], steps);
+  var step_costs = cost(sink.costs||{type:"NONE"}, step_bounds, steps);
 
   var i;
   var lb,ub,costs;

@@ -15,6 +15,8 @@ module.exports = function(program, run) {
         .option('-O, --outnodes <filename>','Send list of nodes to filename, default=no output, can use STDOUT')
         .option('-p, --outbound-penalty <json>','Specify a penalty function for outbound boundary conditions. eg. [[10000,"-10%"],[0,0],[-10000,"10%"]]')
         .action(run);
+    
+    return cmd;
 }
 
 /*

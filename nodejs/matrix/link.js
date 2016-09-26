@@ -17,7 +17,7 @@ module.exports = function(link, subnet) {
   var amp = p.amplitude;
   var step_costs;
   var step_bounds;
-  var i,c;
+  var i, k;
   var rows = [];
 
   var flow = link.properties.flow;
@@ -57,34 +57,31 @@ module.exports = function(link, subnet) {
         }
       }
 
-      var step_costs = cost(link.properties.costs||{type:"NONE"}, steps);
       var step_bounds = bound(link.properties.bounds||[], steps);
+      var step_costs = cost(link.properties.costs||{type:"NONE"}, step_bounds, steps);
 
       var i;
-      var lb,ub,costs;
+      var stepBounds,costs;
       var clb,cub;
 
       for(i = 0; i < steps.length; i++ ) { // i=0 is header;
-        lb = step_bounds[i][0];
-        ub = step_bounds[i][1];
+        stepBounds = step_bounds[i];
         costs = step_costs[i];
 
-        for( c = 0; c < costs.length; c++ ){
+        for( k = 0; k < costs.length; k++ ){
           //console.log(i+"/"+c+":"+costs[c]);
           // clb is greatest of link lower bound and cost lower bound
           // Make sure to satisfy link lb constraint, fill up each link till lb is met.
-          clb=( costs[c][1] > lb )
-          ? costs[c][1]
-          : ( (costs[c][2] || 0) <= lb )
-          ? (costs[c][2] || 0)
-          : lb;
+          clb=( costs[k].lb > stepBounds.LB ) ? costs[k].lb
+                : ( (costs[k].ub || 0) <= stepBounds.LB ) ? (costs[k].ub || 0)
+                : stepBounds.LB;
 
-          lb -= clb;
-          if (ub===null) {
-            cub=costs[c][2];
+          stepBounds.LB -= clb;
+          if( stepBounds.UB === null ) {
+            cub = costs[k].ub;
           } else {
-            cub = ( costs[c][2]!==null && costs[c][2] <= ub ) ? costs[c][2] : ub;
-            ub -= cub;
+            cub = ( costs[k].ub !== null && costs[k].ub <= stepBounds.UB ) ? costs[k].ub : stepBounds.UB;
+            stepBounds.UB -= cub;
           }
 
           // JM
@@ -94,8 +91,8 @@ module.exports = function(link, subnet) {
             rows.push([
               ( p.origin === 'SOURCE' ) ? 'SOURCE' : u.id(p.origin, steps[i]),
               u.id(p.terminus, steps[i]),
-              c, 
-              costs[c][0], 
+              k, 
+              costs[k].cost, 
               amp, 
               // JM - for issue #33
               // if constrained bound, lower bound should equal upper bound
