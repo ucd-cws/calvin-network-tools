@@ -15,7 +15,7 @@ module.exports = function(stor, steps) {
   var id= p.hobbes.networkId;
   var step_costs;
   var step_bounds;
-  var i,c;
+  var i,k;
   var rows = [];
 
   // Assume there IS a storage, otherwise, we need steps!
@@ -28,13 +28,15 @@ module.exports = function(stor, steps) {
   var last=null;
 
   var step_keys={};
-  steps.forEach(function(s){step_keys[s]=1;});
+  steps.forEach((s) => {
+    step_keys[s] =1;
+  });
 
   // Get initial and Final storage capacities
   for( i = 1; i < cap.length; i++ ) { // i=0 is header;
     if (step_keys[cap[i][0]]) {
       if (! first) {
-        if (i>1) initial=cap[i-1][1];
+        if ( i > 1 ) initial=cap[i-1][1];
         first++;
       }
       last=i;
@@ -48,52 +50,65 @@ module.exports = function(stor, steps) {
   rows.push(['INITIAL',u.id(id,steps[0]),0,0,1,initial,initial]);
 
   var step_bounds = bound(p.bounds, steps);
-  var step_costs = cost(p.costs, step_bounds, steps);
+  var step_costs = cost(p.costs, step_bounds, steps, p.prmname);
   
   var step_amp = evaporation(stor, steps);
   var i;
-  var lb,ub,costs;
+  var stepBounds, costs;
   var clb,cub;
   var amp;
   var next;
 
   for(i = 0; i < steps.length; i++ ) { // i=0 is header;
-    lb = step_bounds[i][0];
-    ub = step_bounds[i][1];
+    stepBounds = step_bounds[i];
     costs = step_costs[i];
-    amp=step_amp[i];
+    amp = step_amp[i];
 
-    if(i===steps.length-1) { // Fixed to final storage
+    if(i === steps.length-1 ) { // Fixed to final storage
       // JM fix for issue 35
       if( ending === null ) {
-        lb = 0;
+        stepBounds.LB = 0;
       } else {
-        lb = ending;
+        stepBounds.LB = ending;
       }
-      ub = ending;
+      stepBounds.UB = ending;
 
-      next='FINAL';
-      rows.push([u.id(id,steps[i]),next,0,0,1,lb,ub]);
+      next = 'FINAL';
+      rows.push([
+        u.id(id,steps[i]),
+        next,
+        0,
+        0,
+        1,
+        stepBounds.LB,
+        stepBounds.UB
+      ]);
+
     } else {
-      next=u.id(id,steps[i+1]);
-      for( c = 0; c < costs.length; c++ ){
-        clb=( costs[c][1] > lb )
-        ? costs[c][1]
-        : ( (costs[c][2] || 0) <= lb )
-        ? (costs[c][2] || 0)
-        : lb;
+      next = u.id(id,steps[i+1]);
+      
+      for( k = 0; k < costs.length; k++ ){
+        clb = ( costs[k].lb > stepBounds.LB ) ? costs[k].lb
+                : ( (costs[k].ub || 0) <= stepBounds.LB ) ? (costs[k].ub || 0)
+                : stepBounds.LB;
 
-        lb -= clb;
-        if (ub===null) {
-          cub=costs[c][2];
+        stepBounds.LB -= clb;
+        if( stepBounds.UB === null ) {
+          cub = costs[k].ub;
         } else {
-          cub = ( costs[c][2]!==null && costs[c][2] <= ub ) ? costs[c][2] : ub;
-          ub -= cub;
+          cub = ( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) ? costs[k].ub : stepBounds.LB;
+          stepBounds.UB -= cub;
         }
 
-        if (cub===null || cub>0) {
-          rows.push([u.id(id,steps[i]),next,
-          c, costs[c][0], amp, clb, cub
+        if( cub === null || cub > 0) {
+          rows.push([
+            u.id(id,steps[i]),
+            next,
+            k, 
+            costs[k][0], 
+            amp, 
+            clb, 
+            cub
         ]);
       }
     }

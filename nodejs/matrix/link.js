@@ -7,7 +7,7 @@
 var cost = require('./cost');
 var bound = require('./bound');
 var netu = require('./split_utils');
-var u=require('./utils');
+var u = require('./utils');
 
 module.exports = function(link, subnet) {
   var config = require('./mconfig')();
@@ -58,7 +58,7 @@ module.exports = function(link, subnet) {
       }
 
       var step_bounds = bound(link.properties.bounds||[], steps);
-      var step_costs = cost(link.properties.costs||{type:"NONE"}, step_bounds, steps);
+      var step_costs = cost(link.properties.costs||{type:"NONE"}, step_bounds, steps, link.properties.prmname);
 
       var i;
       var stepBounds,costs;

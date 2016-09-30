@@ -13,37 +13,39 @@ function getMonth(dateString) {
 }
 
 // Given a penalty function, return a number of cost links
-function penalty_costs(penalty, bounds) {
+function penalty_costs(penalty, bounds, prmname) {
   var costs = [];
   var marg_cost, bound;
 
+  // DONT DELETE
   // If Penalty function starts >0, push on a 0 cost
   // with a fixed bound if slope<0, no bound if slope>0
-  if( penalty[1][0] > 0 ) {
-    bound = penalty[1][0];
-    marg_cost = (penalty[2][1] - penalty[1][1]) / bound;
+  // if( penalty[1][0] > 0 ) {
+  //   bound = penalty[1][0];
+  //   marg_cost = (penalty[2][1] - penalty[1][1]) / bound;
 
-    // negative slope
-    if (marg_cost < 0) {
-      costs.push({
-        cost : 0, 
-        lb : penalty[1][0], 
-        ub : penalty[1][0]
-      });
+  //   // negative slope
+  //   if (marg_cost < 0) {
+  //     costs.push({
+  //       cost : 0, 
+  //       lb : penalty[1][0], 
+  //       ub : penalty[1][0]
+  //     });
 
-    // positive slope
-    } else {
-      costs.push({
-        cost : 0, 
-        lb : 0, 
-        ub : penalty[1][0]
-      });
-    }
-  }
+  //   // positive slope
+  //   } else {
+  //     costs.push({
+  //       cost : 0, 
+  //       lb : 0, 
+  //       ub : penalty[1][0]
+  //     });
+  //   }
+  // }
 
   for( var i = 2; i < penalty.length; i++ ) {
     bound = penalty[i][0] - penalty[i-1][0];
     marg_cost = (penalty[i][1] - penalty[i-1][1]) / bound;
+
     costs.push({
       cost: marg_cost, 
       lb : 0, 
@@ -51,17 +53,18 @@ function penalty_costs(penalty, bounds) {
     });
   }
 
+  // DONT DELETE
   // Extrapolation above last cost.
-  if (marg_cost < 0) {
-    costs.push({
-      cost : 0, 
-      lb : 0, 
-      ub: null
-    });
-  } else {
-    // extend last upperbound
-    costs[costs.length-1].cost = null;
-  }
+  // if (marg_cost < 0) {
+  //   costs.push({
+  //     cost : 0, 
+  //     lb : 0, 
+  //     ub: null
+  //   });
+  // } else {
+  //   // extend last upperbound
+  //   costs[costs.length-1].cost = null;
+  // }
 
   // TODO: adding logic here for ISSUE #36
   // Now does solutions for ISSUE #36 invalidate above statements?
@@ -74,17 +77,43 @@ function penalty_costs(penalty, bounds) {
     }
   }
 
+  if( costs[0] === 0  ) {
+    if( costs.length > 1 ) {
+      console.log(`${prmname}: Slope 0 but multiple k`);
+    }
+    return;
+  }
+
+  var updated = false;
+
   if( isNegativeSlope ) {
 
     if( exists(bounds.LB) ) {
-      costs[0].lb = bounds.LB;
+      if( costs[0].lb !== bounds.LB ) {
+        costs[0].lb = bounds.LB;
+        console.log(`${prmname}: s<0 && LB, setting k=0 lb to LB`);
+        updated = true;
+      }
     } else {
-      costs[0].lb = 0;
+      if( costs[0].lb !== 0 ) {
+        costs[0].lb = 0;
+        console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
+        updated = true;
+      }
     }
 
     if( exists(bounds.UB) ) {
-      costs[costs.length-1].ub = bounds.UB;
-    } else {
+
+      if( costs[costs.length-1].ub !== bounds.UB ) {
+        costs[costs.length-1].ub = bounds.UB;
+        console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
+        updated = true;
+      }
+
+    } else if( penalty[penalty.length-1][1] != 0 ){ // JM
+
+      console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
+
       var p = penalty[penalty.length-1];
       var c = costs[costs.length-1];
 
@@ -94,26 +123,38 @@ function penalty_costs(penalty, bounds) {
         ub : xIntercept(p[0], p[1], c.cost)
       });
 
-      if( isNaN(costs[costs.length].ub) ) {
-        costs[costs.length].ub = null; // ?
+      updated = true;
+
+      if( isNaN(costs[costs.length-1].ub) ) {
+        console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
+        costs[costs.length-1].ub = null; // ?
       }
     }
 
   } else {
 
     if( exists(bounds.LB) ) {
-      costs[0].lb = bounds.LB;
+      if( costs[0].lb !== bounds.LB ) {
+        costs[0].lb = bounds.LB;
+        console.log(`${prmname}: s>0 && LB, Setting k=0 lb to LB`);
+        updated = true;
+      }
     } else {
-      console.warn('This should never happen!');
+      console.log(`${prmname}: WARNING This should never happen!  s>1 && !LB`);
       costs.push({
         cost : 0, 
         lb : 0, 
         ub : null
       });
+      updated = true;
     }
 
     if( exists(bounds.UB) ) {
-      costs[costs.length-1].ub = bounds.UB;
+      if( costs[costs.length-1].ub !== bounds.UB ) {
+        costs[costs.length-1].ub = bounds.UB;
+        console.log(`${prmname}: s>0 && UB, Setting k=K ub to UB`);
+        updated = true;
+      }
     } else {
       var c = costs[costs.length-1];
 
@@ -122,8 +163,14 @@ function penalty_costs(penalty, bounds) {
         lb : c.lb,
         ub : config.maxUb || 1e9
       });
-    }
 
+      console.log(`${prmname}: s>0 && !UB, Extending k to ub=${1e9}`);
+      updated = true;
+    }
+  }
+
+  if( updated ) {
+    console.log(costs);
   }
 
   return costs;
@@ -138,7 +185,8 @@ function exists(val) {
   return (val !== undefined && val !== null);
 }
 
-module.exports = function(costs, bounds, steps) {
+// prmname is for debug
+module.exports = function(costs, bounds, steps, prmname) {
     var step_cost = [];
     var penalty;
     var month, month_cost = {};
@@ -170,22 +218,22 @@ module.exports = function(costs, bounds, steps) {
         return step_cost;
 
       case 'Monthly Variable':
-        steps.forEach(function(time){
+        steps.forEach(function(time, index){
           month = getMonth(time);
            if( !month_cost[month] ) {
               penalty = costs.costs[month];
-              month_cost[month] = penalty_costs(penalty, bounds);
+              month_cost[month] = penalty_costs(penalty, bounds[index], prmname);
            }
            step_cost.push(month_cost[month]);
         });
         return step_cost;
 
       case 'Annual Variable':
-        steps.forEach(function(){
+        steps.forEach(function(step, index){
           month = 'JAN-DEC';
           if( !month_cost[month] ) {
             penalty = costs.costs[month];
-            month_cost[month] = penalty_costs(penalty, bounds);
+            month_cost[month] = penalty_costs(penalty, bounds[index], prmname);
           }
           step_cost.push(month_cost[month]);
         });

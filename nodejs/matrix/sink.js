@@ -12,7 +12,7 @@ function createSink(sink, id, steps) {
   var amp = 1;
   var step_costs;
   var step_bounds;
-  var i,c;
+  var i,k;
   var rows = [];
   var u = require('./utils');
 
@@ -29,40 +29,36 @@ function createSink(sink, id, steps) {
   }
 
   var step_bounds = bound(sink.bounds||[], steps);
-  var step_costs = cost(sink.costs||{type:"NONE"}, step_bounds, steps);
+  var step_costs = cost(sink.costs||{type:"NONE"}, step_bounds, steps, id);
 
   var i;
-  var lb,ub,costs;
+  var stepBounds,costs;
   var clb,cub;
 
   for (i = 0; i < steps.length; i++) { // i=0 is header;
-    lb = step_bounds[i][0];
-    ub = step_bounds[i][1];
+    stepBounds = step_bounds[i];
     costs = step_costs[i];
 
-    for (c = 0; c < costs.length; c++) {
+    for (k = 0; k < costs.length; k++) {
       //console.log(i+"/"+c+":"+costs[c]);
       // clb is greatest of item lower bound and cost lower bound
       // Make sure to satisfy item lb constraint, fill up each item till lb is met.
       // console.log('cost:' + c + ' lb:' + lb + 'clb:' + clb);
 
-      if (ub === null) {
-        clb = (costs[c][1] > lb)
-          ? costs[c][1]
-          : lb;
-        lb -= clb;
+      if ( stepBounds.UB === null) {
+        clb = (costs[k].lb > stepBounds.LB) ? costs[k].lb : stepBounds.LB;
+        stepBounds.LB -= clb;
 
-        cub = costs[c][2];
+        cub = costs[k].ub;
       } else {
-        clb = (costs[c][1] > lb)
-          ? costs[c][1]
-          : ((costs[c][2] || 0) <= lb)
-            ? (costs[c][2] || 0)
-            : lb;
-        lb -= clb;
+        clb = (costs[k].lb > stepBounds.LB) ? costs[k].lb
+                : ((costs[k].lb || 0) <= stepBounds.LB) ? (costs[k].lb || 0)
+                : stepBounds.LB;
 
-        cub = (costs[c][2] !== null && costs[c][2] <= ub) ? costs[c][2] : ub;
-        ub -= cub;
+        stepBounds.LB -= clb;
+
+        cub = (costs[k].ub !== null && costs[k].ub <= stepBounds.UB) ? costs[k].ub : stepBounds.UB;
+        stepBounds.UB -= cub;
       }
 
       // JM - including as part of issue #33 discussion
@@ -70,8 +66,8 @@ function createSink(sink, id, steps) {
         rows.push([
           u.id(id, steps[i]),
           u.id('SINK', steps[i]),
-          c, 
-          costs[c][0], 
+          k, 
+          costs[k].cost, 
           amp, 
           // JM - for issue #33
           // if constrained bound, lower bound should equal upper bound
