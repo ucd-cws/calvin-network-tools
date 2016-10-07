@@ -117,8 +117,9 @@ module.exports = function (callback) {
           file.end();
         }
       }
-    }
+    } 
 
+    console.log('Matrix export complete.');
     
     callback();
   });

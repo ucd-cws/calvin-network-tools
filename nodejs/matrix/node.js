@@ -10,6 +10,7 @@ var storage = require('./storage');
 var inflows = require('./inflows');
 var sink=require('./sink');
 var u = require('./utils');
+var createSteps = require('./createSteps');
 
 module.exports = function(item, subnet) {
   var config = require('./mconfig')();
@@ -26,11 +27,11 @@ module.exports = function(item, subnet) {
   var inbound=netu.inbound_to(subnet,id);
   var outbound=netu.outbound_from(subnet,id);
   var flow = item.properties.flow;
-  if (! flow ) {
-    if (item.properties.storage) {
-      flow=item.properties.storage;
+  if ( !flow ) {
+    if( item.properties.storage ) {
+      flow = item.properties.storage;
     } else {
-       flow=[];
+      flow = createSteps();
     }
   }
 

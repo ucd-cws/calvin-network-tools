@@ -1,6 +1,7 @@
 'use strict';
 
 var config = require('../config').get();
+var LOCAL_DEBUG = false;
 
 // Given a link, and the time steps,
 // return a list of every set of cost links at each timestep.
@@ -79,7 +80,7 @@ function penalty_costs(penalty, bounds, prmname) {
 
   if( costs[0] === 0  ) {
     if( costs.length > 1 ) {
-      console.log(`${prmname}: Slope 0 but multiple k`);
+      if( LOCAL_DEBUG ) console.log(`${prmname}: Slope 0 but multiple k`);
     }
     return;
   }
@@ -91,13 +92,13 @@ function penalty_costs(penalty, bounds, prmname) {
     if( exists(bounds.LB) ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
-        console.log(`${prmname}: s<0 && LB, setting k=0 lb to LB`);
+        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && LB, setting k=0 lb to LB`);
         updated = true;
       }
     } else {
       if( costs[0].lb !== 0 ) {
         costs[0].lb = 0;
-        console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
+        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
         updated = true;
       }
     }
@@ -106,13 +107,13 @@ function penalty_costs(penalty, bounds, prmname) {
 
       if( costs[costs.length-1].ub !== bounds.UB ) {
         costs[costs.length-1].ub = bounds.UB;
-        console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
+        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
         updated = true;
       }
 
     } else if( penalty[penalty.length-1][1] != 0 ){ // JM
 
-      console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
+      if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
 
       var p = penalty[penalty.length-1];
       var c = costs[costs.length-1];
@@ -126,7 +127,7 @@ function penalty_costs(penalty, bounds, prmname) {
       updated = true;
 
       if( isNaN(costs[costs.length-1].ub) ) {
-        console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
+        if( LOCAL_DEBUG ) console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
         costs[costs.length-1].ub = null; // ?
       }
     }
@@ -136,11 +137,23 @@ function penalty_costs(penalty, bounds, prmname) {
     if( exists(bounds.LB) ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
-        console.log(`${prmname}: s>0 && LB, Setting k=0 lb to LB`);
+        
+        if( LOCAL_DEBUG ) {
+          console.log(`${prmname}: s>0 && LB, Setting k=0 lb to LB`);
+          if( prmname.indexOf('-') > -1 ) {
+            console.log(` WARNING This should never happen!`);
+          }
+        }
         updated = true;
       }
     } else {
-      console.log(`${prmname}: WARNING This should never happen!  s>1 && !LB`);
+      if( LOCAL_DEBUG ) {
+        console.log(`${prmname}:  s>1 && !LB`);
+        if( prmname.indexOf('-') > -1 ) {
+          console.log(`  WARNING This should never happen! `);
+        }
+      }
+
       costs.push({
         cost : 0, 
         lb : 0, 
@@ -152,24 +165,32 @@ function penalty_costs(penalty, bounds, prmname) {
     if( exists(bounds.UB) ) {
       if( costs[costs.length-1].ub !== bounds.UB ) {
         costs[costs.length-1].ub = bounds.UB;
-        console.log(`${prmname}: s>0 && UB, Setting k=K ub to UB`);
+        if( LOCAL_DEBUG ) console.log(`${prmname}: s>0 && UB, Setting k=K ub to UB`);
         updated = true;
       }
     } else {
       var c = costs[costs.length-1];
 
-      costs.push({
-        cost : c.cost,
-        lb : c.lb,
-        ub : config.maxUb || 1e9
-      });
+      // Remove for possible fix for issue #36
+      // set to maxium w/o adding another k
+      // costs.push({
+      //   cost : c.cost,
+      //   lb : c.lb,
+      //   ub : config.maxUb || 1e9
+      // });
+      costs[costs.length-1].ub = config.maxUb || 1e9;
 
-      console.log(`${prmname}: s>0 && !UB, Extending k to ub=${1e9}`);
+      if( LOCAL_DEBUG ) {
+        console.log(`${prmname}: s>0 && !UB, Extending k to ub=${1e9}`);
+        if( prmname.indexOf('-') > -1 ) {
+          console.log(` WARNING This should never happen!`);
+        }
+      }
       updated = true;
     }
   }
 
-  if( updated ) {
+  if( updated && LOCAL_DEBUG ) {
     console.log(costs);
   }
 

@@ -61,5 +61,6 @@ module.exports = {
   getUserHome : getUserHome,
   trimDates : trimDates,
   toDate : toDate,
-  getWorkspacePath : getWorkspacePath
+  getWorkspacePath : getWorkspacePath,
+  daysInMonth : daysInMonth
 };
