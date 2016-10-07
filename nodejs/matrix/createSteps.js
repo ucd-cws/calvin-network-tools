@@ -14,8 +14,8 @@ var steps;
 function createSteps() {
   var steps = [['date','kaf']];
 
-  var start = new Date(config.start ? config.start+'-01' : DEFAULT_START);
-  var stop = new Date(config.stop ? config.stop+'-01' : DEFAULT_STOP);
+  var start = new Date(config.start || DEFAULT_START);
+  var stop = new Date(config.stop || DEFAULT_STOP);
 
   var currentDate = new Date(start.getTime());
   while( currentDate.getTime() < stop.getTime() ) {
