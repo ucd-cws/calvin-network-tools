@@ -25,7 +25,9 @@ module.exports = function(item, steps) {
 
     for( i = 0; i < steps.length; i++ ){
       inf = inflow_at[steps[i]];
-      if( typeof inf !=='undefined' && inf !== null && inf !== 0) {
+      // JM - fix for issue #37
+      // if( typeof inf !=='undefined' && inf !== null && inf !== 0) {
+      if( typeof inf !=='undefined' && inf !== null ) {
         rows.push([
           u.id('INFLOW',steps[i]),
           u.id(id,steps[i]),
