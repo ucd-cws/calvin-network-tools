@@ -23,7 +23,7 @@ module.exports = function(subnet, callback) {
    async.eachSeries(
      arr,
      function(node, next) {
-       hnf.expand(node, next);
+       hnf.expand({node : node}, next);
      },
      callback
    );

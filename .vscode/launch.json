@@ -43,8 +43,9 @@
 				"--stop=2000-02",
 				"--ts=.",
 				"--to=network",
-				"--max-ub=1000000"
-
+				"--max-ub=1000000",
+				"--dev",
+				"--data=/Users/jrmerz/dev/watershed/calvin-network-data-v2/data"
 				//"--debug=ALL",
 				//"--outnodes=node"
 			],

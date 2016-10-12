@@ -30,7 +30,16 @@ function matrix(config, callback) {
     config.stop = new Date(config.stop).getTime();
   }
 
-  hnf.split(config.data, {id:'prmname'}, config.nodes, function (subnet) {
+  var opts = {
+    /**
+     * We don't want to parse any $refs, yet
+     */
+    onlyParse : function(file) {
+      return false;
+    }
+  }
+
+  hnf.split(config.data, opts, config.nodes, function (subnet) {
     if (subnet.in.length === 0) {
       subnet.in = subnet.out;
     }
