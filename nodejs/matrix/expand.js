@@ -22,9 +22,11 @@ module.exports = function(subnet, callback) {
    
    async.eachSeries(
      arr,
-     function(node, next) {
+     (node, next) => {
        hnf.expand({node : node}, next);
      },
-     callback
+     (err) => {
+       callback();
+     }
    );
 }

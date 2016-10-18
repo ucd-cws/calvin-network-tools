@@ -8,7 +8,7 @@ var u = require('./utils');
 module.exports = function(item, steps) {
   var rows=[];
   var p=item.properties;
-  var id=p.hobbes.networkId;
+  var id=p.hobbes.id;
 
   if (p.inflows) {
     // This should be done for every inflow

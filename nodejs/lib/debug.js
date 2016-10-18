@@ -7,7 +7,7 @@ var dbgsrc = {
     description : 'Dummy source node to test infeasibilities',
     hobbes : {
       debug: true,
-      networkId : 'DBUGSRC',
+      id : 'DBUGSRC',
       type : 'node'
     }
   }
@@ -20,7 +20,7 @@ var dbgsinks = {
     description : 'Dummy source node to test infeasibilities',
     hobbes : {
       debug: true,
-      networkId : 'DBUGSNK',
+      id : 'DBUGSNK',
       type : 'node'
     }
   }
@@ -35,7 +35,9 @@ var sinkLink = {
     description : 'Debug link from DBUGSINK to SINK with high unit cost.',
     hobbes : {
       debug: true,
-      networkId : 'DBUGSNK-SINK',
+      id : 'DBUGSNK-SINK',
+      origin: 'DBUGSNK',
+      terminus : 'SINK',
       type : 'link'
     },
     costs : {
@@ -53,7 +55,9 @@ var sourceLink = {
     description : 'Debug link from source to DBUGSOURCE with high unit cost.',
     hobbes : {
       debug: true,
-      networkId : 'SOURCE-DBUGSRC',
+      id : 'SOURCE-DBUGSRC',
+      origin: 'SOURCE',
+      terminus : 'DBUGSRC',
       type : 'link'
     },
     costs : {

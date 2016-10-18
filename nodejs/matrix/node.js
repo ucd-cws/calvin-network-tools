@@ -15,7 +15,7 @@ var createSteps = require('./createSteps');
 module.exports = function(item, subnet) {
   var config = require('./mconfig')();
   var p = item.properties;
-  var id = p.hobbes.networkId;
+  var id = p.hobbes.id;
   var rows=[];
 
   // Look through flow, get boundaries

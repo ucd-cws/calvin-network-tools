@@ -12,7 +12,7 @@ var u=require('./utils');
 
 module.exports = function(stor, steps) {
   var p = stor.properties;
-  var id= p.hobbes.networkId;
+  var id= p.hobbes.id;
   var step_costs;
   var step_bounds;
   var i,k;

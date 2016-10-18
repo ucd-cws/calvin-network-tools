@@ -5,7 +5,7 @@ functions, but only when you return a split, so I don't know about that.
 function is_inbound(network,id) {
   var is=false;
   network.edge.in.forEach(function(e) {
-    if(id===e.properties.hobbes.networkId)
+    if(id===e.properties.hobbes.id)
       is=true;
   });
   return is;
@@ -14,7 +14,7 @@ function is_inbound(network,id) {
 function is_outbound(network,id) {
   var is=false;
   network.edge.out.forEach(function(e) {
-    if(id===e.properties.hobbes.networkId)
+    if(id===e.properties.hobbes.id)
       is=true;
   });
   return is;

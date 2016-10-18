@@ -75,7 +75,7 @@ function onSubnetReady(subnet, config, callback) {
   
   subnet.in.forEach(function(item){
     var p = item.properties;
-    var id = p.hobbes.networkId;
+    var id = p.hobbes.id;
 
     if( p.hobbes.type === 'node' ) {
       rows_for[id] = node(item, subnet);

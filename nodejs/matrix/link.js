@@ -14,7 +14,7 @@ module.exports = function(link, subnet) {
   var config = require('./mconfig')();
   var steps = [];
   var p = link.properties;
-  var id= p.hobbes.networkId;
+  var id = p.hobbes.id;
   var amp = p.amplitude;
   var step_costs;
   var step_bounds;
@@ -39,13 +39,13 @@ module.exports = function(link, subnet) {
       if (netu.is_inbound(subnet,p.origin)) {
         rows.push([
           u.id('INBOUND',step),
-          u.id(p.origin,step),
+          u.id(p.hobbes.origin,step),
           0,0,1,flow[i][1],flow[i][1]
         ]);
       }
       if (netu.is_outbound(subnet,p.terminus)) {
           rows.push([
-            u.id(p.terminus,step),
+            u.id(p.hobbes.terminus,step),
             u.id('OUTBOUND',step),
             0,0,1,flow[i][1],flow[i][1]
           ]);
@@ -97,8 +97,8 @@ module.exports = function(link, subnet) {
       // need to include links that have 0 upper bound for mass balance
       //if (cub===null || cub>0) {
         rows.push([
-          ( p.origin === 'SOURCE' ) ? 'SOURCE' : u.id(p.origin, steps[i]),
-          u.id(p.terminus, steps[i]),
+          ( p.origin === 'SOURCE' ) ? 'SOURCE' : u.id(p.hobbes.origin, steps[i]),
+          u.id(p.hobbes.terminus, steps[i]),
           k, 
           costs[k].cost, 
           amp, 

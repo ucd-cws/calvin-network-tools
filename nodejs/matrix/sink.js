@@ -102,7 +102,7 @@ function stepsFromSink(flow, config) {
 
 module.exports = function (item, steps, config) {
   var p = item.properties;
-  var id = p.hobbes.networkId;
+  var id = p.hobbes.id;
   var rows = []
   var i, sinkName, sink;
 
