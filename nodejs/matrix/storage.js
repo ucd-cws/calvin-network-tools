@@ -114,7 +114,7 @@ module.exports = function(stor, steps) {
             u.id(id,steps[i]),
             next,
             k, 
-            costs[k][0], 
+            costs[k].cost, 
             amp, 
             clb, 
             cub
