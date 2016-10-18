@@ -86,17 +86,26 @@ module.exports = function(stor, steps) {
 
     } else {
       next = u.id(id,steps[i+1]);
-      
-      for( k = 0; k < costs.length; k++ ){
-        clb = ( costs[k].lb > stepBounds.LB ) ? costs[k].lb
-                : ( (costs[k].ub || 0) <= stepBounds.LB ) ? (costs[k].ub || 0)
-                : stepBounds.LB;
+
+      for( k = 0; k < costs.length; k++ ) {
+        if( costs[k].lb > stepBounds.LB ) {
+          clb = costs[k].lb;
+        } else if ( (costs[k].ub || 0) <= stepBounds.LB ) {
+          clb = costs[k].ub || 0;
+        } else {
+          clb = stepBounds.LB;
+        }
 
         stepBounds.LB -= clb;
         if( stepBounds.UB === null ) {
           cub = costs[k].ub;
         } else {
-          cub = ( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) ? costs[k].ub : stepBounds.LB;
+          if( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) {
+            cub = costs[k].ub
+          } else {
+            cub = stepBounds.LB;
+          }
+
           stepBounds.UB -= cub;
         }
 
@@ -105,7 +114,7 @@ module.exports = function(stor, steps) {
             u.id(id,steps[i]),
             next,
             k, 
-            costs[k][0], 
+            costs[k].cost, 
             amp, 
             clb, 
             cub

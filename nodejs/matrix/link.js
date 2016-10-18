@@ -93,7 +93,7 @@ module.exports = function(link, subnet) {
       }
 
       // JM
-      // fix for second part of issue #2
+      // fix for second part of issue #32
       // need to include links that have 0 upper bound for mass balance
       //if (cub===null || cub>0) {
         rows.push([
