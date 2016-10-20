@@ -30,8 +30,6 @@ var sinkLink = {
   properties : {
     type : 'Diversion',
     prmname : 'DBUGSNK-SINK',
-    origin : 'DBUGSNK',
-    terminus : 'SINK',
     description : 'Debug link from DBUGSINK to SINK with high unit cost.',
     hobbes : {
       debug: true,
@@ -81,20 +79,20 @@ module.exports = function(nodes) {
   var newList = [], np;
 
   for( var i = 0; i < nodes.length; i++ ) {
-    np = nodes[i].properties;
+    np = nodes[i].properties.hobbes;
     if( np.type !== 'Diversion' &&
-	     (all || matches.indexOf(np.prmname.toLowerCase()) > -1 )) {
+	     (all || matches.indexOf(np.id.toLowerCase()) > -1 )) {
 
       newList.push({
         properties : {
           type : 'Diversion',
-          prmname : np.prmname+'DBUGSNK',
-          origin : np.prmname,
-          terminus : 'DBUGSNK',
+          prmname : np.id+'-DBUGSNK',
           hobbes : {
             debug: true,
-            networkId : np.prmname+'DBUGSNK',
-            type : 'link'
+            id : np.id+'-DBUGSNK',
+            type : 'link',
+            origin : np.id,
+            terminus : 'DBUGSNK', 
           },
           costs : {}
         }
@@ -103,13 +101,13 @@ module.exports = function(nodes) {
       newList.push({
         properties : {
           type : 'Diversion',
-          prmname : 'DBUGSRC-'+np.prmname,
-          origin : 'DBUGSRC',
-          terminus : np.prmname,
+          prmname : 'DBUGSRC-'+np.id,
           hobbes : {
             debug: true,
-            networkId : 'DBUGSRC-'+np.prmname,
-            type : 'link'
+            id : 'DBUGSRC-'+np.id,
+            type : 'link',
+            origin : 'DBUGSRC',
+            terminus : np.id,
           },
           costs : {}
         }
