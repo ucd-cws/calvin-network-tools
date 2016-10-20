@@ -118,11 +118,11 @@ module.exports = function(stor, steps) {
             amp, 
             clb, 
             cub
-        ]);
+          ]);
+        }
       }
     }
   }
-}
 
 return rows;
 };
