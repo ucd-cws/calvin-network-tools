@@ -101,10 +101,10 @@ module.exports = function(stor, steps) {
           cub = costs[k].ub;
         } else {
           if( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) {
-            cub = costs[k].ub
+            cub = costs[k].ub;
           /** start of final fix for issue #36 */
           } else if( k === costs.length - 1 ) {
-            cub = stepBounds.UB - clb;
+            cub = costs[k].ub;
           /** end of final fix for issue #36 */
           } else {
             cub = stepBounds.LB;
