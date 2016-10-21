@@ -105,6 +105,9 @@ module.exports = function(stor, steps) {
           /** start of final fix for issue #36 */
           } else if( k === costs.length - 1 ) {
             cub = costs[k].ub;
+            for( var z = 0; z < costs.length-1; z++ ) {
+              cub -= costs[z].ub;
+            }
           /** end of final fix for issue #36 */
           } else {
             cub = stepBounds.LB;
