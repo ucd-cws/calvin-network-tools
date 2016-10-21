@@ -86,7 +86,7 @@ module.exports = function(stor, steps) {
 
     } else {
       next = u.id(id,steps[i+1]);
-
+      
       for( k = 0; k < costs.length; k++ ) {
         if( costs[k].lb > stepBounds.LB ) {
           clb = costs[k].lb;
@@ -102,12 +102,17 @@ module.exports = function(stor, steps) {
         } else {
           if( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) {
             cub = costs[k].ub
+          /** start of final fix for issue #36 */
+          } else if( k === costs.length - 1 ) {
+            cub = stepBounds.UB - clb;
+          /** end of final fix for issue #36 */
           } else {
             cub = stepBounds.LB;
           }
 
           stepBounds.UB -= cub;
         }
+
 
         if( cub === null || cub > 0) {
           rows.push([
