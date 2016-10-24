@@ -100,17 +100,18 @@ module.exports = function(stor, steps) {
         if( stepBounds.UB === null ) {
           cub = costs[k].ub;
         } else {
-          if( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) {
+          if( costs[k].ub !== null && costs[k].ub <= stepBounds.UB ) {
             cub = costs[k].ub;
           /** start of final fix for issue #36 */
-          } else if( k === costs.length - 1 ) {
-            cub = costs[k].ub;
-            for( var z = 0; z < costs.length-1; z++ ) {
-              cub -= costs[z].ub;
-            }
+          // } else if( k === costs.length - 1 ) {
+          //   cub = costs[k].ub;
+          //   for( var z = 0; z < costs.length-1; z++ ) {
+          //     cub -= costs[z].ub;
+          //   }
           /** end of final fix for issue #36 */
           } else {
-            cub = stepBounds.LB;
+            cub = stepBounds.UB;
+            //cub = stepBounds.LB;
           }
 
           stepBounds.UB -= cub;
