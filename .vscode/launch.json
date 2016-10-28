@@ -39,8 +39,8 @@
 				"matrix",
 				"--verbose",
 				"--format=csv",
-				"--start=2002-01",
-				"--stop=2003-01",
+				"--start=2000-01",
+				"--stop=2001-01",
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000000"

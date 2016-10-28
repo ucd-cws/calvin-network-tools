@@ -24,19 +24,26 @@ module.exports = function (callback) {
   var nodes_output=[];
   var node_list = {};
   
+  // set the file separator for the CSV file
   config.fs = config.fs || ',';
 
+  // set the format type
   config.format = config.format || 'csv';
   config.format = config.format.toLowerCase();
 
+  // if tab separator, convert to tab charactor
   if (config.fs === ':tab:' || config.format === 'tsv' ) {
     config.fs = '\t';
   }
 
+  // set time separator.  this goes between node id and time for columns i and j.
   config.ts = config.ts || '@';
+  // set newline separator.  Not sure why called rs...
   config.rs = config.rs || '\n';
+  // where to direct output to
   config.to = config.to || 'STDOUT';
   
+  // read in outboundPenalty
   if( config.outboundPenalty ) {
     config.outboundPenalty = JSON.parse(config.outboundPenalty);
   }
@@ -55,35 +62,46 @@ module.exports = function (callback) {
     return callback();
   }
 
+  // run matrix module
   matrix(config, function (rows) {
     
-    var header = ["i", "j", "k", "cost", "amplitude", "lower_bound", "upper_bound"];
-    if (!config['no-header']) {
-      matrix_output.push(header.join(config.fs));
-      nodes_output.push("node");
-     }
+    // we are now ready to create matrix
+    var header = ['i', 'j', 'k', 'cost', 'amplitude', 'lower_bound', 'upper_bound'];
 
-    rows.forEach(function (r) {
-      node_list[r[0]]=true;
-      node_list[r[1]]=true;
-      if (config.maxUb) {
-        if (r[6] === null) {
+    if( !config['no-header'] ) {
+      matrix_output.push(header.join(config.fs));
+      nodes_output.push('node');
+    }
+
+    rows.forEach((r) => {
+      node_list[r[0]] = true;
+      node_list[r[1]] = true;
+
+      if( config.maxUb ) {
+        if( r[6] === null ) {
           r[6] = config.maxUb;
         }
       }
+
       var line = r.join(config.fs);
       matrix_output.push(line);
       matrix_data.push(r);
     });
     
     if( config.outnodes ) {
-      nodes_output=Object.keys(node_list).sort();
-      if (config.nodes === "STDOUT") {
+      nodes_output = Object.keys(node_list).sort();
+
+      if( config.nodes === 'STDOUT' ) {
         console.log(nodes_output.join(config.rs) + config.rs);
       } else {
-        fs.writeFile(config.outnodes, 
-          nodes_output.join(config.rs)+config.rs,'utf8',
-         (err) => { if (err) {throw err;}});
+        fs.writeFile(
+          config.outnodes, 
+          nodes_output.join(config.rs)+config.rs,
+          'utf8',
+           (err) => { 
+             if (err) throw err;
+           }
+        );
       }
     }
 
