@@ -21,7 +21,8 @@ function createSteps() {
   while( currentDate.getTime() < stop.getTime() ) {
     steps.push([currentDate.toISOString().replace(/T.*/,''), '']);
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 1);
-    currentDate.setDate(daysInMonth[currentDate.getMonth()]);
+    var day = daysInMonth(currentDate.getMonth()+1, currentDate.getFullYear());
+    currentDate.setDate(day);
   }
 
   return steps;

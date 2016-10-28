@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var config = require('../config').get();
-var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+// var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function trimDates(start, stop, data) {
   var i, date;
@@ -15,12 +15,16 @@ function trimDates(start, stop, data) {
   }
 }
 
+function daysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
+}
+
 function toDate(dateStr, isStop) {
   var parts = dateStr.split('-');
 
   var day = parts.length > 2 ? parseInt(parts[2]) : 1;
   if( isStop && parts.length <= 2) {
-    day = daysInMonth[parseInt(parts[1])-1];
+    day = daysInMonth(parseInt(parts[1]), parseInt(parts[0]));
   }
 
   return new Date(
