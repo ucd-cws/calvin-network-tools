@@ -19,7 +19,7 @@ module.exports = function(bounds, steps, callback) {
 
     // Start with no bounds
     steps.forEach(function(step) {
-      steps_bound.push([0, null]);
+      steps_bound.push([null, null]);
     });
 
     var c = 0;

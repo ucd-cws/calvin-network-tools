@@ -98,11 +98,13 @@ function penalty_costs(penalty, bounds, prmname) {
         updated = true;
       }
     } else {
-      if( costs[0].lb !== 0 ) {
-        costs[0].lb = 0;
-        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
-        updated = true;
+      costs[0].lb = 0;
+      if( penalty.length >= 3 ) {
+        costs[0].ub = penalty[2][0];
       }
+
+      if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
+      updated = true;
     }
 
     if( exists(bounds.UB) ) {
