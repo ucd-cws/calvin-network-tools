@@ -1,5 +1,5 @@
 'use strict';
-
+var extend = require('extend');
 var config = require('../config').get();
 var LOCAL_DEBUG = false;
 
@@ -104,33 +104,49 @@ function penalty_costs(penalty, bounds, prmname) {
     }
 
     if( exists(bounds.UB) ) {
-
-      if( costs[costs.length-1].ub !== bounds.UB ) {
-        costs[costs.length-1].ub = bounds.UB;
-        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
-        updated = true;
-      }
-
-    } else if( penalty[penalty.length-1][1] != 0 ){ // JM
-
-      if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
-
-      var p = penalty[penalty.length-1];
-      var c = costs[costs.length-1];
-
+      if( costs[costs.length-1].ub < bounds.UB ) {
+        costs.push({
+          lb   : 0,
+          ub   : bounds.UB - costs[costs.length-1].ub,
+          cost : 0
+        });
+       }
+    } else {
       costs.push({
-        cost : c.cost,
-        lb : c.lb,
-        ub : xIntercept(p[0], p[1], c.cost)
+        lb   : 0,
+        ub   : config.maxUb || 1e9,
+        cost : 0
       });
-
-      updated = true;
-
-      if( isNaN(costs[costs.length-1].ub) ) {
-        if( LOCAL_DEBUG ) console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
-        costs[costs.length-1].ub = null; // ?
-      }
     }
+
+    // if( exists(bounds.UB) ) {
+
+    //   if( costs[costs.length-1].ub !== bounds.UB ) {
+    //     costs[costs.length-1].ub = bounds.UB;
+    //     if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
+    //     updated = true;
+    //   }
+
+    // } else if( penalty[penalty.length-1][1] != 0 ){ // JM
+
+    //   if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
+
+    //   var p = penalty[penalty.length-1];
+    //   var c = costs[costs.length-1];
+
+    //   costs.push({
+    //     cost : c.cost,
+    //     lb : c.lb,
+    //     ub : xIntercept(p[0], p[1], c.cost)
+    //   });
+
+    //   updated = true;
+
+    //   if( isNaN(costs[costs.length-1].ub) ) {
+    //     if( LOCAL_DEBUG ) console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
+    //     costs[costs.length-1].ub = null; // ?
+    //   }
+    // }
 
   } else {
 
