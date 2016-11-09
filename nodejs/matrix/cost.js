@@ -43,8 +43,10 @@ function penalty_costs(penalty, bounds, prmname) {
   //   }
   // }
 
+  var lastBound;
   for( var i = 2; i < penalty.length; i++ ) {
     bound = penalty[i][0] - penalty[i-1][0];
+    lastBound = penalty[i][0];
     marg_cost = (penalty[i][1] - penalty[i-1][1]) / bound;
 
     costs.push({
@@ -104,10 +106,10 @@ function penalty_costs(penalty, bounds, prmname) {
     }
 
     if( exists(bounds.UB) ) {
-      if( costs[costs.length-1].ub < bounds.UB ) {
+      if( lastBound < bounds.UB ) {
         costs.push({
           lb   : 0,
-          ub   : bounds.UB - costs[costs.length-1].ub,
+          ub   : bounds.UB - lastBound,
           cost : 0
         });
        }
