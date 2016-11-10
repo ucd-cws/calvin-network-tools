@@ -91,7 +91,7 @@ function penalty_costs(penalty, bounds, prmname) {
 
   if( isNegativeSlope ) {
 
-    if( exists(bounds.LB) ) {
+    if( bounds.LBDefined ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
         if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && LB, setting k=0 lb to LB`);
@@ -154,7 +154,7 @@ function penalty_costs(penalty, bounds, prmname) {
 
   } else {
 
-    if( exists(bounds.LB) ) {
+    if( bounds.LBDefined ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
         
@@ -167,19 +167,22 @@ function penalty_costs(penalty, bounds, prmname) {
         updated = true;
       }
     } else {
-      if( LOCAL_DEBUG ) {
-        console.log(`${prmname}:  s>1 && !LB`);
-        if( prmname.indexOf('-') > -1 ) {
-          console.log(`  WARNING This should never happen! `);
-        }
-      }
 
-      costs.push({
-        cost : 0, 
-        lb : 0, 
-        ub : null
-      });
-      updated = true;
+      if( costs[0].lb !== 0 ) {
+        if( LOCAL_DEBUG ) {
+          console.log(`${prmname}:  s>1 && !LB`);
+          if( prmname.indexOf('-') > -1 ) {
+            console.log(`  WARNING This should never happen! `);
+          }
+        }
+
+        costs.unshift({
+          cost : 0, 
+          lb : 0, 
+          ub : costs[0].lb
+        });
+        updated = true;
+      }
     }
 
     if( exists(bounds.UB) ) {
