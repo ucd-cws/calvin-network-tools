@@ -56,19 +56,6 @@ function penalty_costs(penalty, bounds, prmname) {
     });
   }
 
-  // DONT DELETE
-  // Extrapolation above last cost.
-  // if (marg_cost < 0) {
-  //   costs.push({
-  //     cost : 0, 
-  //     lb : 0, 
-  //     ub: null
-  //   });
-  // } else {
-  //   // extend last upperbound
-  //   costs[costs.length-1].cost = null;
-  // }
-
   // TODO: adding logic here for ISSUE #36
   // Now does solutions for ISSUE #36 invalidate above statements?
   var isNegativeSlope = false;
@@ -264,22 +251,16 @@ module.exports = function(costs, bounds, steps, prmname) {
       case 'Monthly Variable':
         steps.forEach(function(time, index){
           month = getMonth(time);
-           if( !month_cost[month] ) {
-              penalty = costs.costs[month];
-              month_cost[month] = penalty_costs(penalty, bounds[index], prmname);
-           }
-           step_cost.push(month_cost[month]);
+          penalty = costs.costs[month];
+          step_cost.push(penalty_costs(penalty, bounds[index], prmname));
         });
         return step_cost;
 
       case 'Annual Variable':
         steps.forEach(function(step, index){
           month = 'JAN-DEC';
-          if( !month_cost[month] ) {
-            penalty = costs.costs[month];
-            month_cost[month] = penalty_costs(penalty, bounds[index], prmname);
-          }
-          step_cost.push(month_cost[month]);
+          penalty = costs.costs[month];
+          step_cost.push(penalty_costs(penalty, bounds[index], prmname));
         });
         return step_cost;
 

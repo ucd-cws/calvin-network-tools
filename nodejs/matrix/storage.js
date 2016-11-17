@@ -64,6 +64,9 @@ module.exports = function(stor, steps) {
     costs = step_costs[i];
     amp = step_amp[i];
 
+    // if( id == 'SR_SHA' && steps[i] === '2001-02-28' ) debugger;
+    // if( id == 'SR_SHA' && steps[i] === '1998-10-31' ) debugger;
+
     if(i === steps.length-1 ) { // Fixed to final storage
       // JM fix for issue 35
       if( ending === null ) {
@@ -104,7 +107,6 @@ module.exports = function(stor, steps) {
             cub = costs[k].ub;
           } else {
             cub = stepBounds.UB;
-            //cub = stepBounds.LB;
           }
 
           stepBounds.UB -= cub;

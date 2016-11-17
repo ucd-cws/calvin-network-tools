@@ -39,12 +39,12 @@
 				"matrix",
 				"--verbose",
 				"--format=csv",
-				"--start=2001-01",
+				"--start=1998-10",
 				"--stop=2002-01",
 				"--ts=.",
 				"--to=network",
-				"--max-ub=1000000000"
-				//"--debug=ALL"
+				"--max-ub=1000000000",
+				"--debug=ALL"
 				//"--outnodes=node"
 			],
 			"cwd": "${workspaceRoot}",
