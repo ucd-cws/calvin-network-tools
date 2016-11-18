@@ -81,6 +81,11 @@ function penalty_costs(penalty, bounds, prmname) {
     if( bounds.LBDefined ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
+        
+        // need to adjust the ub as well.
+        if( penalty.length >= 3 ) {
+          costs[0].ub = penalty[2][0];
+        }
         if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && LB, setting k=0 lb to LB`);
         updated = true;
       }
