@@ -7,6 +7,7 @@ return a list of every set of cost storage links at each timestep.
 var cost = require('./cost');
 var bound = require('./bound');
 var netu = require('./split_utils');
+var stepCost = require('./stepCost');
 var evaporation = require('./evaporation');
 var u=require('./utils');
 
@@ -55,9 +56,11 @@ module.exports = function(stor, steps) {
   var step_amp = evaporation(stor, steps);
   var i;
   var stepBounds, costs;
-  var clb,cub;
+
   var amp;
   var next;
+
+  var stepCostResult;
 
   for(i = 0; i < steps.length; i++ ) { // i=0 is header;
     stepBounds = step_bounds[i];
@@ -91,39 +94,18 @@ module.exports = function(stor, steps) {
       next = u.id(id,steps[i+1]);
       
       for( k = 0; k < costs.length; k++ ) {
-        if( costs[k].lb > stepBounds.LB ) {
-          clb = costs[k].lb;
-        } else if ( (costs[k].ub || 0) <= stepBounds.LB ) {
-          clb = costs[k].ub || 0;
-        } else {
-          clb = stepBounds.LB;
-        }
 
-        stepBounds.LB -= clb;
-        if( stepBounds.UB === null ) {
-          cub = costs[k].ub;
-        } else {
-          if( costs[k].ub !== null && costs[k].ub <= stepBounds.UB ) {
-            cub = costs[k].ub;
-          } else {
-            cub = stepBounds.UB;
-          }
-
-          stepBounds.UB -= cub;
-        }
-
-
-        if( cub === null || cub > 0) {
-          rows.push([
-            u.id(id,steps[i]),
-            next,
-            k, 
-            costs[k].cost, 
-            amp, 
-            clb, 
-            cub
-          ]);
-        }
+        stepCostResult = stepCost(costs[k], stepBounds, costs);
+        
+        rows.push([
+          u.id(id,steps[i]),
+          next,
+          k, 
+          costs[k].cost, 
+          amp, 
+          stepCostResult.clb, 
+          stepCostResult.cub
+        ]);
       }
     }
   }

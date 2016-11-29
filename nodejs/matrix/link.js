@@ -8,6 +8,7 @@ var cost = require('./cost');
 var bound = require('./bound');
 var netu = require('./split_utils');
 var u = require('./utils');
+var stepCost = require('./stepCost');
 var createSteps = require('./createSteps');
 
 module.exports = function(link, subnet) {
@@ -70,44 +71,25 @@ module.exports = function(link, subnet) {
 
   var i;
   var stepBounds,costs;
-  var clb,cub;
+  var stepCostResult;
 
   for(i = 0; i < steps.length; i++ ) { // i=0 is header;
     stepBounds = step_bounds[i];
     costs = step_costs[i];
 
     for( k = 0; k < costs.length; k++ ){
-      //console.log(i+"/"+c+":"+costs[c]);
-      // clb is greatest of link lower bound and cost lower bound
-      // Make sure to satisfy link lb constraint, fill up each link till lb is met.
-      clb=( costs[k].lb > stepBounds.LB ) ? costs[k].lb
-            : ( (costs[k].ub || 0) <= stepBounds.LB ) ? (costs[k].ub || 0)
-            : stepBounds.LB;
 
-      stepBounds.LB -= clb;
-      if( stepBounds.UB === null ) {
-        cub = costs[k].ub;
-      } else {
-        cub = ( costs[k].ub !== null && costs[k].ub <= stepBounds.UB ) ? costs[k].ub : stepBounds.UB;
-        stepBounds.UB -= cub;
-      }
+      stepCostResult = stepCost(costs[k], stepBounds, costs);
 
-      // JM
-      // fix for second part of issue #32
-      // need to include links that have 0 upper bound for mass balance
-      //if (cub===null || cub>0) {
-        rows.push([
-          ( p.origin === 'SOURCE' ) ? 'SOURCE' : u.id(p.origin, steps[i]),
-          u.id(p.terminus, steps[i]),
-          k, 
-          costs[k].cost, 
-          amp, 
-          // JM - for issue #33
-          // if constrained bound, lower bound should equal upper bound
-          isConstrained ? cub : clb, 
-          cub
-        ]);
-      //}
+      rows.push([
+        ( p.origin === 'SOURCE' ) ? 'SOURCE' : u.id(p.origin, steps[i]),
+        u.id(p.terminus, steps[i]),
+        k, 
+        costs[k].cost, 
+        amp, 
+        isConstrained ? stepCostResult.cub : stepCostResult.clb, 
+        stepCostResult.cub
+      ]);
     }
   }
 

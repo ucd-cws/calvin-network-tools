@@ -5,6 +5,7 @@
 
 var cost = require('./cost');
 var bound = require('./bound');
+var stepCost = require('./stepCost');
 var netu = require('./split_utils');
 var u = require('./utils');
 
@@ -33,48 +34,28 @@ function createSink(sink, id, steps) {
 
   var i;
   var stepBounds,costs;
-  var clb,cub;
+  var stepCostResult;
 
   for (i = 0; i < steps.length; i++) { // i=0 is header;
     stepBounds = step_bounds[i];
     costs = step_costs[i];
 
+    // if( id === 'C53' ) debugger;
+
     for (k = 0; k < costs.length; k++) {
-      //console.log(i+"/"+c+":"+costs[c]);
-      // clb is greatest of item lower bound and cost lower bound
-      // Make sure to satisfy item lb constraint, fill up each item till lb is met.
-      // console.log('cost:' + c + ' lb:' + lb + 'clb:' + clb);
 
-      if ( stepBounds.UB === null) {
-        clb = (costs[k].lb > stepBounds.LB) ? costs[k].lb : stepBounds.LB;
-        stepBounds.LB -= clb;
+      stepCostResult = stepCost(costs[k], stepBounds, costs);
 
-        cub = costs[k].ub;
-      } else {
-        clb = (costs[k].lb > stepBounds.LB) ? costs[k].lb
-                : ((costs[k].lb || 0) <= stepBounds.LB) ? (costs[k].lb || 0)
-                : stepBounds.LB;
+      rows.push([
+        u.id(id, steps[i]),
+        u.id('SINK', steps[i]),
+        k, 
+        costs[k].cost, 
+        amp, 
+        isConstrained ? stepCostResult.cub : stepCostResult.clb, 
+        stepCostResult.cub
+      ]);
 
-        stepBounds.LB -= clb;
-
-        cub = (costs[k].ub !== null && costs[k].ub <= stepBounds.UB) ? costs[k].ub : stepBounds.UB;
-        stepBounds.UB -= cub;
-      }
-
-      // JM - including as part of issue #33 discussion
-      //if (cub === null || cub > 0) {
-        rows.push([
-          u.id(id, steps[i]),
-          u.id('SINK', steps[i]),
-          k, 
-          costs[k].cost, 
-          amp, 
-          // JM - for issue #33
-          // if constrained bound, lower bound should equal upper bound
-          isConstrained ? cub : clb, 
-          cub
-        ]);
-      //}
     }
   }
 
