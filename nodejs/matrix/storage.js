@@ -86,7 +86,7 @@ module.exports = function(stor, steps) {
 
     } else {
       next = u.id(id,steps[i+1]);
-
+      
       for( k = 0; k < costs.length; k++ ) {
         if( costs[k].lb > stepBounds.LB ) {
           clb = costs[k].lb;
@@ -100,14 +100,23 @@ module.exports = function(stor, steps) {
         if( stepBounds.UB === null ) {
           cub = costs[k].ub;
         } else {
-          if( costs[k].ub !== null && costs[k].ub <= stepBounds.LB ) {
-            cub = costs[k].ub
+          if( costs[k].ub !== null && costs[k].ub <= stepBounds.UB ) {
+            cub = costs[k].ub;
+          /** start of final fix for issue #36 */
+          // } else if( k === costs.length - 1 ) {
+          //   cub = costs[k].ub;
+          //   for( var z = 0; z < costs.length-1; z++ ) {
+          //     cub -= costs[z].ub;
+          //   }
+          /** end of final fix for issue #36 */
           } else {
-            cub = stepBounds.LB;
+            cub = stepBounds.UB;
+            //cub = stepBounds.LB;
           }
 
           stepBounds.UB -= cub;
         }
+
 
         if( cub === null || cub > 0) {
           rows.push([
@@ -118,11 +127,11 @@ module.exports = function(stor, steps) {
             amp, 
             clb, 
             cub
-        ]);
+          ]);
+        }
       }
     }
   }
-}
 
 return rows;
 };
