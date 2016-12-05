@@ -40,8 +40,6 @@ function createSink(sink, id, steps) {
     stepBounds = step_bounds[i];
     costs = step_costs[i];
 
-    // if( id === 'C53' ) debugger;
-
     for (k = 0; k < costs.length; k++) {
 
       stepCostResult = stepCost(costs[k], stepBounds, costs);
