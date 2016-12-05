@@ -4,8 +4,8 @@
  * We may change this.  Currently timeseries is dictated by flow.  No flow, no steps.
  * If flow is not provided, we are going to fake the timeseries steps, for now.
  */
-var config = require('../config').get() || {};
-var daysInMonth = require('../lib/utils').daysInMonth;
+var config = require('../../config').get() || {};
+var daysInMonth = require('../../lib/utils').daysInMonth;
 
 var DEFAULT_START = '1921-10-01';
 var DEFAULT_STOP = '2003-10-01';

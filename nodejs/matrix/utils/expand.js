@@ -5,7 +5,7 @@
 */
 
 var async = require('async');
-var hnf = require('../hnf')();
+var hnf = require('../../hnf')();
 
 module.exports = function(subnet, callback) {
    
@@ -23,7 +23,9 @@ module.exports = function(subnet, callback) {
    async.eachSeries(
      arr,
      (node, next) => {
-       hnf.expand({node : node}, next);
+       hnf.expand({node : node}, function(){
+         next();
+       });
      },
      (err) => {
        callback();

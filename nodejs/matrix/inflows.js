@@ -30,7 +30,7 @@ module.exports = function(item, steps) {
       if( typeof inf !=='undefined' && inf !== null ) {
         rows.push([
           u.id('INFLOW',steps[i]),
-          u.id(id,steps[i]),
+          u.id(p.prmname, steps[i]),
           // JM - fixing issue #32.
           // old values: k=0, cost=1
           0,   // k

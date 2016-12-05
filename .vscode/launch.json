@@ -43,11 +43,9 @@
 				"--stop=2003-01",
 				"--ts=.",
 				"--to=network",
-				"--max-ub=1000000",
+				"--max-ub=1000000000",
 				"--dev",
-				"--data=/Users/jrmerz/dev/watershed/calvin-network-data-v2/data",
-				"--debug=*",
-				"--outnodes=v2-nodes"
+				"--data=/Users/jrmerz/dev/watershed/calvin-network-data-v2/data"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,

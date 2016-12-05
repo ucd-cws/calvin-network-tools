@@ -9,12 +9,11 @@
 // l = lower bound
 // u = upper bound
 
-
 'use strict';
 
-var hnf = require('../hnf')();
-var expand = require('./expand');
 var async = require('async');
+var hnf = require('../hnf')();
+var expand = require('./utils/expand');
 var link = require('./link');
 var node = require('./node');
 var debug = require('../lib/debug');
@@ -72,7 +71,14 @@ function onSubnetReady(subnet, config, callback) {
   var final=false;
   var initial=false;
 
-  
+  require('./utils').initNodeLookup(subnet.in);
+
+  subnet.in.sort(function(a, b){
+    if( a.properties.prmname > b.properties.prmname ) return 1;
+    if( a.properties.prmname < b.properties.prmname ) return -1;
+    return 0;
+  }); 
+
   subnet.in.forEach(function(item){
     var p = item.properties;
     var id = p.hobbes.id;
@@ -90,11 +96,12 @@ function onSubnetReady(subnet, config, callback) {
 
   for( i in rows_for ) {
     rows_for[i].forEach(function(r) {
-      if ( r[0].indexOf("INITIAL")===0 && ! initial) {
+
+      if ( r[0].indexOf("INITIAL") === 0 && !initial) {
         rows.push(['SOURCE',r[0],0,0,1,0,null]);
         initial=true;
       }
-      if (r[1].indexOf("FINAL")===0 && ! final) {
+      if ( r[1].indexOf("FINAL") === 0 && !final) {
         rows.push([r[1],'SINK',0,0,1,0,null]);
         final=true;
       }

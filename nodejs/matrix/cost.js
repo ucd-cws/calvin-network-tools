@@ -1,5 +1,5 @@
 'use strict';
-var extend = require('extend');
+
 var config = require('../config').get();
 var LOCAL_DEBUG = false;
 
@@ -17,31 +17,6 @@ function getMonth(dateString) {
 function penalty_costs(penalty, bounds, prmname) {
   var costs = [];
   var marg_cost, bound;
-
-  // DONT DELETE
-  // If Penalty function starts >0, push on a 0 cost
-  // with a fixed bound if slope<0, no bound if slope>0
-  // if( penalty[1][0] > 0 ) {
-  //   bound = penalty[1][0];
-  //   marg_cost = (penalty[2][1] - penalty[1][1]) / bound;
-
-  //   // negative slope
-  //   if (marg_cost < 0) {
-  //     costs.push({
-  //       cost : 0, 
-  //       lb : penalty[1][0], 
-  //       ub : penalty[1][0]
-  //     });
-
-  //   // positive slope
-  //   } else {
-  //     costs.push({
-  //       cost : 0, 
-  //       lb : 0, 
-  //       ub : penalty[1][0]
-  //     });
-  //   }
-  // }
 
   var lastBound;
   for( var i = 2; i < penalty.length; i++ ) {
@@ -115,35 +90,6 @@ function penalty_costs(penalty, bounds, prmname) {
       });
     }
 
-    // if( exists(bounds.UB) ) {
-
-    //   if( costs[costs.length-1].ub !== bounds.UB ) {
-    //     costs[costs.length-1].ub = bounds.UB;
-    //     if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
-    //     updated = true;
-    //   }
-
-    // } else if( penalty[penalty.length-1][1] != 0 ){ // JM
-
-    //   if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
-
-    //   var p = penalty[penalty.length-1];
-    //   var c = costs[costs.length-1];
-
-    //   costs.push({
-    //     cost : c.cost,
-    //     lb : c.lb,
-    //     ub : xIntercept(p[0], p[1], c.cost)
-    //   });
-
-    //   updated = true;
-
-    //   if( isNaN(costs[costs.length-1].ub) ) {
-    //     if( LOCAL_DEBUG ) console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
-    //     costs[costs.length-1].ub = null; // ?
-    //   }
-    // }
-
   } else {
 
     if( bounds.LBDefined ) {
@@ -186,13 +132,6 @@ function penalty_costs(penalty, bounds, prmname) {
     } else {
       var c = costs[costs.length-1];
 
-      // Remove for possible fix for issue #36
-      // set to maxium w/o adding another k
-      // costs.push({
-      //   cost : c.cost,
-      //   lb : c.lb,
-      //   ub : config.maxUb || 1e9
-      // });
       costs[costs.length-1].ub = config.maxUb || 1e9;
 
       if( LOCAL_DEBUG ) {

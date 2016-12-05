@@ -5,12 +5,13 @@
 // Any storage node flows from timestep to timestep
 // Storage Nodes have Initial and Finals
 
-var netu = require('./split_utils');
+
 var storage = require('./storage');
 var inflows = require('./inflows');
-var sink=require('./sink');
+var sink = require('./sink');
+var netu = require('./utils/split');
 var u = require('./utils');
-var createSteps = require('./createSteps');
+var createSteps = require('./utils/createSteps');
 
 module.exports = function(item, subnet) {
   var config = require('./mconfig')();
@@ -24,8 +25,8 @@ module.exports = function(item, subnet) {
 
   var time, step, steps = [];
   var e,edge;
-  var inbound=netu.inbound_to(subnet,id);
-  var outbound=netu.outbound_from(subnet,id);
+  var inbound = netu.inboundTo(subnet, id);
+  var outbound = netu.outboundFrom(subnet, id);
   var flow = item.properties.flow;
   if ( !flow ) {
     if( item.properties.storage ) {
@@ -51,13 +52,13 @@ module.exports = function(item, subnet) {
         edge = inbound[e].properties;
         rows.push([
           u.id('INBOUND', step),
-          u.id(id, step),
+          u.id(p.prmname, step),
           e, 0, 1, edge.flow[i][1], edge.flow[i][1]]);
       }
       for (e = 0; e < outbound.length; e++) {
         edge = outbound[e].properties;
         rows.push([
-          u.id(id, step),
+          u.id(p.prmname, step),
           u.id('OUTBOUND', step),
           e, 0, 1, edge.flow[i][1], edge.flow[i][1]]);
       }

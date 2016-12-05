@@ -5,11 +5,10 @@
 
 var cost = require('./cost');
 var bound = require('./bound');
-var stepCost = require('./stepCost');
-var netu = require('./split_utils');
+var stepCost = require('./utils/stepCost');
 var u = require('./utils');
 
-function createSink(sink, id, steps) {
+function createSink(sink, id, prmname, steps) {
   var amp = 1;
   var step_costs;
   var step_bounds;
@@ -45,7 +44,7 @@ function createSink(sink, id, steps) {
       stepCostResult = stepCost(costs[k], stepBounds, costs);
 
       rows.push([
-        u.id(id, steps[i]),
+        u.id(prmname, steps[i]),
         u.id('SINK', steps[i]),
         k, 
         costs[k].cost, 
@@ -98,7 +97,7 @@ module.exports = function (item, steps, config) {
           steps = stepsFromSink(sink.flow, config);
         }
 
-        createSink(sink, id, steps).forEach(function (r) {
+        createSink(sink, id, p.prmname, steps).forEach(function (r) {
           rows.push(r);
         });
       }

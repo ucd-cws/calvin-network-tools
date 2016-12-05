@@ -13,12 +13,12 @@ module.exports = function(item, steps) {
     steps_amp.push([1]);
   });
 
-  if (p.evaporation) {
+  if( p.evaporation ) {
     var acf = p.areacapfactor;
     var evap = item.properties.evaporation;
     var time;
     var row;
-    var ev={};
+    var ev = {};
     var i,b,e;
 
     // Lookup evap - could be faster
@@ -30,7 +30,7 @@ module.exports = function(item, steps) {
       e = ev[steps[i]];
 
       if( typeof e !=='undefined' && e !== null) {
-        steps_amp[i]=1-acf*e;
+        steps_amp[i] = 1 - acf * e;
       }
     }
   }

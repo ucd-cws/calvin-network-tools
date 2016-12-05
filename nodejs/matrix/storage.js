@@ -6,10 +6,9 @@ return a list of every set of cost storage links at each timestep.
 
 var cost = require('./cost');
 var bound = require('./bound');
-var netu = require('./split_utils');
-var stepCost = require('./stepCost');
+var stepCost = require('./utils/stepCost');
 var evaporation = require('./evaporation');
-var u=require('./utils');
+var u = require('./utils');
 
 module.exports = function(stor, steps) {
   var p = stor.properties;
@@ -36,8 +35,8 @@ module.exports = function(stor, steps) {
   // Get initial and Final storage capacities
   for( i = 1; i < cap.length; i++ ) { // i=0 is header;
     if (step_keys[cap[i][0]]) {
-      if (! first) {
-        if ( i > 1 ) initial=cap[i-1][1];
+      if (!first) {
+        if ( i > 1 ) initial = cap[i-1][1];
         first++;
       }
       last=i;
@@ -48,7 +47,7 @@ module.exports = function(stor, steps) {
   }
 
   // Add Initial [i,j,k,cost,amplitude,lower,upper]
-  rows.push(['INITIAL',u.id(id,steps[0]),0,0,1,initial,initial]);
+  rows.push(['INITIAL',u.id(p.prmname,steps[0]),0,0,1,initial,initial]);
 
   var step_bounds = bound(p.bounds, steps);
   var step_costs = cost(p.costs, step_bounds, steps, p.prmname);
@@ -81,7 +80,7 @@ module.exports = function(stor, steps) {
 
       next = 'FINAL';
       rows.push([
-        u.id(id,steps[i]),
+        u.id(p.prmname, steps[i]),
         next,
         0,
         0,
@@ -91,14 +90,14 @@ module.exports = function(stor, steps) {
       ]);
 
     } else {
-      next = u.id(id,steps[i+1]);
+      next = u.id(p.prmname, steps[i+1]);
       
       for( k = 0; k < costs.length; k++ ) {
 
         stepCostResult = stepCost(costs[k], stepBounds, costs);
         
         rows.push([
-          u.id(id,steps[i]),
+          u.id(p.prmname,steps[i]),
           next,
           k, 
           costs[k].cost, 

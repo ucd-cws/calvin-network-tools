@@ -46,11 +46,6 @@ function onReady() {
   checkVersion(function(){
     var cmd = env._name;
     run(cmd);
-    
-    // done with all cmds
-    if( env.verbose ) {
-      console.log('\nPRM COMPLETE');
-    }
   });
 }
 
