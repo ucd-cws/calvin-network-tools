@@ -19,7 +19,8 @@ module.exports = function(bounds, steps, callback) {
 
     // Start with no bounds
     steps.forEach(function(step) {
-      steps_bound.push([0, null]);
+      // lb, ub, lb defined
+      steps_bound.push([0, null, false]);
     });
 
     var c = 0;
@@ -32,6 +33,7 @@ module.exports = function(bounds, steps, callback) {
           for(i = 0; i < steps.length; i++) {
             if( steps_bound[i][0] === null || steps_bound[i][0] < bound.bound ){
               steps_bound[i][0] = bound.bound;
+              steps_bound[i][2] = true;
             }
           }
           return;
@@ -49,6 +51,7 @@ module.exports = function(bounds, steps, callback) {
               b = (bound.type === 'LBM') ? bm[getMonth(steps[i])] : bm[steps[i]];
               if( (typeof b !== 'undefined' && b !== null) && (steps_bound[i][0] === null || steps_bound[i][0] < b) ){
                 steps_bound[i][0] = b;
+                steps_bound[i][2] = true;
               }
           }
           return;
@@ -92,6 +95,7 @@ module.exports = function(bounds, steps, callback) {
               if( typeof b !=='undefined' && b !== null) {
                 if( steps_bound[i][0] === null || steps_bound[i][0] < b ) {
                   steps_bound[i][0] = b;
+                  steps_bound[i][2] = true;
                 }
                 if( steps_bound[i][1] === null || steps_bound[i][1] > b ) {
                   steps_bound[i][1] = b;
@@ -108,7 +112,8 @@ module.exports = function(bounds, steps, callback) {
     return steps_bound.map((bound) => {
       return {
         LB : bound[0],
-        UB : bound[1]
+        UB : bound[1],
+        LBDefined : bound[2]
       }
     });
 };

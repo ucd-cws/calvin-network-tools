@@ -53,6 +53,7 @@
 			"preLaunchTask": null,
 			"runtimeExecutable": null,
 			"runtimeArgs": [
+				"--max-old-space-size=4096",
 				"--nolazy"
 			],
 			"env": {

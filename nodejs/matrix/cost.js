@@ -1,5 +1,5 @@
 'use strict';
-
+var extend = require('extend');
 var config = require('../config').get();
 var LOCAL_DEBUG = false;
 
@@ -43,8 +43,10 @@ function penalty_costs(penalty, bounds, prmname) {
   //   }
   // }
 
+  var lastBound;
   for( var i = 2; i < penalty.length; i++ ) {
     bound = penalty[i][0] - penalty[i-1][0];
+    lastBound = penalty[i][0];
     marg_cost = (penalty[i][1] - penalty[i-1][1]) / bound;
 
     costs.push({
@@ -53,19 +55,6 @@ function penalty_costs(penalty, bounds, prmname) {
       ub: bound
     });
   }
-
-  // DONT DELETE
-  // Extrapolation above last cost.
-  // if (marg_cost < 0) {
-  //   costs.push({
-  //     cost : 0, 
-  //     lb : 0, 
-  //     ub: null
-  //   });
-  // } else {
-  //   // extend last upperbound
-  //   costs[costs.length-1].cost = null;
-  // }
 
   // TODO: adding logic here for ISSUE #36
   // Now does solutions for ISSUE #36 invalidate above statements?
@@ -89,52 +78,75 @@ function penalty_costs(penalty, bounds, prmname) {
 
   if( isNegativeSlope ) {
 
-    if( exists(bounds.LB) ) {
+    if( bounds.LBDefined ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
+        
+        // need to adjust the ub as well.
+        if( penalty.length >= 3 ) {
+          costs[0].ub = penalty[2][0];
+        }
         if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && LB, setting k=0 lb to LB`);
         updated = true;
       }
     } else {
-      if( costs[0].lb !== 0 ) {
-        costs[0].lb = 0;
-        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
-        updated = true;
+      costs[0].lb = 0;
+      if( penalty.length >= 3 ) {
+        costs[0].ub = penalty[2][0];
       }
+
+      if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !LB, Setting k=0 lb to 0`);
+      updated = true;
     }
 
     if( exists(bounds.UB) ) {
-
-      if( costs[costs.length-1].ub !== bounds.UB ) {
-        costs[costs.length-1].ub = bounds.UB;
-        if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
-        updated = true;
-      }
-
-    } else if( penalty[penalty.length-1][1] != 0 ){ // JM
-
-      if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
-
-      var p = penalty[penalty.length-1];
-      var c = costs[costs.length-1];
-
+      if( lastBound < bounds.UB ) {
+        costs.push({
+          lb   : 0,
+          ub   : bounds.UB - lastBound,
+          cost : 0
+        });
+       }
+    } else {
       costs.push({
-        cost : c.cost,
-        lb : c.lb,
-        ub : xIntercept(p[0], p[1], c.cost)
+        lb   : 0,
+        ub   : config.maxUb || 1e9,
+        cost : 0
       });
-
-      updated = true;
-
-      if( isNaN(costs[costs.length-1].ub) ) {
-        if( LOCAL_DEBUG ) console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
-        costs[costs.length-1].ub = null; // ?
-      }
     }
+
+    // if( exists(bounds.UB) ) {
+
+    //   if( costs[costs.length-1].ub !== bounds.UB ) {
+    //     costs[costs.length-1].ub = bounds.UB;
+    //     if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && UB, setting k=K to UB`);
+    //     updated = true;
+    //   }
+
+    // } else if( penalty[penalty.length-1][1] != 0 ){ // JM
+
+    //   if( LOCAL_DEBUG ) console.log(`${prmname}: s<0 && !UB, Extending k, ub = xIntercept`);
+
+    //   var p = penalty[penalty.length-1];
+    //   var c = costs[costs.length-1];
+
+    //   costs.push({
+    //     cost : c.cost,
+    //     lb : c.lb,
+    //     ub : xIntercept(p[0], p[1], c.cost)
+    //   });
+
+    //   updated = true;
+
+    //   if( isNaN(costs[costs.length-1].ub) ) {
+    //     if( LOCAL_DEBUG ) console.log(`  WARNING ub is now NaN ${p[0]}, ${p[1]}, ${c.cost}!!!!!`);
+    //     costs[costs.length-1].ub = null; // ?
+    //   }
+    // }
 
   } else {
 
-    if( exists(bounds.LB) ) {
+    if( bounds.LBDefined ) {
       if( costs[0].lb !== bounds.LB ) {
         costs[0].lb = bounds.LB;
         
@@ -147,19 +159,22 @@ function penalty_costs(penalty, bounds, prmname) {
         updated = true;
       }
     } else {
-      if( LOCAL_DEBUG ) {
-        console.log(`${prmname}:  s>1 && !LB`);
-        if( prmname.indexOf('-') > -1 ) {
-          console.log(`  WARNING This should never happen! `);
-        }
-      }
 
-      costs.push({
-        cost : 0, 
-        lb : 0, 
-        ub : null
-      });
-      updated = true;
+      if( costs[0].lb !== 0 ) {
+        if( LOCAL_DEBUG ) {
+          console.log(`${prmname}:  s>1 && !LB`);
+          if( prmname.indexOf('-') > -1 ) {
+            console.log(`  WARNING This should never happen! `);
+          }
+        }
+
+        costs.unshift({
+          cost : 0, 
+          lb : 0, 
+          ub : costs[0].lb
+        });
+        updated = true;
+      }
     }
 
     if( exists(bounds.UB) ) {
@@ -241,22 +256,16 @@ module.exports = function(costs, bounds, steps, prmname) {
       case 'Monthly Variable':
         steps.forEach(function(time, index){
           month = getMonth(time);
-           if( !month_cost[month] ) {
-              penalty = costs.costs[month];
-              month_cost[month] = penalty_costs(penalty, bounds[index], prmname);
-           }
-           step_cost.push(month_cost[month]);
+          penalty = costs.costs[month];
+          step_cost.push(penalty_costs(penalty, bounds[index], prmname));
         });
         return step_cost;
 
       case 'Annual Variable':
         steps.forEach(function(step, index){
           month = 'JAN-DEC';
-          if( !month_cost[month] ) {
-            penalty = costs.costs[month];
-            month_cost[month] = penalty_costs(penalty, bounds[index], prmname);
-          }
-          step_cost.push(month_cost[month]);
+          penalty = costs.costs[month];
+          step_cost.push(penalty_costs(penalty, bounds[index], prmname));
         });
         return step_cost;
 
