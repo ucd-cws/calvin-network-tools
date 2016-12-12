@@ -1,6 +1,6 @@
 {
   "name": "calvin-network-tools",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Command line tools for calvin-network-data and calvin-network-app. Includes prm tool for export PRI and DSS files",
   "main": "index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "deep-diff": "^0.3.3",
     "extend": "^3.0.0",
     "graphviz": "0.0.8",
-    "hobbes-network-format": "^2.0.1",
+    "hobbes-network-format": "^2.0.2",
     "minimist": "^1.2.0",
     "node-uuid": "^1.4.7",
     "rimraf": "^2.4.3",
