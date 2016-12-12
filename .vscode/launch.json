@@ -37,6 +37,7 @@
 			"stopOnEntry": false,
 			"args": [
 				"matrix",
+				"--dev",
 				"--verbose",
 				"--format=csv",
 				"--start=2002-01",
@@ -44,8 +45,39 @@
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000000",
-				"--dev",
-				"--data=/Users/jrmerz/dev/watershed/calvin-network-data-v2/data"
+				"--data=../calvin-network-data/data"
+			],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--max-old-space-size=4096",
+				"--nolazy"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"externalConsole": false,
+			"sourceMaps": false,
+			"outDir": null
+		},
+				{
+			"name": "matrix-testing",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/bin/cnf.bin.js",
+			"stopOnEntry": false,
+			"args": [
+				"matrix",
+				"--verbose",
+				"--format=tsv",
+				"--start=1921-10",
+				"--stop=2003-10",
+				"--ts=.",
+				"--fs=:tab:",
+				"--to=network",
+				"--outnodes=nodes",
+				"--max-ub=1000000000"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
