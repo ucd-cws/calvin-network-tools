@@ -80,7 +80,7 @@ module.exports = function(nodes) {
 
   for( var i = 0; i < nodes.length; i++ ) {
     np = nodes[i].properties.hobbes;
-    if( np.type !== 'Diversion' &&
+    if( np.type === 'node' &&
 	     (all || matches.indexOf(np.id.toLowerCase()) > -1 )) {
 
       newList.push({
