@@ -45,7 +45,7 @@
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000000",
-				"--data=../calvin-network-data/data"
+				"SR_SHA","D5"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
