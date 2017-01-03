@@ -44,7 +44,8 @@
 				"--ts=.",
 				"--to=network",
 				"--max-ub=1000000000",
-				"SR_SHA","D5"
+				"--outnodes=nodes",
+				"--debug=ALL"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,

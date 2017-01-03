@@ -46,22 +46,22 @@ function matrix(config, callback) {
       subnet.in = subnet.out;
     }
 
-    // JM
-    // Attempting to add debug for issue #34
-    if( config.debug ) {
-      subnet.in = debug(subnet.in);
-    }
-
     // remove all disabled nodes
     ['in', 'out'].forEach((type) => {
       var l = subnet[type].length;
       for( var i = l-1; i >= 0; i-- ) {
         if( subnet[type][i].properties.disabled ) {
+          console.log('removing: '+subnet[type][i].properties.prmname)
           subnet[type].splice(i, 1);
         }
       }
     });
-    
+
+    // JM
+    // Attempting to add debug for issue #34
+    if( config.debug ) {
+      subnet.in = debug(subnet.in);
+    }
 
     expand(subnet, function(){
 
