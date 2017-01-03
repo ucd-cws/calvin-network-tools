@@ -35,6 +35,9 @@ function matrix(config, callback) {
      */
     onlyParse : function(file) {
       return false;
+    },
+    getId : function(properties) {
+      return properties.prmname;
     }
   }
 

@@ -37,7 +37,6 @@
 			"stopOnEntry": false,
 			"args": [
 				"matrix",
-				"--dev",
 				"--verbose",
 				"--format=csv",
 				"--start=2002-01",
