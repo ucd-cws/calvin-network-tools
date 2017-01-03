@@ -13,5 +13,17 @@ module.exports = {
   },
   getNodeById : function(id) {
     return nodeLookup[id];
+  },
+  roundCostAmp : function(val) {
+    if( typeof val !== 'number' ) {
+      return val;
+    }
+    return val.toFixed(5)
+  },
+  roundBound : function(val) {
+    if( typeof val !== 'number' ) {
+      return val;
+    }
+    return val.toFixed(3)
   }
 };

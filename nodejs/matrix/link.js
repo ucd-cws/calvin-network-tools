@@ -41,14 +41,22 @@ module.exports = function(link, subnet) {
         rows.push([
           u.id('INBOUND',step),
           u.id(u.getNodeById(p.hobbes.origin).properties.prmname, step),
-          0,0,1,flow[i][1],flow[i][1]
+          0,
+          0,
+          1,
+          u.roundBound(flow[i][1]),
+          u.roundBound(flow[i][1])
         ]);
       }
       if (netu.isOutbound(subnet, p.hobbes.terminus)) {
           rows.push([
             u.id(u.getNodeById(p.hobbes.terminus).properties.prmname, step),
             u.id('OUTBOUND',step),
-            0,0,1,flow[i][1],flow[i][1]
+            0,
+            0,
+            1,
+            u.roundBound(flow[i][1]),
+            u.roundBound(flow[i][1])
           ]);
       }
     }
@@ -85,10 +93,10 @@ module.exports = function(link, subnet) {
         (p.hobbes.origin === 'SOURCE') ? 'SOURCE' : u.id(getPrmname(p.hobbes.origin), steps[i]),
         u.id(getPrmname(p.hobbes.terminus), steps[i]),
         k, 
-        costs[k].cost, 
-        amp, 
-        isConstrained ? stepCostResult.cub : stepCostResult.clb, 
-        stepCostResult.cub
+        u.roundCostAmp(costs[k].cost), 
+        u.roundCostAmp(amp), 
+        u.roundBound(isConstrained ? stepCostResult.cub : stepCostResult.clb), 
+        u.roundBound(stepCostResult.cub)
       ]);
 
     }

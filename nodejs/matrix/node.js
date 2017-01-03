@@ -53,14 +53,24 @@ module.exports = function(item, subnet) {
         rows.push([
           u.id('INBOUND', step),
           u.id(p.prmname, step),
-          e, 0, 1, edge.flow[i][1], edge.flow[i][1]]);
+          e, 
+          0, 
+          1, 
+          u.roundBound(edge.flow[i][1]), 
+          u.roundBound(edge.flow[i][1])
+        ]);
       }
       for (e = 0; e < outbound.length; e++) {
         edge = outbound[e].properties;
         rows.push([
           u.id(p.prmname, step),
           u.id('OUTBOUND', step),
-          e, 0, 1, edge.flow[i][1], edge.flow[i][1]]);
+          e, 
+          0, 
+          1, 
+          u.roundBound(edge.flow[i][1]), 
+          u.roundBound(edge.flow[i][1])
+        ]);
       }
     }
   }

@@ -36,8 +36,8 @@ module.exports = function(item, steps) {
           0,   // k
           0,   // cost
           1,   // amplitude
-          inf, // lower bound
-          inf  // upper bound
+          u.roundBound(inf), // lower bound
+          u.roundBound(inf)  // upper bound
         ]);
       }
     }

@@ -47,10 +47,10 @@ function createSink(sink, id, prmname, steps) {
         u.id(prmname, steps[i]),
         u.id('SINK', steps[i]),
         k, 
-        costs[k].cost, 
-        amp, 
-        isConstrained ? stepCostResult.cub : stepCostResult.clb, 
-        stepCostResult.cub
+        u.roundCostAmp(costs[k].cost), 
+        u.roundCostAmp(amp), 
+        u.roundBound(isConstrained ? stepCostResult.cub : stepCostResult.clb), 
+        u.roundBound(stepCostResult.cub)
       ]);
 
     }

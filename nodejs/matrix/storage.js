@@ -47,7 +47,7 @@ module.exports = function(stor, steps) {
   }
 
   // Add Initial [i,j,k,cost,amplitude,lower,upper]
-  rows.push(['INITIAL',u.id(p.prmname,steps[0]),0,0,1,initial,initial]);
+  rows.push(['INITIAL',u.id(p.prmname,steps[0]),0,0,1, u.roundBound(initial), u.roundBound(initial)]);
 
   var step_bounds = bound(p.bounds, steps);
   var step_costs = cost(p.costs, step_bounds, steps, p.prmname);
@@ -66,9 +66,6 @@ module.exports = function(stor, steps) {
     costs = step_costs[i];
     amp = step_amp[i];
 
-    // if( id == 'SR_SHA' && steps[i] === '2001-02-28' ) debugger;
-    // if( id == 'SR_SHA' && steps[i] === '1998-10-31' ) debugger;
-
     if(i === steps.length-1 ) { // Fixed to final storage
       // JM fix for issue 35
       if( ending === null ) {
@@ -85,8 +82,8 @@ module.exports = function(stor, steps) {
         0,
         0,
         1,
-        stepBounds.LB,
-        stepBounds.UB
+        u.roundBound(stepBounds.LB),
+        u.roundBound(stepBounds.UB)
       ]);
 
     } else {
@@ -100,10 +97,10 @@ module.exports = function(stor, steps) {
           u.id(p.prmname,steps[i]),
           next,
           k, 
-          costs[k].cost, 
-          amp, 
-          stepCostResult.clb, 
-          stepCostResult.cub
+          u.roundCostAmp(costs[k].cost), 
+          u.roundCostAmp(amp), 
+          u.roundBound(stepCostResult.clb), 
+          u.roundBound(stepCostResult.cub)
         ]);
       }
     }
