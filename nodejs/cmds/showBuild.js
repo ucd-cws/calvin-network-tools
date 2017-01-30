@@ -1,6 +1,6 @@
 'use strict';
 
-var crawler = require('hobbes-network-format');
+var hnf = require('hobbes-network-format');
 var parse = require('csv-parse');
 var fs = require('fs');
 
@@ -39,7 +39,14 @@ module.exports = function(type, callback) {
   }
 
   var pridata = pri.init();
-  crawler(data, {parseCsvData : false}, function(results){
+
+  var opts = {
+    onlyParse : function(file) {
+      return !file.match(/\.csv$/i);
+    }
+  }
+
+  hnf.crawl(data, opts, function(results){
 
     var nodes, all = false;
     if( config.debug ) {
@@ -71,14 +78,14 @@ module.exports = function(type, callback) {
 function print(pridata) {
   console.log('*** Time Series ***');
   var csvFiles = [], i;
-  for( i = 0; i < config.ts.data.length; i++ ) {
-    console.log(config.ts.data[i]);
-    csvFiles.push(config.ts.data[i].csvFilePath);
+  for( i = 0; i < pridata.ts.data.length; i++ ) {
+    console.log(pridata.ts.data[i]);
+    csvFiles.push(pridata.ts.data[i].csvFilePath);
   }
   console.log('*** Penalty ***');
   for( i = 0; i < pridata.pd.data.length; i++ ) {
-    console.log(config.pd.data[i]);
-    csvFiles.push(config.pd.data[i].csvFilePath);
+    console.log(pridata.pd.data[i]);
+    csvFiles.push(pridata.pd.data[i].csvFilePath);
   }
 
   if( !config.showData ) {
