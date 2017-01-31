@@ -6,9 +6,9 @@ require('yargs')
   .usage(require('./logo')+'\n$ cnf <command>')
   .fail(function (msg, err, yargs) {
     if (err) throw err // preserve stack
-    console.error('You broke it!')
+    console.error('Badness :(\n');
     console.error(msg)
-    console.error('You should be doing', yargs.help())
+    console.error('Try:\n', yargs.help())
     process.exit(1)
   })
   .help()

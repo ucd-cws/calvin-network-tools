@@ -1,4 +1,4 @@
-exports.command = 'matrix'
+exports.command = 'matrix [nodes...]'
 exports.desc = 'Create a delimited matrix file to run 3rd party solver.'
 exports.builder = require('../shared')({
   format: {
@@ -9,6 +9,7 @@ exports.builder = require('../shared')({
   },
   'no-header': {
     describe : 'Supress CSV/TSV Header',
+    type : 'boolean',
     alias : 'N'
   },
   ts : {
@@ -31,6 +32,7 @@ exports.builder = require('../shared')({
   },
   'max-ub' : {
     describe : 'Replace null upperbound with a big number.  Like 1000000',
+    type: 'number',
     alias : 'M'
   },
   debug : {

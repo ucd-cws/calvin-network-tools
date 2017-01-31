@@ -7,7 +7,7 @@ var checkVersion = require('../nodejs/lib/checkVersion');
 var config = require('../nodejs/config');
 
 var cmdModuleMap = {
-  validate : 'validate'
+  list : 'showOrList'
 }
 
 module.exports = function(argv) {
@@ -30,7 +30,7 @@ module.exports = function(argv) {
   if( cmd === 'show' ) {
     config.set({nodeCmdType : 'show'});
   } else if( cmd === 'list' ) {
-    config.set({nodeCmdType : 'build'});
+    config.set({nodeCmdType : 'list'});
   }
 
   checkVersion(function(){

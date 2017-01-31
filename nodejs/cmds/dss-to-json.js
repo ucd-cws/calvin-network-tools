@@ -13,10 +13,10 @@ var dirPreFix = 'dssExportJson';
 module.exports = function(callback) {
   console.log('Running **DSS to JSON** command.\n');
 
-  var path = config.data;
+  var fpath = config.file;
 
-  if( !path ) {
-    console.log('No data path provided');
+  if( !fpath ) {
+    console.log('No dss path provided');
     process.exit(-1);
   }
 

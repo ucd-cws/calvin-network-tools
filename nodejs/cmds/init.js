@@ -3,6 +3,7 @@
 var HEC_VERSION = 'v1.4';
 
 var request = require('superagent');
+var Spinner = require('cli-spinner').Spinner;
 var AdmZip = require('adm-zip');
 var rimraf = require('rimraf');
 var fs = require('fs');
@@ -19,6 +20,8 @@ var runtimeUrl = 'https://github.com/ucd-cws/calvin-network-tools/releases/downl
 var dataRepo = '';
 
 var configPath = path.join(utils.getUserHome(), '.prmconf');
+
+var done;
 
 function getDataDir() {
   // if the data dir has already been set and dir exists, continue
@@ -67,7 +70,10 @@ function go() {
 }
 
 function get() {
-  console.log('\nDownloading runtime, this might take a minute...');
+  console.log('');
+  var spinner = new Spinner('%s Downloading runtime, this might take a minute...');
+  spinner.setSpinnerString('|/-\\');
+  spinner.start();
 
   var file = fs.createWriteStream(runtimeZip);
   var p = request
@@ -75,6 +81,9 @@ function get() {
     .pipe(file); // returns write stream pipe
 
   p.on('finish', function(){
+    spinner.stop(true);
+    console.log('Runtime download complete.');
+    
     extract();
   });
 }
@@ -86,13 +95,21 @@ function extract() {
   }
   ranExtract = true;
 
-  console.log('Extracting runtime, please wait...');
+  process.stdout.write('Extracting runtime, please wait...');
 
-  // reading archives
-  var zip = new AdmZip(runtimeZip);
-  zip.extractAllTo(extractTo, true);
 
-  write();
+  setTimeout(function(){
+    // reading archives
+    var zip = new AdmZip(runtimeZip);
+    zip.extractAllTo(extractTo, true);
+
+    process.stdout.clearLine();  // clear current text
+    process.stdout.cursorTo(0);
+    console.log('Runtime extraction complete.');
+
+    write();
+  }, 100);
+
 }
 
 function write() {
@@ -102,10 +119,16 @@ function write() {
   };
 
   fs.writeFileSync(path.join(utils.getUserHome(), '.prmconf'), JSON.stringify(config));
-  console.log('All set.');
-  console.log('Help: prm --help');
-  console.log('Example build: prm build --prefix test');
-  console.log('More Info: https://github.com/ucd-cws/calvin-network-tools');
+  console.log('All set.\n');
+  console.log('Help:           cnf hec-prm --help');
+  console.log('Example build:  cnf hec-prm build --prefix test');
+  console.log('More Info:      https://github.com/ucd-cws/calvin-network-tools');
+
+  done();
 }
 
-getDataDir();
+
+module.exports = function(callback) {
+  done = callback;
+  getDataDir();
+}

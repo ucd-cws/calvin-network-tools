@@ -52,10 +52,10 @@ module.exports = function (callback) {
     console.log('Running matrix command.\n');
   }
 
-  if (!config.nodes && !config.debug) {
-    console.log('Please provide a nodes to ' + config.nodeCmdType);
-    return callback();
-  }
+  // if (!config.nodes && !config.debug) {
+  //   console.log('Please provide a nodes to ' + config.nodeCmdType);
+  //   return callback();
+  // }
 
   if (!config.data) {
     console.log('Please provide a data repo location');
@@ -88,14 +88,14 @@ module.exports = function (callback) {
       matrix_data.push(r);
     });
     
-    if( config.outnodes ) {
+    if( config['dump-nodes'] ) {
       nodes_output = Object.keys(node_list).sort();
 
-      if( config.nodes === 'STDOUT' ) {
+      if( config['dump-nodes'] === 'STDOUT' ) {
         console.log(nodes_output.join(config.rs) + config.rs);
       } else {
         fs.writeFile(
-          config.outnodes, 
+          config['dump-nodes'], 
           nodes_output.join(config.rs)+config.rs,
           'utf8',
            (err) => { 

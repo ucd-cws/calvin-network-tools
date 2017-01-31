@@ -7,7 +7,7 @@ exports.builder = require('../../../hec-prm-shared')({
   },
   regex: {
     describe : '[expression] Regex to use when selecting dss path values to write.',
-    default : '*',
+    default : '.*',
     alias : 'g'
   }
 });
