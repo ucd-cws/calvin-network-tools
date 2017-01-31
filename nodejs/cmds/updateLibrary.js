@@ -10,37 +10,40 @@ var runtimePath = path.join(__dirname, '..','..','HEC_Runtime');
 var tmpPath = path.join(utils.getUserHome(),'.HEC_Runtime');
 var moved = false;
 
-moveHome();
+module.exports = function(callback) {
+  moveHome();
 
-if( !moved ) {
-  console.log('Failed to move runtime.  Please run "prm init"');
-}
+  if( !moved ) {
+    console.log('Failed to move runtime.  Please run "cnf library init"');
+  }
 
-console.log('Updating via npm');
-exec('npm install -g calvin-network-tools', {},
-  function (error, stdout, stderr) {
-    if( error ) {
-      console.log(error);
-    }
-    if( stderr ) {
-      console.log(stderr);
-    }
-    if( stdout ) {
-      console.log(stdout);
-    }
+  console.log('Updating via npm');
+  exec('npm install -g calvin-network-tools', {},
+    function (error, stdout, stderr) {
+      if( error ) {
+        console.log(error);
+      }
+      if( stderr ) {
+        console.log(stderr);
+      }
+      if( stdout ) {
+        console.log(stdout);
+      }
 
-    if( moved ) {
-      try {
-        console.log('Copying runtime back');
-        fs.renameSync(tmpPath, runtimePath);
-        console.log('Update complete.');
-      } catch(e) {
-        console.log('Failed to move runtime.  Please run "prm init"');
-        console.log(e);
+      if( moved ) {
+        try {
+          console.log('Copying runtime back');
+          fs.renameSync(tmpPath, runtimePath);
+          console.log('Update complete.');
+          callback();
+        } catch(e) {
+          console.log('Failed to move runtime.  Please run "cnf library init"');
+          console.log(e);
+        }
       }
     }
-  }
-);
+  );
+}
 
 
 function moveHome() {

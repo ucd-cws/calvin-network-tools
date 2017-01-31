@@ -1,5 +1,5 @@
-exports.command = 'show-build'
-exports.describe = 'Print the JSON that will be passed to the DssWrite'
+exports.command = 'show-build <nodes...>'
+exports.describe = 'Print the JSON that will be passed to the DssWrite.'
 exports.builder = require('../../../hec-prm-shared')({
   start: {
     describe : '[YYYY-MM] Specify start date for TimeSeries data',

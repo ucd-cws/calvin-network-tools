@@ -7,7 +7,9 @@ var checkVersion = require('../nodejs/lib/checkVersion');
 var config = require('../nodejs/config');
 
 var cmdModuleMap = {
-  list : 'showOrList'
+  list : 'showOrList',
+  show : 'showOrList',
+  update : 'updateLibrary'
 }
 
 module.exports = function(argv) {
