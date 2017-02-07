@@ -25,7 +25,7 @@ function isOutbound(network, id) {
 function inboundTo(network, id) {
   var inbound=[];
   network.edge.in.forEach(function(e){
-    if (id === e.properties.terminus) {
+    if (id === e.properties.hobbes.terminus) {
       inbound.push(e);
     }
   });
@@ -35,7 +35,7 @@ function inboundTo(network, id) {
 function outboundFrom(network,id) {
   var outbound=[];
   network.edge.out.forEach(function(e){
-    if(id === e.properties.origin) {
+    if(id === e.properties.hobbes.origin) {
       outbound.push(e);
     }
   });

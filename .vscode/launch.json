@@ -68,14 +68,16 @@
 			"args": [
 				"matrix",
 				"--verbose",
-				"--format=tsv",
-				"--start=1921-10",
-				"--stop=2003-10",
+				"--format=csv",
+				"--start=2002-10",
+				"--stop=2003-01",
 				"--ts=.",
-				"--fs=:tab:",
-				"--to=network",
+				"--fs=,",
+				"--to=network-new",
 				"--outnodes=nodes",
-				"--max-ub=1000000000"
+				"--max-ub=1000000000",
+				"SR_SHA",
+				"D5"
 			],
 			"cwd": "${workspaceRoot}",
 			"preLaunchTask": null,
