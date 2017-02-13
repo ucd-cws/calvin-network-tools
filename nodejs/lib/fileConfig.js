@@ -8,22 +8,16 @@ var CONFIG_NAME = '.prmconf';
  * Store basic calvin prm in home directory
  **/
 module.exports = function(program) {
-  if( program.c || program.config ) {
-    readConfig(program.c || program.config, program);
-    return;
-  }
-
-  var configPath = path.join(getUserHome(), CONFIG_NAME);
-
-  if( fs.existsSync(configPath) ) {
-    readConfig(configPath, program);
-  }
+  if( !program.c || !program.config ) return;
+  readConfig(path.join(program.c || program.config, CONFIG_NAME), program);
 };
 
 function readConfig(path, program) {
   if( !fs.existsSync(path) ) {
-    console.log('Invalid config file path: '+path);
-    process.exit(-1);
+    if( program.verbose ) {
+      console.warn(`No config file found at: ${path}`);
+    }
+    return;
   }
 
   var config;
@@ -40,8 +34,4 @@ function readConfig(path, program) {
       program[key] = config[key];
     }
   }
-}
-
-function getUserHome() {
-  return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
 }

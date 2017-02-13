@@ -24,6 +24,7 @@ function onReady() {
       env.nodes.push(nodes[i]);
     }
   }
+
   // read arguments from config file;
   fileConfig(env);
 

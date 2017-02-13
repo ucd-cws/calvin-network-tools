@@ -1,6 +1,6 @@
 'use strict';
 
-var crawler = require('hobbes-network-format');
+var hnf = require('hobbes-network-format');
 
 var updateStorage = require('../lib/updateStorage');
 var pri = require('../pri');
@@ -44,7 +44,13 @@ function list() {
     nodes[i] = nodes[i].toUpperCase();
   }
 
-  crawler(datapath, {parseCsvData : false}, function(results){
+  var opts = {
+    onlyParse : function(file) {
+      return false;
+    }
+  }
+
+  hnf.crawl(datapath, opts, function(results){
     var i, node;
 
     for( i = 0; i < results.nodes.features.length; i++ ) {
@@ -75,7 +81,13 @@ function show() {
 
   var pridata = pri.init();
 
-  crawler(config.data, {parseCsvData : false}, function(results){
+  var opts = {
+    onlyParse : function(file) {
+      return !file.match(/\.csv$/i);
+    }
+  }
+
+  hnf.crawl(config.data, opts, function(results){
     var node, i;
     var list = [];
 

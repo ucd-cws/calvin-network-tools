@@ -33,7 +33,7 @@
 			"name": "matrix",
 			"type": "node",
 			"request": "launch",
-			"program": "${workspaceRoot}/bin/cnf.bin.js",
+			"program": "${workspaceRoot}/bin/cli.js",
 			"stopOnEntry": false,
 			"args": [
 				"matrix",
@@ -146,12 +146,13 @@
 			"name": "Build",
 			"type": "node",
 			"request": "launch",
-			"program": "${workspaceRoot}/nodejs/index.js",
+			"program": "${workspaceRoot}/bin/cli.js",
 			"stopOnEntry": false,
 			"args": [
+				"hec-prm",
 				"build",
 				"--prefix",
-				"testsorted"
+				"test"
 				// "--debug",
 				// //"SR_GNT,SR_HID,SR_ISB,SR_ML,SR_TL",
 				// "SR_HID,SR_ISB,SR_ML,SR_TL"
@@ -203,9 +204,11 @@
 			"name": "DssToJSON",
 			"type": "node",
 			"request": "launch",
-			"program": "${workspaceRoot}/nodejs/index.js",
+			"program": "${workspaceRoot}/bin/cli.js",
 			"stopOnEntry": false,
 			"args": [
+				"hec-prm",
+				"debug",
 				"dss-to-json",
 				"--file",
 				"testPD.dss",

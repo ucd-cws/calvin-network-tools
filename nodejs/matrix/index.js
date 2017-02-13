@@ -51,6 +51,9 @@ function matrix(config, callback) {
       var l = subnet[type].length;
       for( var i = l-1; i >= 0; i-- ) {
         if( subnet[type][i].properties.disabled ) {
+          if( config.verbose ) {
+            console.log('removing: '+subnet[type][i].properties.prmname)
+          }
           subnet[type].splice(i, 1);
         }
       }

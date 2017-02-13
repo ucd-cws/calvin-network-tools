@@ -34,12 +34,9 @@ module.exports = function(cb) {
   callback = cb;
 
   var crawlerOptions = {
-    parseCsvData: false,
-    reindex : config.reindex ? true : false
-  }
-
-  if( crawlerOptions.reindex ) {
-    console.log('** Regenerating calvin-network-data indexes **');
+    onlyParse : function(file) {
+      return !file.match(/\.csv$/i);
+    }
   }
 
   crawler(config.data, crawlerOptions, onCrawlComplete);
