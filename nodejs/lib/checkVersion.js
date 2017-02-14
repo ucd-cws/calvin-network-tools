@@ -31,10 +31,10 @@ module.exports = function(callback) {
       var cInfo = require('../../package.json');
 
       if( info['dist-tags'].latest !== cInfo.version ) {
-        console.log(colors.yellow('\n**** PRM Update Available ****'));
+        console.log(colors.yellow('\n**** CNF Update Available ****'));
         console.log(colors.yellow('* Your version is '+cInfo.version));
         console.log(colors.yellow('* Current version is '+info['dist-tags'].latest));
-        console.log(colors.yellow('* Run "prm update-library" to update'));
+        console.log(colors.yellow('* Run "cnf library update" to update'));
         console.log(colors.yellow('******************************\n'));
       }
 

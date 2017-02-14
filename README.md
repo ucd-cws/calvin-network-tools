@@ -252,7 +252,7 @@ cnf list --help
 
 Using the [Calvin Network App](http://cwn.casil.ucdavis.edu/) (repo [here](https://github.com/ucd-cws/calvin-network-app)),
 you can download all tabular data for a node/link in a single excel file using the
-'Download Excel Data File' button. ex: [http://cwn.casil.ucdavis.edu/#info/SR_CLE-D94](http://cwn.casil.ucdavis.edu/#info/SR_CLE-D94).
+'Download Excel Data File' button. ex: [https://cwn.casil.ucdavis.edu/#info/north-coast,lower-klamath,sr_cle](https://cwn.casil.ucdavis.edu/#info/north-coast,lower-klamath,sr_cle).
 
 Using this file you can make modifications to the underlying data for a node.  Once you are ready to
 apply those modifications back to the [data repo](https://github.com/ucd-cws/calvin-network-data),
