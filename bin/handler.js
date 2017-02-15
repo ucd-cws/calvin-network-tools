@@ -35,9 +35,14 @@ module.exports = function(argv) {
     config.set({nodeCmdType : 'list'});
   }
 
-  if( cmd === 'apply-changes' ) {
-    cmd = 'excel';
+  if( argv._.length  > 0 && argv._[0] === 'apply-changes' ) {
+    if( cmd === 'app' ) {
+      cmd = 'excel';
+    } else if ( cmd === 'csv' ) {
+      cmd = 'update-from-csv';
+    }
   }
+
 
   checkVersion(function(){
     runCommand(cmd, argv);

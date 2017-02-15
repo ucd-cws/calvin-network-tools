@@ -1,4 +1,6 @@
-exports.command = 'apply-changes <excel-path>'
-exports.desc = 'Apply http://cwn.casil.ucdavis.edu Excel file download changes to repo'
-exports.builder = require('../shared')({});
-exports.handler = require('../handler');
+exports.command = 'apply-changes <command>'
+exports.desc = 'Commands related to updating the calvin-network-data repository'
+exports.builder = function (yargs) {
+  return yargs.commandDir('apply-changes-cmds');
+}
+exports.handler = function (argv) {}

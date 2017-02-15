@@ -45,6 +45,7 @@
     "node-uuid": "^1.4.7",
     "rimraf": "^2.4.3",
     "sprintf-js": "^1.0.3",
+    "stream-transform": "^0.1.2",
     "superagent": "^1.4.0",
     "walk": "^2.3.9",
     "xlsx": "^0.8.0",
