@@ -37,7 +37,7 @@ exports.builder = require('../shared')({
   },
   debug : {
     describe : 'Set debug nodes.  Either "ALL", "*" or comma seperated list of prmnames (no spaces)',
-    alias : 'd'
+    alias : 'D'
   },
   to : {
     describe : '<filename> Send matrix to filename',
