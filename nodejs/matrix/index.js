@@ -44,6 +44,8 @@ function matrix(config, callback) {
   hnf.split(config.data, opts, config.nodes, function (subnet) {
     if (subnet.in.length === 0) {
       subnet.in = subnet.out;
+    } else if( config.verbose ) {
+      console.log('Subnet: ', JSON.stringify(subnet.in.map((feature) => feature.properties.prmname)) );
     }
 
     // remove all disabled nodes
@@ -87,7 +89,10 @@ function onSubnetReady(subnet, config, callback) {
   var final=false;
   var initial=false;
 
-  require('./utils').initNodeLookup(subnet.in);
+  var initNodeLookup = require('./utils').initNodeLookup;
+  initNodeLookup(subnet.in);
+  initNodeLookup(subnet.edge.in);
+  initNodeLookup(subnet.edge.out);
 
   subnet.in.sort(function(a, b){
     if( a.properties.prmname > b.properties.prmname ) return 1;

@@ -50,6 +50,8 @@ module.exports = function(item, subnet) {
       // debugger;
       for (e = 0; e < inbound.length; e++) {
         edge = inbound[e].properties;
+        if( edge.flow.length >= i ) continue;
+        
         rows.push([
           u.id('INBOUND', step),
           u.id(p.prmname, step),
@@ -62,6 +64,8 @@ module.exports = function(item, subnet) {
       }
       for (e = 0; e < outbound.length; e++) {
         edge = outbound[e].properties;
+        if( edge.flow.length >= i ) continue;
+
         rows.push([
           u.id(p.prmname, step),
           u.id('OUTBOUND', step),

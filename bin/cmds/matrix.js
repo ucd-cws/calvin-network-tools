@@ -51,6 +51,10 @@ exports.builder = require('../shared')({
   'outbound-penalty' : {
     describe : '<json> Specify a penalty function for outbound boundary conditions. eg. [[10000,"-10%"],[0,0],[-10000,"10%"]]',
     alias : 'p'
+  },
+  regions : {
+    describe : 'Specify a list of regions to include.  All nodes within the regions will be added to the NODES list.  Comma seperate',
+    alias : 'r'
   }
 });
 

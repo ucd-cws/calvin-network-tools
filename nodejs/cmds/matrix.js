@@ -62,6 +62,13 @@ module.exports = function (callback) {
     return callback();
   }
 
+  if( config.regions ) {
+    config.regions = config.regions.replace(/\s/g,'').split(',');
+    if( !config.nodes ) config.nodes = [];
+    config.regions.forEach(region => config.nodes.push(region));
+  }
+
+
   // run matrix module
   matrix(config, function (rows) {
     
