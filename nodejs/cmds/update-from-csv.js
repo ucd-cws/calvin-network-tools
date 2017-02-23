@@ -5,7 +5,7 @@ var updateFromCsv = require('../update-from-csv');
 
 module.exports = function(callback) {
   if( config.verbose ) {
-    console.log('Running **Excel** command.\n');
+    console.log('Running **CSV UPDATE** command.\n');
   }
 
   updateFromCsv(config, callback);

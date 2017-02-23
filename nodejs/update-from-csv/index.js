@@ -18,7 +18,7 @@ module.exports = function(args, cb) {
   var callback = cb;
 
   if( !fs.existsSync(args.file) ) {
-    console.log('Invalid file: '+args.excelPath);
+    console.log('Invalid file: '+args.file);
     if( callback ) callback();
     return;
   }
