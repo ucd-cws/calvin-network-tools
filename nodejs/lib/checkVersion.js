@@ -15,7 +15,7 @@ module.exports = function(callback) {
     callback();
   }, 5000);
 
-  exec('npm info calvin-network-tools', {},
+  exec('npm view --json calvin-network-tools', {},
     function (error, stdout, stderr) {
       if( cancel ) {
         return;
