@@ -39,7 +39,7 @@ function matrix(config, callback) {
     getId : function(properties) {
       return properties.prmname;
     }
-  }
+  };
 
   hnf.split(config.data, opts, config.nodes, function (subnet) {
     if (subnet.in.length === 0) {
@@ -54,7 +54,7 @@ function matrix(config, callback) {
       for( var i = l-1; i >= 0; i-- ) {
         if( subnet[type][i].properties.disabled ) {
           if( config.verbose ) {
-            console.log('removing: '+subnet[type][i].properties.prmname)
+            console.log('removing: '+subnet[type][i].properties.prmname);
           }
           subnet[type].splice(i, 1);
         }
@@ -114,7 +114,6 @@ function onSubnetReady(subnet, config, callback) {
 
   var i;
   var rows = [];
-
   for( i in rows_for ) {
     rows_for[i].forEach(function(r) {
 
@@ -137,7 +136,6 @@ function onSubnetReady(subnet, config, callback) {
         rows.push([r[1],'SINK',0,0,1,0,null]);
         outbound[r[1]]=true;
       }
-
       rows.push(r);
     });
   }

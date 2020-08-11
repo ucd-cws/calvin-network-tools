@@ -57,7 +57,7 @@ function createSink(sink, id, prmname, steps) {
   }
 
   return rows;
-};
+}
 
 function stepsFromSink(flow, config) {
   var steps = [], time, step;
@@ -81,7 +81,7 @@ function stepsFromSink(flow, config) {
 module.exports = function (item, steps, config) {
   var p = item.properties;
   var id = p.hobbes.id;
-  var rows = []
+  var rows = [];
   var i, sinkName, sink;
 
   if (p.sinks) {
