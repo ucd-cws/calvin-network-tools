@@ -55,16 +55,25 @@ Entire network
 cnf matrix --format=csv --ts=. --to=network --max-ub=1000000000
 ```
 
-Sub-network with limited time range
+Sub-network with limited time range and defined nodes
 ```
 cnf matrix --verbose --format=csv --start=2002-10 --stop=2003-01 --ts=. --fs=, --to=network --outnodes=nodes --max-ub=1000000000 SR_SHA D5
+```
+
+Export network with manually-defined data repository path. In this case [calvin-network-data](https://github.com/ucd-cws/calvin-network-data) is located in /Users/msdogan/Documents/github/calvin-network-data/data folder
+```
+cnf matrix --data=/Users/msdogan/Documents/github/calvin-network-data/data  --verbose --format=csv --ts=. --fs=, --to=network_full --max-ub=1000000000
+```
+
+Export network with manually-defined data repository path in debug mode
+```
+cnf matrix --data=/Users/msdogan/Documents/github/calvin-network-data/data  --verbose --format=csv --start=2002-10 --stop=2003-01 --ts=. --fs=, --to=network --outnodes=nodes --max-ub=1000000000 --debug=All
 ```
 
 Help
 ```
 cnf matrix --help
 ```
-
 
 ## HEC PRM
 
