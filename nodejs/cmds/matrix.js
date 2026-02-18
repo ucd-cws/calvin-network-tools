@@ -84,11 +84,11 @@ module.exports = function (callback) {
       node_list[r[0]] = true;
       node_list[r[1]] = true;
 
-      if( config.maxUb ) {
-        if( r[6] === null ) {
-          r[6] = config.maxUb;
-        }
-      }
+      // if( config.maxUb ) {
+      //   if( r[6] === null ) {
+      //     r[6] = config.maxUb;
+      //   }
+      // }
 
       var line = r.join(config.fs);
       matrix_output.push(line);
